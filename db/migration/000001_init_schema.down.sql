@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS websites;
+DROP TABLE IF EXISTS template;
+DROP TABLE IF EXISTS pages;
+DROP TABLE IF EXISTS site_meta_tags;
+DROP TABLE IF EXISTS contact_forms;
+DROP TABLE IF EXISTS form_fields;
+DROP TABLE IF EXISTS templates;
+DROP TABLE IF EXISTS layout_options;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS content;
+DROP TABLE IF EXISTS organizations;
+DROP TABLE IF EXISTS content_meta_tags;
+DROP TABLE IF EXISTS content_categories;
+DROP TABLE IF EXISTS categories;
