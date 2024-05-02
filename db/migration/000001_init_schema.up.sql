@@ -42,7 +42,7 @@ CREATE TABLE "form_fields" (
   "required" boolean NOT NULL
 );
 
-CREATE TABLE "templates" (
+CREATE TABLE "template_list" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "name" varchar(255) NOT NULL,
   "preview_image_url" varchar(255) NOT NULL
