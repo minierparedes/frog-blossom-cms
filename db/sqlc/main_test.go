@@ -11,7 +11,7 @@ import (
 
 const (
 	dbDriver = "postgres"
-	dbSource = "postgresql://postgres@localhost/postgres?sslmode=disable"
+	dbSource = "postgresql://root:secret@localhost:5432/frog-blossom-db?sslmode=disable  "
 )
 
 var testQueries *Queries

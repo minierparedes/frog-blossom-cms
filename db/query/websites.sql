@@ -1,33 +1,32 @@
--- name: CreateWebsites :one
-INSERT INTO websites (
+-- name: CreateWebsite :one
+INSERT INTO website (
   name,
   domain,
   owner_id,
-  password,
-  template_id,
-  builder_enabled
+  selected_template
 ) VALUES (
-  $1, $2, $3, $4, $5, $6
+  $1, $2, $3, $4
 ) RETURNING *;
 
--- name: GetWebsites :one
-SELECT * FROM websites
+-- name: GetWebsite :one
+SELECT * FROM website
 WHERE id = $1 LIMIT 1;
 
--- name: ListWebsites :many
-SELECT * FROM websites
+-- name: ListWebsite :many
+SELECT * FROM website
 ORDER BY id
 LIMIT $1
 OFFSET $2;
 
--- name: UpdateWebsites :one
-UPDATE websites
-  SET domain = $2,
-  password = $3,
-  builder_enabled = $4
+-- name: UpdateWebsite :one
+UPDATE website
+  SET name = $2,
+      domain = $3,
+      owner_id = $4,
+      selected_template = $5
 WHERE id = $1
 RETURNING *;
 
--- name: DeleteWebsites :exec
-DELETE FROM websites
+-- name: DeleteWebsite :exec
+DELETE FROM website
 WHERE id = $1;

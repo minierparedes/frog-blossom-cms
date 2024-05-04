@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS pages;
 DROP TABLE IF EXISTS site_meta_tags;
 DROP TABLE IF EXISTS contact_forms;
 DROP TABLE IF EXISTS form_fields;
-DROP TABLE IF EXISTS templates;
+DROP TABLE IF EXISTS template_list;
 DROP TABLE IF EXISTS layout_options;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS content;
