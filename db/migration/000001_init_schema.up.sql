@@ -16,8 +16,8 @@ CREATE TABLE "website" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "name" varchar(255) NOT NULL,
   "domain" varchar(255) NOT NULL,
-  "owner_id" bigserial NOT NULL,
-  "selected_template" bigserial
+  "owner_id" int NOT NULL,
+  "selected_template" int NOT NULL
 );
 
 CREATE TABLE "template" (
@@ -32,14 +32,14 @@ CREATE TABLE "website_template" (
 
 CREATE TABLE "pages" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "website_id" bigserial NOT NULL,
+  "website_id" int NOT NULL,
   "title" varchar(255) NOT NULL,
   "url" varchar(255) NOT NULL
 );
 
 CREATE TABLE "page_components" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "page_id" bigserial NOT NULL,
+  "page_id" int NOT NULL,
   "component_type" varchar(255) NOT NULL,
   "component_data" jsonb NOT NULL
 );
@@ -48,14 +48,14 @@ CREATE TABLE "content" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "title" varchar(255) NOT NULL,
   "body" text NOT NULL,
-  "author_id" bigserial NOT NULL,
+  "author_id" int NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now()),
   "updated_at" timestamp,
   "status" varchar(255) NOT NULL,
   "published_at" timestamp,
   "edited_at" timestamp,
-  "published_by_id" bigserial,
-  "component_id" bigserial NOT NULL
+  "published_by_id" int,
+  "component_id" int NOT NULL
 );
 
 CREATE TABLE "content_images" (
@@ -69,7 +69,7 @@ CREATE TABLE "content_images" (
 
 CREATE TABLE "form_fields" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "component_id" bigserial NOT NULL,
+  "component_id" int NOT NULL,
   "label" varchar(255) NOT NULL,
   "type" varchar(255) NOT NULL,
   "required" boolean NOT NULL

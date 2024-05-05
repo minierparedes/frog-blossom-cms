@@ -7,26 +7,41 @@ import (
 	"testing"
 )
 
-func TestCreateWebsites(t *testing.T) {
+func MockUserData() *User {
+	user := &User{
+		ID:       1,
+		Username: "",
+		Email:    "",
+		Password: "",
+		Role: sql.NullString{
+			String: "admin",
+		},
+	}
+	return user
+}
+
+func TestCreateWebsite(t *testing.T) {
 	// Arrange
-	arg := CreateWebsitesParams{
-		Name:           "felix-fe",
-		Domain:         "https://fix-contactform-type-error.felix-fe.pages.dev",
-		Password:       sql.NullString{String: "mypassword", Valid: false},
-		TemplateID:     sql.NullInt64{Int64: 1, Valid: true},
-		BuilderEnabled: sql.NullBool{Bool: false, Valid: false},
+	user, err := testQueries.GetUsers(context.Background(), 5)
+	require.NoError(t, err)
+	require.NotEmpty(t, user)
+
+	args := CreateWebsiteParams{
+		Name:             "felix-fe",
+		Domain:           "https://fix-contactform-type-error.felix-fe.pages.dev",
+		OwnerID:          user.ID,
+		SelectedTemplate: sql.NullInt64{Int64: 123, Valid: true},
 	}
 	// Act
-	websites, err := testQueries.CreateWebsites(context.Background(), arg)
+	website, err := testQueries.CreateWebsite(context.Background(), args)
 	// Assert
 	require.NoError(t, err)
-	require.NotEmpty(t, websites)
+	require.NotEmpty(t, website)
 
-	require.Equal(t, arg.Name, websites.Name)
-	require.Equal(t, arg.Domain, websites.Domain)
-	require.Equal(t, arg.Password, websites.Password)
-	require.Equal(t, arg.TemplateID, websites.TemplateID)
-	require.Equal(t, arg.BuilderEnabled, websites.BuilderEnabled)
+	require.Equal(t, args.Name, website.Name)
+	require.Equal(t, args.Domain, website.Domain)
+	require.Equal(t, args.OwnerID, website.OwnerID)
+	require.Equal(t, args.SelectedTemplate, website.SelectedTemplate)
 
-	require.NotZero(t, websites.ID)
+	require.NotZero(t, website.ID)
 }
