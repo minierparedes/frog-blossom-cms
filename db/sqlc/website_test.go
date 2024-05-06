@@ -2,6 +2,7 @@ package frog_blossom_db
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 
 	"github.com/reflection/frog_blossom_db/utils"
@@ -38,25 +39,6 @@ func TestCreateWebsite(t *testing.T) {
 	require.NotZero(t, website.ID)
 }
 
-func TestGetWebsite(t *testing.T) {
-	// Arrange
-	user, err := testQueries.GetUsers(context.Background(), 9)
-	require.NoError(t, err)
-	require.NotEmpty(t, user)
-
-	template, err := testQueries.GetTemplate(context.Background(), 9)
-	require.NoError(t, err)
-	require.NotEmpty(t, template)
-	// Act
-	website, err := testQueries.GetWebsite(context.Background(), 9)
-	require.NoError(t, err)
-	require.NotEmpty(t, website)
-
-	// Assert
-	require.Equal(t, user.ID, website.OwnerID)
-	require.Equal(t, template.ID, website.SelectedTemplate)
-}
-
 func TestUpdateWebsite(t *testing.T) {
 	// Arrange
 	user, err := testQueries.GetUsers(context.Background(), 9)
@@ -84,4 +66,35 @@ func TestUpdateWebsite(t *testing.T) {
 	require.Equal(t, args.Domain, website.Domain)
 	require.Equal(t, args.OwnerID, website.OwnerID)
 	require.Equal(t, args.SelectedTemplate, website.SelectedTemplate)
+}
+
+func TestGetWebsite(t *testing.T) {
+	// Arrange
+	user, err := testQueries.GetUsers(context.Background(), 9)
+	require.NoError(t, err)
+	require.NotEmpty(t, user)
+
+	template, err := testQueries.GetTemplate(context.Background(), 9)
+	require.NoError(t, err)
+	require.NotEmpty(t, template)
+	// Act
+	website, err := testQueries.GetWebsite(context.Background(), 9)
+	require.NoError(t, err)
+	require.NotEmpty(t, website)
+
+	// Assert
+	require.Equal(t, user.ID, website.OwnerID)
+	require.Equal(t, template.ID, website.SelectedTemplate)
+}
+
+func TestDeleteWebsite(t *testing.T) {
+	// Arrange
+	err := testQueries.DeleteWebsite(context.Background(), 9)
+	require.NoError(t, err)
+	// Act
+	website, err := testQueries.GetWebsite(context.Background(), 9)
+	// Assert
+	require.Error(t, err)
+	require.EqualError(t, err, sql.ErrNoRows.Error())
+	require.Empty(t, website)
 }
