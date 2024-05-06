@@ -7,7 +7,6 @@ package frog_blossom_db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createWebsite = `-- name: CreateWebsite :one
@@ -22,10 +21,10 @@ INSERT INTO website (
 `
 
 type CreateWebsiteParams struct {
-	Name             string        `json:"name"`
-	Domain           string        `json:"domain"`
-	OwnerID          int64         `json:"owner_id"`
-	SelectedTemplate sql.NullInt64 `json:"selected_template"`
+	Name             string `json:"name"`
+	Domain           string `json:"domain"`
+	OwnerID          int64  `json:"owner_id"`
+	SelectedTemplate int64  `json:"selected_template"`
 }
 
 func (q *Queries) CreateWebsite(ctx context.Context, arg CreateWebsiteParams) (Website, error) {
@@ -126,11 +125,11 @@ RETURNING id, name, domain, owner_id, selected_template
 `
 
 type UpdateWebsiteParams struct {
-	ID               int64         `json:"id"`
-	Name             string        `json:"name"`
-	Domain           string        `json:"domain"`
-	OwnerID          int64         `json:"owner_id"`
-	SelectedTemplate sql.NullInt64 `json:"selected_template"`
+	ID               int64  `json:"id"`
+	Name             string `json:"name"`
+	Domain           string `json:"domain"`
+	OwnerID          int64  `json:"owner_id"`
+	SelectedTemplate int64  `json:"selected_template"`
 }
 
 func (q *Queries) UpdateWebsite(ctx context.Context, arg UpdateWebsiteParams) (Website, error) {

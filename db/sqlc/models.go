@@ -14,19 +14,19 @@ type Content struct {
 	ID            int64         `json:"id"`
 	Title         string        `json:"title"`
 	Body          string        `json:"body"`
-	AuthorID      int32         `json:"author_id"`
+	AuthorID      int64         `json:"author_id"`
 	CreatedAt     time.Time     `json:"created_at"`
 	UpdatedAt     sql.NullTime  `json:"updated_at"`
 	Status        string        `json:"status"`
 	PublishedAt   sql.NullTime  `json:"published_at"`
 	EditedAt      sql.NullTime  `json:"edited_at"`
-	PublishedByID sql.NullInt32 `json:"published_by_id"`
-	ComponentID   int32         `json:"component_id"`
+	PublishedByID sql.NullInt64 `json:"published_by_id"`
+	ComponentID   int64         `json:"component_id"`
 }
 
 type ContentImage struct {
 	ID          int64          `json:"id"`
-	ContentID   sql.NullInt32  `json:"content_id"`
+	ContentID   sql.NullInt64  `json:"content_id"`
 	FilePath    string         `json:"file_path"`
 	Title       string         `json:"title"`
 	Description string         `json:"description"`
@@ -35,7 +35,7 @@ type ContentImage struct {
 
 type FormField struct {
 	ID          int64  `json:"id"`
-	ComponentID int32  `json:"component_id"`
+	ComponentID int64  `json:"component_id"`
 	Label       string `json:"label"`
 	Type        string `json:"type"`
 	Required    bool   `json:"required"`
@@ -43,14 +43,14 @@ type FormField struct {
 
 type Page struct {
 	ID        int64  `json:"id"`
-	WebsiteID int32  `json:"website_id"`
+	WebsiteID int64  `json:"website_id"`
 	Title     string `json:"title"`
 	Url       string `json:"url"`
 }
 
 type PageComponent struct {
 	ID            int64           `json:"id"`
-	PageID        int32           `json:"page_id"`
+	PageID        int64           `json:"page_id"`
 	ComponentType string          `json:"component_type"`
 	ComponentData json.RawMessage `json:"component_data"`
 }
@@ -78,11 +78,11 @@ type Website struct {
 	ID               int64  `json:"id"`
 	Name             string `json:"name"`
 	Domain           string `json:"domain"`
-	OwnerID          int32  `json:"owner_id"`
-	SelectedTemplate int32  `json:"selected_template"`
+	OwnerID          int64  `json:"owner_id"`
+	SelectedTemplate int64  `json:"selected_template"`
 }
 
 type WebsiteTemplate struct {
-	WebsiteID  sql.NullInt32 `json:"website_id"`
-	TemplateID sql.NullInt32 `json:"template_id"`
+	WebsiteID  sql.NullInt64 `json:"website_id"`
+	TemplateID sql.NullInt64 `json:"template_id"`
 }

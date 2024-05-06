@@ -7,30 +7,23 @@ import (
 	"testing"
 )
 
-func MockUserData() *User {
-	user := &User{
-		ID:       1,
-		Username: "",
-		Email:    "",
-		Password: "",
-		Role: sql.NullString{
-			String: "admin",
-		},
-	}
-	return user
-}
-
 func TestCreateWebsite(t *testing.T) {
 	// Arrange
-	user, err := testQueries.GetUsers(context.Background(), 5)
+	user, err := testQueries.GetUsers(context.Background(), 9)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
+
+	user64 := int64(user.ID)
+
+	template, err := testQueries.GetTemplate(context.Background(), 1)
+	require.NoError(t, err)
+	require.NotEmpty(t, template)
 
 	args := CreateWebsiteParams{
 		Name:             "felix-fe",
 		Domain:           "https://fix-contactform-type-error.felix-fe.pages.dev",
-		OwnerID:          user.ID,
-		SelectedTemplate: sql.NullInt64{Int64: 123, Valid: true},
+		OwnerID:          user64,
+		SelectedTemplate: sql.NullInt64{Int64: template.ID, Valid: true},
 	}
 	// Act
 	website, err := testQueries.CreateWebsite(context.Background(), args)

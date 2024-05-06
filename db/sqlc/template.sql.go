@@ -49,7 +49,7 @@ func (q *Queries) GetTemplate(ctx context.Context, id int64) (Template, error) {
 const listTemplate = `-- name: ListTemplate :many
 SELECT id, name FROM template
 ORDER BY id
-    LIMIT $1
+LIMIT $1
 OFFSET $2
 `
 
@@ -85,7 +85,7 @@ const updateTemplate = `-- name: UpdateTemplate :one
 UPDATE template
 SET name = $2
 WHERE id = $1
-    RETURNING id, name
+RETURNING id, name
 `
 
 type UpdateTemplateParams struct {

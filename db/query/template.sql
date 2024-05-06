@@ -12,14 +12,14 @@ WHERE id = $1 LIMIT 1;
 -- name: ListTemplate :many
 SELECT * FROM template
 ORDER BY id
-    LIMIT $1
+LIMIT $1
 OFFSET $2;
 
 -- name: UpdateTemplate :one
 UPDATE template
 SET name = $2
 WHERE id = $1
-    RETURNING *;
+RETURNING *;
 
 -- name: DeleteTemplate :exec
 DELETE FROM template
