@@ -1,7 +1,7 @@
 CREATE TABLE "users" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "username" varchar(255) UNIQUE NOT NULL,
-  "email" varchar(255) UNIQUE NOT NULL,
+  "username" varchar(255) NOT NULL,
+  "email" varchar(255) NOT NULL,
   "password" varchar(255) NOT NULL,
   "role" varchar(255) DEFAULT 'user',
   "first_name" varchar(255),
@@ -16,8 +16,8 @@ CREATE TABLE "website" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "name" varchar(255) NOT NULL,
   "domain" varchar(255) NOT NULL,
-  "owner_id" int NOT NULL,
-  "selected_template" int NOT NULL
+  "owner_id" bigint NOT NULL,
+  "selected_template" bigint NOT NULL
 );
 
 CREATE TABLE "template" (
@@ -26,20 +26,20 @@ CREATE TABLE "template" (
 );
 
 CREATE TABLE "website_template" (
-  "website_id" int,
-  "template_id" int
+  "website_id" bigint,
+  "template_id" bigint
 );
 
 CREATE TABLE "pages" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "website_id" int NOT NULL,
+  "website_id" bigint NOT NULL,
   "title" varchar(255) NOT NULL,
   "url" varchar(255) NOT NULL
 );
 
 CREATE TABLE "page_components" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "page_id" int NOT NULL,
+  "page_id" bigint NOT NULL,
   "component_type" varchar(255) NOT NULL,
   "component_data" jsonb NOT NULL
 );
@@ -48,19 +48,19 @@ CREATE TABLE "content" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "title" varchar(255) NOT NULL,
   "body" text NOT NULL,
-  "author_id" int NOT NULL,
+  "author_id" bigint NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now()),
   "updated_at" timestamp,
   "status" varchar(255) NOT NULL,
   "published_at" timestamp,
   "edited_at" timestamp,
-  "published_by_id" int,
-  "component_id" int NOT NULL
+  "published_by_id" bigint,
+  "component_id" bigint NOT NULL
 );
 
 CREATE TABLE "content_images" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "content_id" int,
+  "content_id" bigint,
   "file_path" varchar(255) NOT NULL,
   "title" varchar(255) NOT NULL,
   "description" varchar(255) NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE "content_images" (
 
 CREATE TABLE "form_fields" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "component_id" int NOT NULL,
+  "component_id" bigint NOT NULL,
   "label" varchar(255) NOT NULL,
   "type" varchar(255) NOT NULL,
   "required" boolean NOT NULL
