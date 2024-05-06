@@ -10,17 +10,17 @@ import (
 func TestCreateUser(t *testing.T) {
 	// Arrange
 	args := CreateUsersParams{
-		Username: "Jasdsddadack Doe",
+		Username: "John Doe",
 		Email:    "sdsdsdsadsasadadas@example.com",
 		Password: "12345",
 		Role: sql.NullString{
 			String: "admin", Valid: true,
 		},
 		FirstName: sql.NullString{
-			String: "name", Valid: true,
+			String: "John", Valid: true,
 		},
 		LastName: sql.NullString{
-			String: "lastname", Valid: true,
+			String: "Doe", Valid: true,
 		},
 		AvatarUrl: sql.NullString{
 			String: "avatar", Valid: true,

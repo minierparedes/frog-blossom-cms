@@ -2,14 +2,13 @@ package frog_blossom_db
 
 import (
 	"context"
-	"database/sql"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
 
 func TestCreateWebsite(t *testing.T) {
 	// Arrange
-	user, err := testQueries.GetUsers(context.Background(), 9)
+	user, err := testQueries.GetUsers(context.Background(), 1)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
 
@@ -23,7 +22,7 @@ func TestCreateWebsite(t *testing.T) {
 		Name:             "felix-fe",
 		Domain:           "https://fix-contactform-type-error.felix-fe.pages.dev",
 		OwnerID:          user64,
-		SelectedTemplate: sql.NullInt64{Int64: template.ID, Valid: true},
+		SelectedTemplate: template.ID,
 	}
 	// Act
 	website, err := testQueries.CreateWebsite(context.Background(), args)
