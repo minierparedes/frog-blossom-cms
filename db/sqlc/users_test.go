@@ -52,7 +52,7 @@ func TestCreateUser(t *testing.T) {
 
 }
 
-func TestGetUsers(t *testing.T) {
+func TestGetUser(t *testing.T) {
 	// Arrange
 	randomUser := createRandomUser(t)
 	user, err := testQueries.GetUsers(context.Background(), randomUser.ID)
@@ -71,4 +71,35 @@ func TestGetUsers(t *testing.T) {
 	require.Equal(t, randomUser.AvatarUrl, user.AvatarUrl)
 	require.Equal(t, randomUser.Bio, user.Bio)
 	require.WithinDuration(t, randomUser.CreatedAt.Time, user.CreatedAt.Time, time.Second)
+}
+
+func TestUpdateUser(t *testing.T) {
+	// Arrange
+	args := UpdateUsersParams{
+		ID:        11,
+		Username:  "holyunin8 hello nurse",
+		Email:     "holyunin8@si.edu",
+		Password:  "gY0_OzLmifL1",
+		Role:      sql.NullString{String: "user", Valid: true},
+		FirstName: sql.NullString{String: "Hillery", Valid: true},
+		LastName:  sql.NullString{String: "Olyunin", Valid: true},
+		AvatarUrl: sql.NullString{String: "https://robohash.org/veritatisquaeratnemo.png?size=50x50&set=set1", Valid: true},
+		Bio:       sql.NullString{String: "Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.", Valid: true},
+		UpdatedAt: sql.NullTime{Time: time.Now(), Valid: true},
+	}
+	// Act
+	user, err := testQueries.UpdateUsers(context.Background(), args)
+	// Assert
+	require.NoError(t, err)
+	require.NotEmpty(t, user)
+	require.Equal(t, args.ID, user.ID)
+	require.Equal(t, args.Username, user.Username)
+	require.Equal(t, args.Email, user.Email)
+	require.Equal(t, args.Password, user.Password)
+	require.Equal(t, args.Role, user.Role)
+	require.Equal(t, args.FirstName, user.FirstName)
+	require.Equal(t, args.LastName, user.LastName)
+	require.Equal(t, args.AvatarUrl, user.AvatarUrl)
+	require.Equal(t, args.Bio, user.Bio)
+	require.WithinDuration(t, args.UpdatedAt.Time, user.UpdatedAt.Time, time.Second)
 }
