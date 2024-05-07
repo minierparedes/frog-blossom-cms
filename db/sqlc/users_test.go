@@ -103,3 +103,38 @@ func TestUpdateUser(t *testing.T) {
 	require.Equal(t, args.Bio, user.Bio)
 	require.WithinDuration(t, args.UpdatedAt.Time, user.UpdatedAt.Time, time.Second)
 }
+
+func TestDeleteUser(t *testing.T) {
+	// Arrange
+	randomUser := createRandomUser(t)
+
+	err := testQueries.DeleteUsers(context.Background(), randomUser.ID)
+	require.NoError(t, err)
+	// Act
+	user, err := testQueries.GetUsers(context.Background(), randomUser.ID)
+	// Assert
+	require.Error(t, err)
+	require.EqualError(t, err, sql.ErrNoRows.Error())
+	require.Empty(t, user)
+}
+
+func TestListUsers(t *testing.T) {
+	// Arrange
+	for i := 0; i < 10; i++ {
+		createRandomUser(t)
+	}
+
+	args := ListUsersParams{
+		Limit:  5,
+		Offset: 5,
+	}
+	// Act
+	users, err := testQueries.ListUsers(context.Background(), args)
+	require.NoError(t, err)
+	// Assert
+	require.Len(t, users, 5)
+
+	for _, user := range users {
+		require.NotEmpty(t, user)
+	}
+}
