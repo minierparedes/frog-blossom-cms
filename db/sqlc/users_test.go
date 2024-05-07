@@ -31,9 +31,7 @@ func createRandomUser(t *testing.T) User {
 			String: "Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl. Nunc nisl.", Valid: true,
 		},
 	}
-
 	// Act
-
 	user, err := testQueries.CreateUsers(context.Background(), args)
 	// Assert
 	require.NoError(t, err)
@@ -49,14 +47,14 @@ func createRandomUser(t *testing.T) User {
 
 func TestCreateUser(t *testing.T) {
 	createRandomUser(t)
-
 }
 
 func TestGetUser(t *testing.T) {
 	// Arrange
 	randomUser := createRandomUser(t)
-	user, err := testQueries.GetUsers(context.Background(), randomUser.ID)
+
 	// Act
+	user, err := testQueries.GetUsers(context.Background(), randomUser.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
 

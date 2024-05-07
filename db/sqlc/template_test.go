@@ -2,8 +2,9 @@ package frog_blossom_db
 
 import (
 	"context"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func createRandomTemplate(t *testing.T) Template {
@@ -21,4 +22,18 @@ func createRandomTemplate(t *testing.T) Template {
 
 func TestCreateTemplate(t *testing.T) {
 	createRandomTemplate(t)
+}
+
+func TestGetTemplate(t *testing.T) {
+	// Arrange
+	randomTemplate := createRandomTemplate(t)
+
+	// Act
+	template, err := testQueries.GetTemplate(context.Background(), randomTemplate.ID)
+	require.NoError(t, err)
+	require.NotEmpty(t, template)
+
+	// Assert
+	require.Equal(t, randomTemplate.ID, template.ID)
+	require.Equal(t, randomTemplate.Name, template.Name)
 }
