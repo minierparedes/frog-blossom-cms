@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestCreateTemplate(t *testing.T) {
+func createRandomTemplate(t *testing.T) Template {
 	// Arrange
 	name := "Twenty Twenty"
 	// Act
@@ -15,4 +15,10 @@ func TestCreateTemplate(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, template)
 	require.Equal(t, name, template.Name)
+
+	return template
+}
+
+func TestCreateTemplate(t *testing.T) {
+	createRandomTemplate(t)
 }

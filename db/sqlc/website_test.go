@@ -5,17 +5,19 @@ import (
 	"database/sql"
 	"testing"
 
-	"github.com/reflection/frog_blossom_db/utils"
 	"github.com/stretchr/testify/require"
 )
 
-func TestCreateWebsite(t *testing.T) {
+func createRandomWebsite(t *testing.T) Website {
 	// Arrange
-	user, err := testQueries.GetUsers(context.Background(), utils.RandomID())
+	randomUser := createRandomUser(t)
+	randomTemplate := createRandomTemplate(t)
+
+	user, err := testQueries.GetUsers(context.Background(), randomUser.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
 
-	template, err := testQueries.GetTemplate(context.Background(), utils.RandomID())
+	template, err := testQueries.GetTemplate(context.Background(), randomTemplate.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, template)
 
@@ -37,6 +39,12 @@ func TestCreateWebsite(t *testing.T) {
 	require.Equal(t, args.SelectedTemplate, website.SelectedTemplate)
 
 	require.NotZero(t, website.ID)
+
+	return website
+}
+
+func TestCreateWebsite(t *testing.T) {
+	createRandomWebsite(t)
 }
 
 func TestUpdateWebsite(t *testing.T) {
@@ -70,6 +78,8 @@ func TestUpdateWebsite(t *testing.T) {
 
 func TestGetWebsite(t *testing.T) {
 	// Arrange
+	randomWebsite := createRandomWebsite(t)
+
 	user, err := testQueries.GetUsers(context.Background(), 9)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
@@ -78,13 +88,14 @@ func TestGetWebsite(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, template)
 	// Act
-	website, err := testQueries.GetWebsite(context.Background(), 9)
+	website, err := testQueries.GetWebsite(context.Background(), randomWebsite.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, website)
 
 	// Assert
-	require.Equal(t, user.ID, website.OwnerID)
-	require.Equal(t, template.ID, website.SelectedTemplate)
+	require.Equal(t, randomWebsite.ID, website.ID)
+	require.Equal(t, randomWebsite.OwnerID, website.OwnerID)
+	require.Equal(t, randomWebsite.SelectedTemplate, website.SelectedTemplate)
 }
 
 func TestDeleteWebsite(t *testing.T) {

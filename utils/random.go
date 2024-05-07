@@ -14,5 +14,5 @@ func RandomInt(min, max int64) int64 {
 }
 
 func RandomID() int64 {
-	return RandomInt(0, 10)
+	return RandomInt(0, 100)
 }
