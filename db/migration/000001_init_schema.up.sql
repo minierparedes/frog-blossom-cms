@@ -16,111 +16,80 @@ CREATE TABLE "website" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "name" varchar(255) NOT NULL,
   "domain" varchar(255) NOT NULL,
-  "owner_id" bigint NOT NULL,
-  "selected_template" bigint NOT NULL
-);
-
-CREATE TABLE "template" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "name" varchar(255) NOT NULL
-);
-
-CREATE TABLE "website_template" (
-  "website_id" bigint,
-  "template_id" bigint
+  "owner_id" bigint NOT NULL
 );
 
 CREATE TABLE "pages" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "website_id" bigint NOT NULL,
   "title" varchar(255) NOT NULL,
-  "url" varchar(255) NOT NULL
+  "url" varchar(255) NOT NULL,
+  "menu_order" bigint NOT NULL
 );
 
 CREATE TABLE "page_components" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "page_id" bigint NOT NULL,
   "component_type" varchar(255) NOT NULL,
-  "component_data" jsonb NOT NULL
+  "component_value" text NOT NULL,
+  "label" varchar(255) NOT NULL,
+  "option_id" bigint NOT NULL,
+  "option_name" varchar(255),
+  "option_value" text,
+  "required" boolean NOT NULL
 );
 
-CREATE TABLE "content" (
+CREATE TABLE "posts" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "title" varchar(255) NOT NULL,
-  "body" text NOT NULL,
-  "author_id" bigint NOT NULL,
+  "content" text NOT NULL,
+  "author" varchar(255) NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now()),
   "updated_at" timestamp,
   "status" varchar(255) NOT NULL,
   "published_at" timestamp,
   "edited_at" timestamp,
   "published_by_id" bigint,
-  "component_id" bigint NOT NULL
+  "website_id" bigint,
+  "post_mime_type" varchar(255)
 );
 
-CREATE TABLE "content_images" (
+CREATE TABLE "meta" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "content_id" bigint,
-  "file_path" varchar(255) NOT NULL,
-  "title" varchar(255) NOT NULL,
-  "description" varchar(255) NOT NULL,
-  "alt_text" VARCHAR(255)
+  "page_id" bigint,
+  "posts_id" bigint,
+  "meta_title" varchar(255),
+  "meta_description" text,
+  "meta_robots" varchar(255),
+  "meta_viewport" varchar(255),
+  "meta_charset" varchar(255),
+  "website_id" bigint NOT NULL,
+  "page_amount" bigint,
+  "site_language" varchar(255),
+  "meta_key" varchar(255),
+  "meta_value" varchar(255) NOT NULL
 );
 
-CREATE TABLE "form_fields" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "component_id" bigint NOT NULL,
-  "label" varchar(255) NOT NULL,
-  "type" varchar(255) NOT NULL,
-  "required" boolean NOT NULL
-);
+CREATE INDEX ON "posts" ("created_at");
 
-CREATE INDEX ON "users" ("username");
+CREATE INDEX ON "posts" ("updated_at");
 
-CREATE INDEX ON "website" ("owner_id");
+CREATE INDEX ON "posts" ("title");
 
-CREATE INDEX ON "website" ("name");
-
-CREATE INDEX ON "website" ("domain");
-
-CREATE INDEX ON "template" ("name");
-
-CREATE INDEX ON "pages" ("website_id");
-
-CREATE INDEX ON "pages" ("title");
-
-CREATE INDEX ON "page_components" ("page_id");
-
-CREATE INDEX ON "content" ("author_id");
-
-CREATE INDEX ON "content" ("created_at");
-
-CREATE INDEX ON "content" ("updated_at");
-
-CREATE INDEX ON "content" ("title");
-
-CREATE INDEX ON "content" ("created_at", "updated_at");
+CREATE INDEX ON "posts" ("created_at", "updated_at");
 
 ALTER TABLE "website" ADD FOREIGN KEY ("owner_id") REFERENCES "users" ("id");
-
-ALTER TABLE "website" ADD FOREIGN KEY ("selected_template") REFERENCES "template" ("id");
-
-ALTER TABLE "website_template" ADD FOREIGN KEY ("website_id", "template_id") REFERENCES "website" ("id", "selected_template");
-
-ALTER TABLE "website_template" ADD FOREIGN KEY ("website_id") REFERENCES "website" ("id");
-
-ALTER TABLE "website_template" ADD FOREIGN KEY ("template_id") REFERENCES "template" ("id");
 
 ALTER TABLE "pages" ADD FOREIGN KEY ("website_id") REFERENCES "website" ("id");
 
 ALTER TABLE "page_components" ADD FOREIGN KEY ("page_id") REFERENCES "pages" ("id");
 
-ALTER TABLE "content" ADD FOREIGN KEY ("author_id") REFERENCES "users" ("id");
+ALTER TABLE "posts" ADD FOREIGN KEY ("published_by_id") REFERENCES "users" ("id");
 
-ALTER TABLE "content" ADD FOREIGN KEY ("published_by_id") REFERENCES "users" ("id");
+ALTER TABLE "posts" ADD FOREIGN KEY ("website_id") REFERENCES "website" ("id");
 
-ALTER TABLE "content" ADD FOREIGN KEY ("component_id") REFERENCES "page_components" ("id");
+ALTER TABLE "meta" ADD FOREIGN KEY ("page_id") REFERENCES "pages" ("id");
 
-ALTER TABLE "content_images" ADD FOREIGN KEY ("content_id") REFERENCES "content" ("id");
+ALTER TABLE "meta" ADD FOREIGN KEY ("posts_id") REFERENCES "posts" ("id");
 
-ALTER TABLE "form_fields" ADD FOREIGN KEY ("component_id") REFERENCES "page_components" ("id");
+ALTER TABLE "meta" ADD FOREIGN KEY ("website_id") REFERENCES "website" ("id");
