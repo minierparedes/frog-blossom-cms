@@ -6,58 +6,52 @@ package frog_blossom_db
 
 import (
 	"database/sql"
-	"encoding/json"
 	"time"
 )
 
-type Content struct {
-	ID            int64         `json:"id"`
-	Title         string        `json:"title"`
-	Body          string        `json:"body"`
-	AuthorID      int64         `json:"author_id"`
-	CreatedAt     time.Time     `json:"created_at"`
-	UpdatedAt     sql.NullTime  `json:"updated_at"`
-	Status        string        `json:"status"`
-	PublishedAt   sql.NullTime  `json:"published_at"`
-	EditedAt      sql.NullTime  `json:"edited_at"`
-	PublishedByID sql.NullInt64 `json:"published_by_id"`
-	ComponentID   int64         `json:"component_id"`
-}
-
-type ContentImage struct {
-	ID          int64          `json:"id"`
-	ContentID   sql.NullInt64  `json:"content_id"`
-	FilePath    string         `json:"file_path"`
-	Title       string         `json:"title"`
-	Description string         `json:"description"`
-	AltText     sql.NullString `json:"alt_text"`
-}
-
-type FormField struct {
-	ID          int64  `json:"id"`
-	ComponentID int64  `json:"component_id"`
-	Label       string `json:"label"`
-	Type        string `json:"type"`
-	Required    bool   `json:"required"`
+type Meta struct {
+	ID              int64          `json:"id"`
+	PageID          sql.NullInt64  `json:"page_id"`
+	PostsID         sql.NullInt64  `json:"posts_id"`
+	MetaTitle       sql.NullString `json:"meta_title"`
+	MetaDescription sql.NullString `json:"meta_description"`
+	MetaRobots      sql.NullString `json:"meta_robots"`
+	MetaViewport    sql.NullString `json:"meta_viewport"`
+	MetaCharset     sql.NullString `json:"meta_charset"`
+	PageAmount      int64          `json:"page_amount"`
+	SiteLanguage    sql.NullString `json:"site_language"`
+	MetaKey         string         `json:"meta_key"`
+	MetaValue       string         `json:"meta_value"`
 }
 
 type Page struct {
-	ID        int64  `json:"id"`
-	WebsiteID int64  `json:"website_id"`
-	Title     string `json:"title"`
-	Url       string `json:"url"`
+	ID             int64  `json:"id"`
+	Domain         string `json:"domain"`
+	PageAuthor     int64  `json:"page_author"`
+	Title          string `json:"title"`
+	Url            string `json:"url"`
+	MenuOrder      int64  `json:"menu_order"`
+	ComponentType  string `json:"component_type"`
+	ComponentValue string `json:"component_value"`
+	PageIdentifier string `json:"page_identifier"`
+	OptionID       int64  `json:"option_id"`
+	OptionName     string `json:"option_name"`
+	OptionValue    string `json:"option_value"`
+	OptionRequired bool   `json:"option_required"`
 }
 
-type PageComponent struct {
-	ID            int64           `json:"id"`
-	PageID        int64           `json:"page_id"`
-	ComponentType string          `json:"component_type"`
-	ComponentData json.RawMessage `json:"component_data"`
-}
-
-type Template struct {
-	ID   int64  `json:"id"`
-	Name string `json:"name"`
+type Post struct {
+	ID           int64     `json:"id"`
+	Title        string    `json:"title"`
+	Content      string    `json:"content"`
+	Author       string    `json:"author"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	Status       string    `json:"status"`
+	PublishedAt  time.Time `json:"published_at"`
+	EditedAt     time.Time `json:"edited_at"`
+	PostAuthor   int64     `json:"post_author"`
+	PostMimeType string    `json:"post_mime_type"`
 }
 
 type User struct {
@@ -66,23 +60,10 @@ type User struct {
 	Email     string         `json:"email"`
 	Password  string         `json:"password"`
 	Role      sql.NullString `json:"role"`
-	FirstName sql.NullString `json:"first_name"`
-	LastName  sql.NullString `json:"last_name"`
-	AvatarUrl sql.NullString `json:"avatar_url"`
+	FirstName string         `json:"first_name"`
+	LastName  string         `json:"last_name"`
+	UserUrl   sql.NullString `json:"user_url"`
 	Bio       sql.NullString `json:"bio"`
-	CreatedAt sql.NullTime   `json:"created_at"`
-	UpdatedAt sql.NullTime   `json:"updated_at"`
-}
-
-type Website struct {
-	ID               int64  `json:"id"`
-	Name             string `json:"name"`
-	Domain           string `json:"domain"`
-	OwnerID          int64  `json:"owner_id"`
-	SelectedTemplate int64  `json:"selected_template"`
-}
-
-type WebsiteTemplate struct {
-	WebsiteID  sql.NullInt64 `json:"website_id"`
-	TemplateID sql.NullInt64 `json:"template_id"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
 }

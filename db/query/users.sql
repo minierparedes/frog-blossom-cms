@@ -6,7 +6,7 @@ INSERT INTO Users (
   role,
   first_name,
   last_name,
-  avatar_url,
+  user_url,
   bio,
   updated_at
 ) VALUES (
@@ -31,7 +31,7 @@ UPDATE users
   role = $5,
   first_name = $6,
   last_name = $7,
-  avatar_url = $8,
+  user_url = $8,
   bio = $9,
   updated_at = $10
 WHERE id = $1

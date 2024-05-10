@@ -8,6 +8,7 @@ package frog_blossom_db
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const createUsers = `-- name: CreateUsers :one
@@ -18,12 +19,12 @@ INSERT INTO Users (
   role,
   first_name,
   last_name,
-  avatar_url,
+  user_url,
   bio,
   updated_at
 ) VALUES (
   $1, $2, $3, $4, $5, $6, $7, $8, $9
-) RETURNING id, username, email, password, role, first_name, last_name, avatar_url, bio, created_at, updated_at
+) RETURNING id, username, email, password, role, first_name, last_name, user_url, bio, created_at, updated_at
 `
 
 type CreateUsersParams struct {
@@ -31,11 +32,11 @@ type CreateUsersParams struct {
 	Email     string         `json:"email"`
 	Password  string         `json:"password"`
 	Role      sql.NullString `json:"role"`
-	FirstName sql.NullString `json:"first_name"`
-	LastName  sql.NullString `json:"last_name"`
-	AvatarUrl sql.NullString `json:"avatar_url"`
+	FirstName string         `json:"first_name"`
+	LastName  string         `json:"last_name"`
+	UserUrl   sql.NullString `json:"user_url"`
 	Bio       sql.NullString `json:"bio"`
-	UpdatedAt sql.NullTime   `json:"updated_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
 }
 
 func (q *Queries) CreateUsers(ctx context.Context, arg CreateUsersParams) (User, error) {
@@ -46,7 +47,7 @@ func (q *Queries) CreateUsers(ctx context.Context, arg CreateUsersParams) (User,
 		arg.Role,
 		arg.FirstName,
 		arg.LastName,
-		arg.AvatarUrl,
+		arg.UserUrl,
 		arg.Bio,
 		arg.UpdatedAt,
 	)
@@ -59,7 +60,7 @@ func (q *Queries) CreateUsers(ctx context.Context, arg CreateUsersParams) (User,
 		&i.Role,
 		&i.FirstName,
 		&i.LastName,
-		&i.AvatarUrl,
+		&i.UserUrl,
 		&i.Bio,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -78,7 +79,7 @@ func (q *Queries) DeleteUsers(ctx context.Context, id int64) error {
 }
 
 const getUsers = `-- name: GetUsers :one
-SELECT id, username, email, password, role, first_name, last_name, avatar_url, bio, created_at, updated_at FROM users
+SELECT id, username, email, password, role, first_name, last_name, user_url, bio, created_at, updated_at FROM users
 WHERE id = $1 LIMIT 1
 `
 
@@ -93,7 +94,7 @@ func (q *Queries) GetUsers(ctx context.Context, id int64) (User, error) {
 		&i.Role,
 		&i.FirstName,
 		&i.LastName,
-		&i.AvatarUrl,
+		&i.UserUrl,
 		&i.Bio,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -102,7 +103,7 @@ func (q *Queries) GetUsers(ctx context.Context, id int64) (User, error) {
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, username, email, password, role, first_name, last_name, avatar_url, bio, created_at, updated_at FROM users
+SELECT id, username, email, password, role, first_name, last_name, user_url, bio, created_at, updated_at FROM users
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -130,7 +131,7 @@ func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, e
 			&i.Role,
 			&i.FirstName,
 			&i.LastName,
-			&i.AvatarUrl,
+			&i.UserUrl,
 			&i.Bio,
 			&i.CreatedAt,
 			&i.UpdatedAt,
@@ -156,11 +157,11 @@ UPDATE users
   role = $5,
   first_name = $6,
   last_name = $7,
-  avatar_url = $8,
+  user_url = $8,
   bio = $9,
   updated_at = $10
 WHERE id = $1
-RETURNING id, username, email, password, role, first_name, last_name, avatar_url, bio, created_at, updated_at
+RETURNING id, username, email, password, role, first_name, last_name, user_url, bio, created_at, updated_at
 `
 
 type UpdateUsersParams struct {
@@ -169,11 +170,11 @@ type UpdateUsersParams struct {
 	Email     string         `json:"email"`
 	Password  string         `json:"password"`
 	Role      sql.NullString `json:"role"`
-	FirstName sql.NullString `json:"first_name"`
-	LastName  sql.NullString `json:"last_name"`
-	AvatarUrl sql.NullString `json:"avatar_url"`
+	FirstName string         `json:"first_name"`
+	LastName  string         `json:"last_name"`
+	UserUrl   sql.NullString `json:"user_url"`
 	Bio       sql.NullString `json:"bio"`
-	UpdatedAt sql.NullTime   `json:"updated_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
 }
 
 func (q *Queries) UpdateUsers(ctx context.Context, arg UpdateUsersParams) (User, error) {
@@ -185,7 +186,7 @@ func (q *Queries) UpdateUsers(ctx context.Context, arg UpdateUsersParams) (User,
 		arg.Role,
 		arg.FirstName,
 		arg.LastName,
-		arg.AvatarUrl,
+		arg.UserUrl,
 		arg.Bio,
 		arg.UpdatedAt,
 	)
@@ -198,7 +199,7 @@ func (q *Queries) UpdateUsers(ctx context.Context, arg UpdateUsersParams) (User,
 		&i.Role,
 		&i.FirstName,
 		&i.LastName,
-		&i.AvatarUrl,
+		&i.UserUrl,
 		&i.Bio,
 		&i.CreatedAt,
 		&i.UpdatedAt,
