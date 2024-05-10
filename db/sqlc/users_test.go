@@ -18,13 +18,9 @@ func createRandomUser(t *testing.T) User {
 		Role: sql.NullString{
 			String: "admin", Valid: true,
 		},
-		FirstName: sql.NullString{
-			String: "Cointon", Valid: true,
-		},
-		LastName: sql.NullString{
-			String: "Shopcott", Valid: true,
-		},
-		AvatarUrl: sql.NullString{
+		FirstName: "Cointon",
+		LastName:  "Shopcott",
+		UserUrl: sql.NullString{
 			String: "https://robohash.org/nihildelectussed.png?size=50x50&set=set1", Valid: true,
 		},
 		Bio: sql.NullString{
@@ -40,6 +36,9 @@ func createRandomUser(t *testing.T) User {
 	require.Equal(t, args.Email, user.Email)
 	require.Equal(t, args.Password, user.Password)
 	require.Equal(t, args.Role, user.Role)
+	require.Equal(t, args.FirstName, user.FirstName)
+	require.Equal(t, args.LastName, user.LastName)
+	require.Equal(t, args.UserUrl, user.UserUrl)
 	require.Equal(t, args.Bio, user.Bio)
 
 	return user
@@ -66,7 +65,7 @@ func TestGetUser(t *testing.T) {
 	require.Equal(t, randomUser.Role, user.Role)
 	require.Equal(t, randomUser.FirstName, user.FirstName)
 	require.Equal(t, randomUser.LastName, user.LastName)
-	require.Equal(t, randomUser.AvatarUrl, user.AvatarUrl)
+	require.Equal(t, randomUser.UserUrl, user.UserUrl)
 	require.Equal(t, randomUser.Bio, user.Bio)
 	require.WithinDuration(t, randomUser.CreatedAt.Time, user.CreatedAt.Time, time.Second)
 }
@@ -79,11 +78,11 @@ func TestUpdateUser(t *testing.T) {
 		Email:     "holyunin8@si.edu",
 		Password:  "gY0_OzLmifL1",
 		Role:      sql.NullString{String: "user", Valid: true},
-		FirstName: sql.NullString{String: "Hillery", Valid: true},
-		LastName:  sql.NullString{String: "Olyunin", Valid: true},
-		AvatarUrl: sql.NullString{String: "https://robohash.org/veritatisquaeratnemo.png?size=50x50&set=set1", Valid: true},
+		FirstName: "Hillery",
+		LastName:  "Olyunin",
+		UserUrl:   sql.NullString{String: "https://robohash.org/veritatisquaeratnemo.png?size=50x50&set=set1", Valid: true},
 		Bio:       sql.NullString{String: "Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.", Valid: true},
-		UpdatedAt: sql.NullTime{Time: time.Now(), Valid: true},
+		UpdatedAt: time.Now(),
 	}
 	// Act
 	user, err := testQueries.UpdateUsers(context.Background(), args)
@@ -97,9 +96,9 @@ func TestUpdateUser(t *testing.T) {
 	require.Equal(t, args.Role, user.Role)
 	require.Equal(t, args.FirstName, user.FirstName)
 	require.Equal(t, args.LastName, user.LastName)
-	require.Equal(t, args.AvatarUrl, user.AvatarUrl)
+	require.Equal(t, args.UserUrl, user.UserUrl)
 	require.Equal(t, args.Bio, user.Bio)
-	require.WithinDuration(t, args.UpdatedAt.Time, user.UpdatedAt.Time, time.Second)
+	require.WithinDuration(t, args.UpdatedAt, user.UpdatedAt, time.Second)
 }
 
 func TestDeleteUser(t *testing.T) {
