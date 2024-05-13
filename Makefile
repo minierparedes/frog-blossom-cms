@@ -10,6 +10,9 @@ dropdb:
 migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/frog-blossom-db?sslmode=disable" -verbose up
 
+migrateforce:
+	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/frog-blossom-db?sslmode=disable" -verbose force 1
+
 migratedown:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/frog-blossom-db?sslmode=disable" -verbose down
 
