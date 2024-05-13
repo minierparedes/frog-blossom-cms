@@ -3,6 +3,7 @@ INSERT INTO posts (
   title,
   content,
   author_id,
+  url,
   created_at,
   updated_at,
   status,
@@ -13,7 +14,7 @@ INSERT INTO posts (
   published_by,
   updated_by
 ) VALUES (
-  $1, $2, $3, DEFAULT, $4, $5, $6, $7, $8, $9, $10, $11
+  $1, $2, $3, $4, DEFAULT, $5, $6, $7, $8, $9, $10, $11, $12
 ) RETURNING *;
 
 
@@ -32,14 +33,15 @@ UPDATE posts
   SET title = $2,
   content = $3,
   author_id = $4,
-  updated_at = $5,
-  status = $6,
-  published_at = $7,
-  edited_at = $8,
-  post_author = $9,
-  post_mime_type = $10,
-  published_by = $11,
-  updated_by = $12
+  url = $5,
+  updated_at = $6,
+  status = $7,
+  published_at = $8,
+  edited_at = $9,
+  post_author = $10,
+  post_mime_type = $11,
+  published_by = $12,
+  updated_by = $13
 WHERE id = $1
 RETURNING *;
 
