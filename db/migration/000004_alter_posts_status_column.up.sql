@@ -1,4 +1,3 @@
--- Alter the posts table to change the status column type
 DO $$
 BEGIN
     IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'posts') THEN

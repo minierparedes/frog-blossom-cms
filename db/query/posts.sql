@@ -2,17 +2,20 @@
 INSERT INTO posts (
   title,
   content,
-  author,
+  author_id,
   created_at,
   updated_at,
   status,
   published_at,
   edited_at,
   post_author,
-  post_mime_type
+  post_mime_type,
+  published_by,
+  updated_by
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+  $1, $2, $3, DEFAULT, $4, $5, $6, $7, $8, $9, $10, $11, $12
 ) RETURNING *;
+
 
 -- name: GetPosts :one
 SELECT * FROM posts
@@ -28,14 +31,16 @@ OFFSET $2;
 UPDATE posts
   SET title = $2,
   content = $3,
-  author = $4,
+  author_id = $4,
   created_at = $5,
   updated_at = $6,
   status = $7,
   published_at = $8,
   edited_at = $9,
-  post_author = $10,
-  post_mime_type = $11
+  post_author_id = $10,
+  post_mime_type = $11,
+  published_by = $12,
+  updated_by = $13
 WHERE id = $1
 RETURNING *;
 

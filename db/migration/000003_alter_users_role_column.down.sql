@@ -1,4 +1,4 @@
--- Rollback the changes to role column
+-- Migration Down: Rollback the changes to role column
 DO $$
 BEGIN
     IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'users') THEN

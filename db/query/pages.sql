@@ -1,6 +1,7 @@
 -- name: CreatePages :one
 INSERT INTO pages (
   domain,
+  author_id,
   page_author,
   title,
   url,
@@ -13,7 +14,7 @@ INSERT INTO pages (
   option_value,
   option_required
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
 ) RETURNING *;
 
 -- name: GetPages :one
@@ -29,17 +30,18 @@ OFFSET $2;
 -- name: UpdatePages :one
 UPDATE pages
   SET domain = $2,
-  page_author = $3,
-  title = $4,
-  url = $5,
-  menu_order = $6,
-  component_type = $7,
-  component_value = $8,
-  page_identifier = $9,
-  option_id = $10,
-  option_name = $11,
-  option_value = $12,
-  option_required = $13
+  author_id = $3,
+  page_author = $4,
+  title = $5,
+  url = $6,
+  menu_order = $7,
+  component_type = $8,
+  component_value = $9,
+  page_identifier = $10,
+  option_id = $11,
+  option_name = $12,
+  option_value = $13,
+  option_required = $14
 WHERE id = $1
 RETURNING *;
 
