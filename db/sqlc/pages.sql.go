@@ -12,6 +12,7 @@ import (
 const createPages = `-- name: CreatePages :one
 INSERT INTO pages (
   domain,
+  author_id,
   page_author,
   title,
   url,
@@ -24,13 +25,14 @@ INSERT INTO pages (
   option_value,
   option_required
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
-) RETURNING id, domain, page_author, title, url, menu_order, component_type, component_value, page_identifier, option_id, option_name, option_value, option_required
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+) RETURNING id, domain, author_id, page_author, title, url, menu_order, component_type, component_value, page_identifier, option_id, option_name, option_value, option_required
 `
 
 type CreatePagesParams struct {
 	Domain         string `json:"domain"`
-	PageAuthor     int64  `json:"page_author"`
+	AuthorID       int64  `json:"author_id"`
+	PageAuthor     string `json:"page_author"`
 	Title          string `json:"title"`
 	Url            string `json:"url"`
 	MenuOrder      int64  `json:"menu_order"`
@@ -46,6 +48,7 @@ type CreatePagesParams struct {
 func (q *Queries) CreatePages(ctx context.Context, arg CreatePagesParams) (Page, error) {
 	row := q.db.QueryRowContext(ctx, createPages,
 		arg.Domain,
+		arg.AuthorID,
 		arg.PageAuthor,
 		arg.Title,
 		arg.Url,
@@ -62,6 +65,7 @@ func (q *Queries) CreatePages(ctx context.Context, arg CreatePagesParams) (Page,
 	err := row.Scan(
 		&i.ID,
 		&i.Domain,
+		&i.AuthorID,
 		&i.PageAuthor,
 		&i.Title,
 		&i.Url,
@@ -88,7 +92,7 @@ func (q *Queries) DeletePages(ctx context.Context, id int64) error {
 }
 
 const getPages = `-- name: GetPages :one
-SELECT id, domain, page_author, title, url, menu_order, component_type, component_value, page_identifier, option_id, option_name, option_value, option_required FROM pages
+SELECT id, domain, author_id, page_author, title, url, menu_order, component_type, component_value, page_identifier, option_id, option_name, option_value, option_required FROM pages
 WHERE id = $1 LIMIT 1
 `
 
@@ -98,6 +102,7 @@ func (q *Queries) GetPages(ctx context.Context, id int64) (Page, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Domain,
+		&i.AuthorID,
 		&i.PageAuthor,
 		&i.Title,
 		&i.Url,
@@ -114,7 +119,7 @@ func (q *Queries) GetPages(ctx context.Context, id int64) (Page, error) {
 }
 
 const listPages = `-- name: ListPages :many
-SELECT id, domain, page_author, title, url, menu_order, component_type, component_value, page_identifier, option_id, option_name, option_value, option_required FROM pages
+SELECT id, domain, author_id, page_author, title, url, menu_order, component_type, component_value, page_identifier, option_id, option_name, option_value, option_required FROM pages
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -137,6 +142,7 @@ func (q *Queries) ListPages(ctx context.Context, arg ListPagesParams) ([]Page, e
 		if err := rows.Scan(
 			&i.ID,
 			&i.Domain,
+			&i.AuthorID,
 			&i.PageAuthor,
 			&i.Title,
 			&i.Url,
@@ -165,25 +171,27 @@ func (q *Queries) ListPages(ctx context.Context, arg ListPagesParams) ([]Page, e
 const updatePages = `-- name: UpdatePages :one
 UPDATE pages
   SET domain = $2,
-  page_author = $3,
-  title = $4,
-  url = $5,
-  menu_order = $6,
-  component_type = $7,
-  component_value = $8,
-  page_identifier = $9,
-  option_id = $10,
-  option_name = $11,
-  option_value = $12,
-  option_required = $13
+  author_id = $3,
+  page_author = $4,
+  title = $5,
+  url = $6,
+  menu_order = $7,
+  component_type = $8,
+  component_value = $9,
+  page_identifier = $10,
+  option_id = $11,
+  option_name = $12,
+  option_value = $13,
+  option_required = $14
 WHERE id = $1
-RETURNING id, domain, page_author, title, url, menu_order, component_type, component_value, page_identifier, option_id, option_name, option_value, option_required
+RETURNING id, domain, author_id, page_author, title, url, menu_order, component_type, component_value, page_identifier, option_id, option_name, option_value, option_required
 `
 
 type UpdatePagesParams struct {
 	ID             int64  `json:"id"`
 	Domain         string `json:"domain"`
-	PageAuthor     int64  `json:"page_author"`
+	AuthorID       int64  `json:"author_id"`
+	PageAuthor     string `json:"page_author"`
 	Title          string `json:"title"`
 	Url            string `json:"url"`
 	MenuOrder      int64  `json:"menu_order"`
@@ -200,6 +208,7 @@ func (q *Queries) UpdatePages(ctx context.Context, arg UpdatePagesParams) (Page,
 	row := q.db.QueryRowContext(ctx, updatePages,
 		arg.ID,
 		arg.Domain,
+		arg.AuthorID,
 		arg.PageAuthor,
 		arg.Title,
 		arg.Url,
@@ -216,6 +225,7 @@ func (q *Queries) UpdatePages(ctx context.Context, arg UpdatePagesParams) (Page,
 	err := row.Scan(
 		&i.ID,
 		&i.Domain,
+		&i.AuthorID,
 		&i.PageAuthor,
 		&i.Title,
 		&i.Url,

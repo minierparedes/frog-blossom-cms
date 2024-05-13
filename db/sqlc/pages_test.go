@@ -50,3 +50,28 @@ func createRandomPage(t *testing.T) Page {
 func TestCreatePages(t *testing.T) {
 	createRandomPage(t)
 }
+
+func TestGetPages(t *testing.T) {
+	// Arrange
+	randomPage := createRandomPage(t)
+
+	// Act
+	page, err := testQueries.GetPages(context.Background(), randomPage.ID)
+	require.NoError(t, err)
+	require.NotEmpty(t, page)
+
+	// Assert
+	require.Equal(t, randomPage.ID, page.ID)
+	require.Equal(t, page.Domain, page.Domain)
+	require.Equal(t, page.PageAuthor, page.PageAuthor)
+	require.Equal(t, page.Title, page.Title)
+	require.Equal(t, page.Url, page.Url)
+	require.Equal(t, page.MenuOrder, page.MenuOrder)
+	require.Equal(t, page.ComponentType, page.ComponentType)
+	require.Equal(t, page.ComponentValue, page.ComponentValue)
+	require.Equal(t, page.PageIdentifier, page.PageIdentifier)
+	require.Equal(t, page.OptionID, page.OptionID)
+	require.Equal(t, page.OptionName, page.OptionName)
+	require.Equal(t, page.OptionValue, page.OptionValue)
+	require.Equal(t, page.OptionRequired, page.OptionRequired)
+}

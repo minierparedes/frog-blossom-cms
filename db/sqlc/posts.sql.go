@@ -14,51 +14,56 @@ const createPosts = `-- name: CreatePosts :one
 INSERT INTO posts (
   title,
   content,
-  author,
+  author_id,
   created_at,
   updated_at,
   status,
   published_at,
   edited_at,
   post_author,
-  post_mime_type
+  post_mime_type,
+  published_by,
+  updated_by
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
-) RETURNING id, title, content, author, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type
+  $1, $2, $3, DEFAULT, $4, $5, $6, $7, $8, $9, $10, $11
+) RETURNING id, title, content, author_id, url, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type, published_by, updated_by
 `
 
 type CreatePostsParams struct {
 	Title        string    `json:"title"`
 	Content      string    `json:"content"`
-	Author       string    `json:"author"`
-	CreatedAt    time.Time `json:"created_at"`
+	AuthorID     int64     `json:"author_id"`
 	UpdatedAt    time.Time `json:"updated_at"`
 	Status       string    `json:"status"`
 	PublishedAt  time.Time `json:"published_at"`
 	EditedAt     time.Time `json:"edited_at"`
-	PostAuthor   int64     `json:"post_author"`
+	PostAuthor   string    `json:"post_author"`
 	PostMimeType string    `json:"post_mime_type"`
+	PublishedBy  string    `json:"published_by"`
+	UpdatedBy    string    `json:"updated_by"`
 }
 
 func (q *Queries) CreatePosts(ctx context.Context, arg CreatePostsParams) (Post, error) {
 	row := q.db.QueryRowContext(ctx, createPosts,
 		arg.Title,
 		arg.Content,
-		arg.Author,
-		arg.CreatedAt,
+		arg.AuthorID,
 		arg.UpdatedAt,
 		arg.Status,
 		arg.PublishedAt,
 		arg.EditedAt,
 		arg.PostAuthor,
 		arg.PostMimeType,
+		arg.PublishedBy,
+		arg.UpdatedBy,
 	)
 	var i Post
 	err := row.Scan(
 		&i.ID,
 		&i.Title,
 		&i.Content,
-		&i.Author,
+		&i.AuthorID,
+		&i.Url,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Status,
@@ -66,6 +71,8 @@ func (q *Queries) CreatePosts(ctx context.Context, arg CreatePostsParams) (Post,
 		&i.EditedAt,
 		&i.PostAuthor,
 		&i.PostMimeType,
+		&i.PublishedBy,
+		&i.UpdatedBy,
 	)
 	return i, err
 }
@@ -81,7 +88,7 @@ func (q *Queries) DeletePosts(ctx context.Context, id int64) error {
 }
 
 const getPosts = `-- name: GetPosts :one
-SELECT id, title, content, author, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type FROM posts
+SELECT id, title, content, author_id, url, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type, published_by, updated_by FROM posts
 WHERE id = $1 LIMIT 1
 `
 
@@ -92,7 +99,8 @@ func (q *Queries) GetPosts(ctx context.Context, id int64) (Post, error) {
 		&i.ID,
 		&i.Title,
 		&i.Content,
-		&i.Author,
+		&i.AuthorID,
+		&i.Url,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Status,
@@ -100,12 +108,14 @@ func (q *Queries) GetPosts(ctx context.Context, id int64) (Post, error) {
 		&i.EditedAt,
 		&i.PostAuthor,
 		&i.PostMimeType,
+		&i.PublishedBy,
+		&i.UpdatedBy,
 	)
 	return i, err
 }
 
 const listPosts = `-- name: ListPosts :many
-SELECT id, title, content, author, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type FROM posts
+SELECT id, title, content, author_id, url, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type, published_by, updated_by FROM posts
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -129,7 +139,8 @@ func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, e
 			&i.ID,
 			&i.Title,
 			&i.Content,
-			&i.Author,
+			&i.AuthorID,
+			&i.Url,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.Status,
@@ -137,6 +148,8 @@ func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, e
 			&i.EditedAt,
 			&i.PostAuthor,
 			&i.PostMimeType,
+			&i.PublishedBy,
+			&i.UpdatedBy,
 		); err != nil {
 			return nil, err
 		}
@@ -155,30 +168,32 @@ const updatePosts = `-- name: UpdatePosts :one
 UPDATE posts
   SET title = $2,
   content = $3,
-  author = $4,
-  created_at = $5,
-  updated_at = $6,
-  status = $7,
-  published_at = $8,
-  edited_at = $9,
-  post_author = $10,
-  post_mime_type = $11
+  author_id = $4,
+  updated_at = $5,
+  status = $6,
+  published_at = $7,
+  edited_at = $8,
+  post_author = $9,
+  post_mime_type = $10,
+  published_by = $11,
+  updated_by = $12
 WHERE id = $1
-RETURNING id, title, content, author, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type
+RETURNING id, title, content, author_id, url, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type, published_by, updated_by
 `
 
 type UpdatePostsParams struct {
 	ID           int64     `json:"id"`
 	Title        string    `json:"title"`
 	Content      string    `json:"content"`
-	Author       string    `json:"author"`
-	CreatedAt    time.Time `json:"created_at"`
+	AuthorID     int64     `json:"author_id"`
 	UpdatedAt    time.Time `json:"updated_at"`
 	Status       string    `json:"status"`
 	PublishedAt  time.Time `json:"published_at"`
 	EditedAt     time.Time `json:"edited_at"`
-	PostAuthor   int64     `json:"post_author"`
+	PostAuthor   string    `json:"post_author"`
 	PostMimeType string    `json:"post_mime_type"`
+	PublishedBy  string    `json:"published_by"`
+	UpdatedBy    string    `json:"updated_by"`
 }
 
 func (q *Queries) UpdatePosts(ctx context.Context, arg UpdatePostsParams) (Post, error) {
@@ -186,21 +201,23 @@ func (q *Queries) UpdatePosts(ctx context.Context, arg UpdatePostsParams) (Post,
 		arg.ID,
 		arg.Title,
 		arg.Content,
-		arg.Author,
-		arg.CreatedAt,
+		arg.AuthorID,
 		arg.UpdatedAt,
 		arg.Status,
 		arg.PublishedAt,
 		arg.EditedAt,
 		arg.PostAuthor,
 		arg.PostMimeType,
+		arg.PublishedBy,
+		arg.UpdatedBy,
 	)
 	var i Post
 	err := row.Scan(
 		&i.ID,
 		&i.Title,
 		&i.Content,
-		&i.Author,
+		&i.AuthorID,
+		&i.Url,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Status,
@@ -208,6 +225,8 @@ func (q *Queries) UpdatePosts(ctx context.Context, arg UpdatePostsParams) (Post,
 		&i.EditedAt,
 		&i.PostAuthor,
 		&i.PostMimeType,
+		&i.PublishedBy,
+		&i.UpdatedBy,
 	)
 	return i, err
 }

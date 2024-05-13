@@ -16,8 +16,8 @@ type Meta struct {
 	MetaTitle       sql.NullString `json:"meta_title"`
 	MetaDescription sql.NullString `json:"meta_description"`
 	MetaRobots      sql.NullString `json:"meta_robots"`
-	MetaViewport    sql.NullString `json:"meta_viewport"`
-	MetaCharset     sql.NullString `json:"meta_charset"`
+	MetaOgImage     sql.NullString `json:"meta_og_image"`
+	Locale          sql.NullString `json:"locale"`
 	PageAmount      int64          `json:"page_amount"`
 	SiteLanguage    sql.NullString `json:"site_language"`
 	MetaKey         string         `json:"meta_key"`
@@ -27,7 +27,8 @@ type Meta struct {
 type Page struct {
 	ID             int64  `json:"id"`
 	Domain         string `json:"domain"`
-	PageAuthor     int64  `json:"page_author"`
+	AuthorID       int64  `json:"author_id"`
+	PageAuthor     string `json:"page_author"`
 	Title          string `json:"title"`
 	Url            string `json:"url"`
 	MenuOrder      int64  `json:"menu_order"`
@@ -44,26 +45,29 @@ type Post struct {
 	ID           int64     `json:"id"`
 	Title        string    `json:"title"`
 	Content      string    `json:"content"`
-	Author       string    `json:"author"`
+	AuthorID     int64     `json:"author_id"`
+	Url          string    `json:"url"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 	Status       string    `json:"status"`
 	PublishedAt  time.Time `json:"published_at"`
 	EditedAt     time.Time `json:"edited_at"`
-	PostAuthor   int64     `json:"post_author"`
+	PostAuthor   string    `json:"post_author"`
 	PostMimeType string    `json:"post_mime_type"`
+	PublishedBy  string    `json:"published_by"`
+	UpdatedBy    string    `json:"updated_by"`
 }
 
 type User struct {
-	ID        int64          `json:"id"`
-	Username  string         `json:"username"`
-	Email     string         `json:"email"`
-	Password  string         `json:"password"`
-	Role      sql.NullString `json:"role"`
-	FirstName string         `json:"first_name"`
-	LastName  string         `json:"last_name"`
-	UserUrl   sql.NullString `json:"user_url"`
-	Bio       sql.NullString `json:"bio"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	ID          int64          `json:"id"`
+	Username    string         `json:"username"`
+	Email       string         `json:"email"`
+	Password    string         `json:"password"`
+	Role        string         `json:"role"`
+	FirstName   string         `json:"first_name"`
+	LastName    string         `json:"last_name"`
+	UserUrl     sql.NullString `json:"user_url"`
+	Description sql.NullString `json:"description"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
 }

@@ -20,23 +20,23 @@ INSERT INTO Users (
   first_name,
   last_name,
   user_url,
-  bio,
+  description,
   updated_at
 ) VALUES (
   $1, $2, $3, $4, $5, $6, $7, $8, $9
-) RETURNING id, username, email, password, role, first_name, last_name, user_url, bio, created_at, updated_at
+) RETURNING id, username, email, password, role, first_name, last_name, user_url, description, created_at, updated_at
 `
 
 type CreateUsersParams struct {
-	Username  string         `json:"username"`
-	Email     string         `json:"email"`
-	Password  string         `json:"password"`
-	Role      sql.NullString `json:"role"`
-	FirstName string         `json:"first_name"`
-	LastName  string         `json:"last_name"`
-	UserUrl   sql.NullString `json:"user_url"`
-	Bio       sql.NullString `json:"bio"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	Username    string         `json:"username"`
+	Email       string         `json:"email"`
+	Password    string         `json:"password"`
+	Role        string         `json:"role"`
+	FirstName   string         `json:"first_name"`
+	LastName    string         `json:"last_name"`
+	UserUrl     sql.NullString `json:"user_url"`
+	Description sql.NullString `json:"description"`
+	UpdatedAt   time.Time      `json:"updated_at"`
 }
 
 func (q *Queries) CreateUsers(ctx context.Context, arg CreateUsersParams) (User, error) {
@@ -48,7 +48,7 @@ func (q *Queries) CreateUsers(ctx context.Context, arg CreateUsersParams) (User,
 		arg.FirstName,
 		arg.LastName,
 		arg.UserUrl,
-		arg.Bio,
+		arg.Description,
 		arg.UpdatedAt,
 	)
 	var i User
@@ -61,7 +61,7 @@ func (q *Queries) CreateUsers(ctx context.Context, arg CreateUsersParams) (User,
 		&i.FirstName,
 		&i.LastName,
 		&i.UserUrl,
-		&i.Bio,
+		&i.Description,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -79,7 +79,7 @@ func (q *Queries) DeleteUsers(ctx context.Context, id int64) error {
 }
 
 const getUsers = `-- name: GetUsers :one
-SELECT id, username, email, password, role, first_name, last_name, user_url, bio, created_at, updated_at FROM users
+SELECT id, username, email, password, role, first_name, last_name, user_url, description, created_at, updated_at FROM users
 WHERE id = $1 LIMIT 1
 `
 
@@ -95,7 +95,7 @@ func (q *Queries) GetUsers(ctx context.Context, id int64) (User, error) {
 		&i.FirstName,
 		&i.LastName,
 		&i.UserUrl,
-		&i.Bio,
+		&i.Description,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -103,7 +103,7 @@ func (q *Queries) GetUsers(ctx context.Context, id int64) (User, error) {
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, username, email, password, role, first_name, last_name, user_url, bio, created_at, updated_at FROM users
+SELECT id, username, email, password, role, first_name, last_name, user_url, description, created_at, updated_at FROM users
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -132,7 +132,7 @@ func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, e
 			&i.FirstName,
 			&i.LastName,
 			&i.UserUrl,
-			&i.Bio,
+			&i.Description,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -158,23 +158,23 @@ UPDATE users
   first_name = $6,
   last_name = $7,
   user_url = $8,
-  bio = $9,
+  description = $9,
   updated_at = $10
 WHERE id = $1
-RETURNING id, username, email, password, role, first_name, last_name, user_url, bio, created_at, updated_at
+RETURNING id, username, email, password, role, first_name, last_name, user_url, description, created_at, updated_at
 `
 
 type UpdateUsersParams struct {
-	ID        int64          `json:"id"`
-	Username  string         `json:"username"`
-	Email     string         `json:"email"`
-	Password  string         `json:"password"`
-	Role      sql.NullString `json:"role"`
-	FirstName string         `json:"first_name"`
-	LastName  string         `json:"last_name"`
-	UserUrl   sql.NullString `json:"user_url"`
-	Bio       sql.NullString `json:"bio"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	ID          int64          `json:"id"`
+	Username    string         `json:"username"`
+	Email       string         `json:"email"`
+	Password    string         `json:"password"`
+	Role        string         `json:"role"`
+	FirstName   string         `json:"first_name"`
+	LastName    string         `json:"last_name"`
+	UserUrl     sql.NullString `json:"user_url"`
+	Description sql.NullString `json:"description"`
+	UpdatedAt   time.Time      `json:"updated_at"`
 }
 
 func (q *Queries) UpdateUsers(ctx context.Context, arg UpdateUsersParams) (User, error) {
@@ -187,7 +187,7 @@ func (q *Queries) UpdateUsers(ctx context.Context, arg UpdateUsersParams) (User,
 		arg.FirstName,
 		arg.LastName,
 		arg.UserUrl,
-		arg.Bio,
+		arg.Description,
 		arg.UpdatedAt,
 	)
 	var i User
@@ -200,7 +200,7 @@ func (q *Queries) UpdateUsers(ctx context.Context, arg UpdateUsersParams) (User,
 		&i.FirstName,
 		&i.LastName,
 		&i.UserUrl,
-		&i.Bio,
+		&i.Description,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

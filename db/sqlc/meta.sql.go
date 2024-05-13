@@ -17,15 +17,15 @@ INSERT INTO meta (
   meta_title,
   meta_description,
   meta_robots,
-  meta_viewport,
-  meta_charset,
+  meta_og_image,
+  locale,
   page_amount,
   site_language,
   meta_key,
   meta_value
 ) VALUES (
   $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
-) RETURNING id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_viewport, meta_charset, page_amount, site_language, meta_key, meta_value
+) RETURNING id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_og_image, locale, page_amount, site_language, meta_key, meta_value
 `
 
 type CreateMetaParams struct {
@@ -34,8 +34,8 @@ type CreateMetaParams struct {
 	MetaTitle       sql.NullString `json:"meta_title"`
 	MetaDescription sql.NullString `json:"meta_description"`
 	MetaRobots      sql.NullString `json:"meta_robots"`
-	MetaViewport    sql.NullString `json:"meta_viewport"`
-	MetaCharset     sql.NullString `json:"meta_charset"`
+	MetaOgImage     sql.NullString `json:"meta_og_image"`
+	Locale          sql.NullString `json:"locale"`
 	PageAmount      int64          `json:"page_amount"`
 	SiteLanguage    sql.NullString `json:"site_language"`
 	MetaKey         string         `json:"meta_key"`
@@ -49,8 +49,8 @@ func (q *Queries) CreateMeta(ctx context.Context, arg CreateMetaParams) (Meta, e
 		arg.MetaTitle,
 		arg.MetaDescription,
 		arg.MetaRobots,
-		arg.MetaViewport,
-		arg.MetaCharset,
+		arg.MetaOgImage,
+		arg.Locale,
 		arg.PageAmount,
 		arg.SiteLanguage,
 		arg.MetaKey,
@@ -64,8 +64,8 @@ func (q *Queries) CreateMeta(ctx context.Context, arg CreateMetaParams) (Meta, e
 		&i.MetaTitle,
 		&i.MetaDescription,
 		&i.MetaRobots,
-		&i.MetaViewport,
-		&i.MetaCharset,
+		&i.MetaOgImage,
+		&i.Locale,
 		&i.PageAmount,
 		&i.SiteLanguage,
 		&i.MetaKey,
@@ -85,7 +85,7 @@ func (q *Queries) DeleteMeta(ctx context.Context, id int64) error {
 }
 
 const getMeta = `-- name: GetMeta :one
-SELECT id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_viewport, meta_charset, page_amount, site_language, meta_key, meta_value FROM meta
+SELECT id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_og_image, locale, page_amount, site_language, meta_key, meta_value FROM meta
 WHERE id = $1 LIMIT 1
 `
 
@@ -99,8 +99,8 @@ func (q *Queries) GetMeta(ctx context.Context, id int64) (Meta, error) {
 		&i.MetaTitle,
 		&i.MetaDescription,
 		&i.MetaRobots,
-		&i.MetaViewport,
-		&i.MetaCharset,
+		&i.MetaOgImage,
+		&i.Locale,
 		&i.PageAmount,
 		&i.SiteLanguage,
 		&i.MetaKey,
@@ -110,7 +110,7 @@ func (q *Queries) GetMeta(ctx context.Context, id int64) (Meta, error) {
 }
 
 const listMeta = `-- name: ListMeta :many
-SELECT id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_viewport, meta_charset, page_amount, site_language, meta_key, meta_value FROM meta
+SELECT id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_og_image, locale, page_amount, site_language, meta_key, meta_value FROM meta
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -137,8 +137,8 @@ func (q *Queries) ListMeta(ctx context.Context, arg ListMetaParams) ([]Meta, err
 			&i.MetaTitle,
 			&i.MetaDescription,
 			&i.MetaRobots,
-			&i.MetaViewport,
-			&i.MetaCharset,
+			&i.MetaOgImage,
+			&i.Locale,
 			&i.PageAmount,
 			&i.SiteLanguage,
 			&i.MetaKey,
@@ -164,14 +164,14 @@ posts_id = $3,
 meta_title = $4,
 meta_description = $5,
 meta_robots = $6,
-meta_viewport = $7,
-meta_charset = $8,
+meta_og_image = $7,
+locale = $8,
 page_amount = $9,
 site_language = $10,
 meta_key = $11,
 meta_value = $12
 WHERE id = $1
-RETURNING id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_viewport, meta_charset, page_amount, site_language, meta_key, meta_value
+RETURNING id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_og_image, locale, page_amount, site_language, meta_key, meta_value
 `
 
 type UpdateMetaParams struct {
@@ -181,8 +181,8 @@ type UpdateMetaParams struct {
 	MetaTitle       sql.NullString `json:"meta_title"`
 	MetaDescription sql.NullString `json:"meta_description"`
 	MetaRobots      sql.NullString `json:"meta_robots"`
-	MetaViewport    sql.NullString `json:"meta_viewport"`
-	MetaCharset     sql.NullString `json:"meta_charset"`
+	MetaOgImage     sql.NullString `json:"meta_og_image"`
+	Locale          sql.NullString `json:"locale"`
 	PageAmount      int64          `json:"page_amount"`
 	SiteLanguage    sql.NullString `json:"site_language"`
 	MetaKey         string         `json:"meta_key"`
@@ -197,8 +197,8 @@ func (q *Queries) UpdateMeta(ctx context.Context, arg UpdateMetaParams) (Meta, e
 		arg.MetaTitle,
 		arg.MetaDescription,
 		arg.MetaRobots,
-		arg.MetaViewport,
-		arg.MetaCharset,
+		arg.MetaOgImage,
+		arg.Locale,
 		arg.PageAmount,
 		arg.SiteLanguage,
 		arg.MetaKey,
@@ -212,8 +212,8 @@ func (q *Queries) UpdateMeta(ctx context.Context, arg UpdateMetaParams) (Meta, e
 		&i.MetaTitle,
 		&i.MetaDescription,
 		&i.MetaRobots,
-		&i.MetaViewport,
-		&i.MetaCharset,
+		&i.MetaOgImage,
+		&i.Locale,
 		&i.PageAmount,
 		&i.SiteLanguage,
 		&i.MetaKey,
