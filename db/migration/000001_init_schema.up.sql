@@ -40,7 +40,7 @@ CREATE TABLE "posts" (
   "status" varchar(255) NOT NULL,
   "published_at" timestamp NOT NULL,
   "edited_at" timestamp NOT NULL,
-  "post_author" bigint NOT NULL,
+  "post_author" varchar(255) NOT NULL,
   "post_mime_type" varchar(255) NOT NULL,
   "published_by" varchar(255) NOT NULL,
   "updated_by" varchar(255) NOT NULL
