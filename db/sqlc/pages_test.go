@@ -30,10 +30,11 @@ func createRandomPage(t *testing.T) Page {
 
 	// Act
 	page, err := testQueries.CreatePages(context.Background(), args)
-
-	// Assert
 	require.NoError(t, err)
 	require.NotEmpty(t, page)
+
+	// Assert
+
 	require.Equal(t, args.Domain, page.Domain)
 	require.Equal(t, args.AuthorID, page.AuthorID)
 	require.Equal(t, args.PageAuthor, page.PageAuthor)
