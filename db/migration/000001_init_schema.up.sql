@@ -1,6 +1,6 @@
 CREATE TABLE "users" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "username" varchar(255) NOT NULL,
+  "username" varchar(255) UNIQUE NOT NULL,
   "email" varchar(255) NOT NULL,
   "password" varchar(255) NOT NULL,
   "role" varchar(255) NOT NULL,
@@ -62,26 +62,39 @@ CREATE TABLE "meta" (
 );
 
 CREATE INDEX ON "users" ("username");
+
 CREATE INDEX ON "users" ("first_name");
+
 CREATE INDEX ON "users" ("last_name");
+
 CREATE INDEX ON "users" ("created_at", "updated_at");
 
 CREATE INDEX ON "pages" ("page_author");
+
 CREATE INDEX ON "pages" ("domain");
+
 CREATE INDEX ON "pages" ("url");
 
 CREATE INDEX ON "posts" ("created_at");
+
 CREATE INDEX ON "posts" ("updated_at");
+
 CREATE INDEX ON "posts" ("title");
+
 CREATE INDEX ON "posts" ("created_at", "updated_at");
 
 ALTER TABLE "pages" ADD FOREIGN KEY ("author_id") REFERENCES "users" ("id");
+
 ALTER TABLE "pages" ADD FOREIGN KEY ("page_author") REFERENCES "users" ("username");
 
 ALTER TABLE "posts" ADD FOREIGN KEY ("author_id") REFERENCES "users" ("id");
+
 ALTER TABLE "posts" ADD FOREIGN KEY ("post_author") REFERENCES "users" ("username");
+
 ALTER TABLE "posts" ADD FOREIGN KEY ("published_by") REFERENCES "users" ("username");
+
 ALTER TABLE "posts" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("username");
 
 ALTER TABLE "meta" ADD FOREIGN KEY ("page_id") REFERENCES "pages" ("id");
+
 ALTER TABLE "meta" ADD FOREIGN KEY ("posts_id") REFERENCES "posts" ("id");
