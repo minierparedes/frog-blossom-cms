@@ -6,13 +6,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/reflection/frog_blossom_db/utils"
 	"github.com/stretchr/testify/require"
 )
 
 func createRandomUser(t *testing.T) User {
 	// Arrange
 	args := CreateUsersParams{
-		Username:  "cshopcott6",
+		Username:  utils.RandomUsername(),
 		Email:     "cshopcott6@friendfeed.com",
 		Password:  "pP7<8jrQbwS",
 		Role:      "user",
