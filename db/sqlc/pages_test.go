@@ -2,8 +2,9 @@ package frog_blossom_db
 
 import (
 	"context"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func createRandomPage(t *testing.T) Page {
@@ -12,7 +13,8 @@ func createRandomPage(t *testing.T) Page {
 
 	args := CreatePagesParams{
 		Domain:         "example.com",
-		PageAuthor:     randomUser.ID,
+		AuthorID:       randomUser.ID,
+		PageAuthor:     randomUser.Username,
 		Title:          "Homepage",
 		Url:            "/home",
 		MenuOrder:      1,
@@ -32,6 +34,7 @@ func createRandomPage(t *testing.T) Page {
 	require.NoError(t, err)
 	require.NotEmpty(t, page)
 	require.Equal(t, args.Domain, page.Domain)
+	require.Equal(t, args.AuthorID, page.AuthorID)
 	require.Equal(t, args.PageAuthor, page.PageAuthor)
 	require.Equal(t, args.Title, page.Title)
 	require.Equal(t, args.Url, page.Url)
@@ -63,6 +66,7 @@ func TestGetPages(t *testing.T) {
 	// Assert
 	require.Equal(t, randomPage.ID, page.ID)
 	require.Equal(t, page.Domain, page.Domain)
+	require.Equal(t, page.AuthorID, page.PageAuthor)
 	require.Equal(t, page.PageAuthor, page.PageAuthor)
 	require.Equal(t, page.Title, page.Title)
 	require.Equal(t, page.Url, page.Url)

@@ -12,18 +12,16 @@ import (
 func createRandomUser(t *testing.T) User {
 	// Arrange
 	args := CreateUsersParams{
-		Username: "cshopcott6",
-		Email:    "cshopcott6@friendfeed.com",
-		Password: "pP7<8jrQbwS",
-		Role: sql.NullString{
-			String: "admin", Valid: true,
-		},
+		Username:  "cshopcott6",
+		Email:     "cshopcott6@friendfeed.com",
+		Password:  "pP7<8jrQbwS",
+		Role:      "user",
 		FirstName: "Cointon",
 		LastName:  "Shopcott",
 		UserUrl: sql.NullString{
 			String: "https://robohash.org/nihildelectussed.png?size=50x50&set=set1", Valid: true,
 		},
-		Bio: sql.NullString{
+		Description: sql.NullString{
 			String: "Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl. Nunc nisl.", Valid: true,
 		},
 	}
@@ -39,7 +37,7 @@ func createRandomUser(t *testing.T) User {
 	require.Equal(t, args.FirstName, user.FirstName)
 	require.Equal(t, args.LastName, user.LastName)
 	require.Equal(t, args.UserUrl, user.UserUrl)
-	require.Equal(t, args.Bio, user.Bio)
+	require.Equal(t, args.Description, user.Description)
 
 	return user
 }
@@ -66,23 +64,23 @@ func TestGetUser(t *testing.T) {
 	require.Equal(t, randomUser.FirstName, user.FirstName)
 	require.Equal(t, randomUser.LastName, user.LastName)
 	require.Equal(t, randomUser.UserUrl, user.UserUrl)
-	require.Equal(t, randomUser.Bio, user.Bio)
-	require.WithinDuration(t, randomUser.CreatedAt.Time, user.CreatedAt.Time, time.Second)
+	require.Equal(t, randomUser.Description, user.Description)
+	require.WithinDuration(t, randomUser.CreatedAt, user.CreatedAt, time.Second, time.Second)
 }
 
 func TestUpdateUser(t *testing.T) {
 	// Arrange
 	args := UpdateUsersParams{
-		ID:        11,
-		Username:  "holyunin8 hello nurse",
-		Email:     "holyunin8@si.edu",
-		Password:  "gY0_OzLmifL1",
-		Role:      sql.NullString{String: "user", Valid: true},
-		FirstName: "Hillery",
-		LastName:  "Olyunin",
-		UserUrl:   sql.NullString{String: "https://robohash.org/veritatisquaeratnemo.png?size=50x50&set=set1", Valid: true},
-		Bio:       sql.NullString{String: "Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.", Valid: true},
-		UpdatedAt: time.Now(),
+		ID:          11,
+		Username:    "holyunin8 hello nurse",
+		Email:       "holyunin8@si.edu",
+		Password:    "gY0_OzLmifL1",
+		Role:        "user",
+		FirstName:   "Hillery",
+		LastName:    "Olyunin",
+		UserUrl:     sql.NullString{String: "https://robohash.org/veritatisquaeratnemo.png?size=50x50&set=set1", Valid: true},
+		Description: sql.NullString{String: "Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.", Valid: true},
+		UpdatedAt:   time.Now(),
 	}
 	// Act
 	user, err := testQueries.UpdateUsers(context.Background(), args)
@@ -97,7 +95,7 @@ func TestUpdateUser(t *testing.T) {
 	require.Equal(t, args.FirstName, user.FirstName)
 	require.Equal(t, args.LastName, user.LastName)
 	require.Equal(t, args.UserUrl, user.UserUrl)
-	require.Equal(t, args.Bio, user.Bio)
+	require.Equal(t, args.Description, user.Description)
 	require.WithinDuration(t, args.UpdatedAt, user.UpdatedAt, time.Second)
 }
 
