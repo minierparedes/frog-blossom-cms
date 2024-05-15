@@ -9,6 +9,7 @@ import (
 
 func createRandomPosts(t *testing.T) Post {
 	// Arrange
+	now := time.Now().UTC()
 	randomUser := createRandomUser(t)
 
 	args := CreatePostsParams{
@@ -16,10 +17,10 @@ func createRandomPosts(t *testing.T) Post {
 		Content:      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 		AuthorID:     randomUser.ID,
 		Url:          "https://example.com",
-		UpdatedAt:    time.Now(),
+		UpdatedAt:    now,
 		Status:       "admin",
-		PublishedAt:  time.Now(),
-		EditedAt:     time.Now(),
+		PublishedAt:  now,
+		EditedAt:     now,
 		PostAuthor:   randomUser.Username,
 		PostMimeType: "text/plain",
 		PublishedBy:  randomUser.Username,
@@ -36,10 +37,10 @@ func createRandomPosts(t *testing.T) Post {
 	require.Equal(t, args.Content, posts.Content)
 	require.Equal(t, args.AuthorID, posts.AuthorID)
 	require.Equal(t, args.Url, posts.Url)
-	require.Equal(t, args.UpdatedBy, posts.UpdatedBy)
+	require.Equal(t, args.UpdatedAt, posts.UpdatedAt.UTC())
 	require.Equal(t, args.Status, posts.Status)
-	require.Equal(t, args.PublishedAt, posts.PublishedAt)
-	require.Equal(t, args.EditedAt, posts.EditedAt)
+	require.Equal(t, args.PublishedAt, posts.PublishedAt.UTC())
+	require.Equal(t, args.EditedAt, posts.EditedAt.UTC())
 	require.Equal(t, args.PostAuthor, posts.PostAuthor)
 	require.Equal(t, args.PostMimeType, posts.PostMimeType)
 	require.Equal(t, args.PublishedBy, posts.PublishedBy)
