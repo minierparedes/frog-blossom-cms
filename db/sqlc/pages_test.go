@@ -67,19 +67,19 @@ func TestGetPages(t *testing.T) {
 
 	// Assert
 	require.Equal(t, randomPage.ID, page.ID)
-	require.Equal(t, page.Domain, page.Domain)
-	require.Equal(t, page.AuthorID, page.AuthorID)
-	require.Equal(t, page.PageAuthor, page.PageAuthor)
-	require.Equal(t, page.Title, page.Title)
-	require.Equal(t, page.Url, page.Url)
-	require.Equal(t, page.MenuOrder, page.MenuOrder)
-	require.Equal(t, page.ComponentType, page.ComponentType)
-	require.Equal(t, page.ComponentValue, page.ComponentValue)
-	require.Equal(t, page.PageIdentifier, page.PageIdentifier)
-	require.Equal(t, page.OptionID, page.OptionID)
-	require.Equal(t, page.OptionName, page.OptionName)
-	require.Equal(t, page.OptionValue, page.OptionValue)
-	require.Equal(t, page.OptionRequired, page.OptionRequired)
+	require.Equal(t, randomPage.Domain, page.Domain)
+	require.Equal(t, randomPage.AuthorID, page.AuthorID)
+	require.Equal(t, randomPage.PageAuthor, page.PageAuthor)
+	require.Equal(t, randomPage.Title, page.Title)
+	require.Equal(t, randomPage.Url, page.Url)
+	require.Equal(t, randomPage.MenuOrder, page.MenuOrder)
+	require.Equal(t, randomPage.ComponentType, page.ComponentType)
+	require.Equal(t, randomPage.ComponentValue, page.ComponentValue)
+	require.Equal(t, randomPage.PageIdentifier, page.PageIdentifier)
+	require.Equal(t, randomPage.OptionID, page.OptionID)
+	require.Equal(t, randomPage.OptionName, page.OptionName)
+	require.Equal(t, randomPage.OptionValue, page.OptionValue)
+	require.Equal(t, randomPage.OptionRequired, page.OptionRequired)
 }
 
 func TestUpdatePages(t *testing.T) {
