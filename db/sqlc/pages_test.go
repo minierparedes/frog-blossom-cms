@@ -92,6 +92,8 @@ func TestUpdatePages(t *testing.T) {
 	require.NotEmpty(t, user)
 
 	pages, err := testQueries.GetPages(context.Background(), randomPage.ID)
+	require.NoError(t, err)
+	require.NotEmpty(t, pages)
 
 	args := UpdatePagesParams{
 		ID:             pages.ID,
