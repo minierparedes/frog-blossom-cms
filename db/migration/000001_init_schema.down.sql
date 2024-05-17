@@ -1,14 +1,8 @@
-DROP TABLE IF EXISTS websites;
-DROP TABLE IF EXISTS template;
+-- Migration Down: Drop tables that do not have dependencies
+DROP TABLE IF EXISTS meta;
 DROP TABLE IF EXISTS pages;
-DROP TABLE IF EXISTS site_meta_tags;
-DROP TABLE IF EXISTS contact_forms;
-DROP TABLE IF EXISTS form_fields;
-DROP TABLE IF EXISTS templates;
-DROP TABLE IF EXISTS layout_options;
+DROP TABLE IF EXISTS posts;
+
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS content;
-DROP TABLE IF EXISTS organizations;
-DROP TABLE IF EXISTS content_meta_tags;
-DROP TABLE IF EXISTS content_categories;
-DROP TABLE IF EXISTS categories;
+-- Migration Down: Drop table after dropping the foreign key constraint
+

@@ -1,172 +1,100 @@
-CREATE TABLE "websites" (
+CREATE TABLE "users" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "name" varchar(255) NOT NULL,
-  "domain" varchar(255) NOT NULL,
-  "owner_id" bigserial NOT NULL,
-  "password" varchar(255),
-  "template_id" bigserial,
-  "builder_enabled" boolean DEFAULT false
-);
-
-CREATE TABLE "template" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "name" varchar(255) NOT NULL
+  "username" varchar(255) UNIQUE NOT NULL,
+  "email" varchar(255) NOT NULL,
+  "password" varchar(255) NOT NULL,
+  "role" varchar(255) NOT NULL,
+  "first_name" varchar(255) NOT NULL,
+  "last_name" varchar(255) NOT NULL,
+  "user_url" text,
+  "description" text,
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL
 );
 
 CREATE TABLE "pages" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "website_id" bigserial NOT NULL,
+  "domain" varchar(255) NOT NULL,
+  "author_id" bigint NOT NULL,
+  "page_author" varchar(255) NOT NULL,
+  "title" varchar(255) NOT NULL,
+  "url" varchar(255) NOT NULL,
+  "menu_order" bigint NOT NULL,
+  "component_type" varchar(255) NOT NULL,
+  "component_value" text NOT NULL,
+  "page_identifier" varchar(255) NOT NULL,
+  "option_id" bigint NOT NULL,
+  "option_name" varchar(255) NOT NULL,
+  "option_value" text NOT NULL,
+  "option_required" boolean NOT NULL
+);
+
+CREATE TABLE "posts" (
+  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "title" varchar(255) NOT NULL,
   "content" text NOT NULL,
-  "url" varchar(255) NOT NULL
-);
-
-CREATE TABLE "site_meta_tags" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "page_id" bigserial NOT NULL,
-  "name" varchar(255) NOT NULL,
-  "content" text NOT NULL
-);
-
-CREATE TABLE "contact_forms" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "website_id" bigserial NOT NULL,
-  "form_id" varchar(255) NOT NULL
-);
-
-CREATE TABLE "form_fields" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "form_id" bigserial NOT NULL,
-  "label" varchar(255) NOT NULL,
-  "type" varchar(255) NOT NULL,
-  "required" boolean NOT NULL
-);
-
-CREATE TABLE "template_list" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "name" varchar(255) NOT NULL,
-  "preview_image_url" varchar(255) NOT NULL
-);
-
-CREATE TABLE "layout_options" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "name" varchar(255) NOT NULL,
-  "description" text NOT NULL,
-  "preview_image_url" varchar(255) NOT NULL
-);
-
-CREATE TABLE "users" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "username" varchar(255) UNIQUE NOT NULL,
-  "email" varchar(255) UNIQUE NOT NULL,
-  "password" varchar(255) NOT NULL,
-  "role" varchar(255) DEFAULT 'user',
-  "owner_id" bigserial NOT NULL,
-  "first_name" varchar(255),
-  "last_name" varchar(255),
-  "avatar_url" varchar(255),
-  "bio" text,
-  "created_at" timestamptz DEFAULT (now()),
-  "updated_at" timestamptz
-);
-
-CREATE TABLE "content" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "title" varchar(255) NOT NULL,
-  "body" text NOT NULL,
-  "author_id" bigserial NOT NULL,
+  "author_id" bigint NOT NULL,
+  "url" varchar(255) NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now()),
-  "updated_at" timestamp,
+  "updated_at" timestamp NOT NULL,
   "status" varchar(255) NOT NULL,
-  "published_at" timestamp,
-  "edited_at" timestamp,
-  "organization_id" bigserial,
-  "published_by_id" bigserial
+  "published_at" timestamp NOT NULL,
+  "edited_at" timestamp NOT NULL,
+  "post_author" varchar(255) NOT NULL,
+  "post_mime_type" varchar(255) NOT NULL,
+  "published_by" varchar(255) NOT NULL,
+  "updated_by" varchar(255) NOT NULL
 );
 
-CREATE TABLE "organizations" (
+CREATE TABLE "meta" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "name" varchar(255) NOT NULL
+  "page_id" bigint,
+  "posts_id" bigint,
+  "meta_title" varchar(255),
+  "meta_description" text,
+  "meta_robots" varchar(255),
+  "meta_og_image" varchar(255),
+  "locale" varchar(10),
+  "page_amount" bigint NOT NULL,
+  "site_language" varchar(255),
+  "meta_key" varchar(255) NOT NULL,
+  "meta_value" varchar(255) NOT NULL
 );
-
-CREATE TABLE "content_meta_tags" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "content_id" bigserial,
-  "name" varchar(255) NOT NULL,
-  "content" text NOT NULL
-);
-
-CREATE TABLE "content_categories" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "content_id" bigserial,
-  "category_id" bigserial
-);
-
-CREATE TABLE "categories" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "name" varchar(255) NOT NULL
-);
-
-CREATE INDEX ON "websites" ("owner_id");
-
-CREATE INDEX ON "websites" ("name");
-
-CREATE INDEX ON "websites" ("domain");
-
-CREATE INDEX ON "template" ("name");
-
-CREATE INDEX ON "pages" ("website_id");
-
-CREATE INDEX ON "pages" ("title");
-
-CREATE INDEX ON "site_meta_tags" ("page_id");
-
-CREATE INDEX ON "site_meta_tags" ("name");
-
-CREATE INDEX ON "templates" ("name");
 
 CREATE INDEX ON "users" ("username");
 
-CREATE INDEX ON "users" ("owner_id");
+CREATE INDEX ON "users" ("first_name");
 
-CREATE INDEX ON "content" ("author_id");
+CREATE INDEX ON "users" ("last_name");
 
-CREATE INDEX ON "content" ("created_at");
+CREATE INDEX ON "users" ("created_at", "updated_at");
 
-CREATE INDEX ON "content" ("updated_at");
+CREATE INDEX ON "pages" ("page_author");
 
-CREATE INDEX ON "content" ("organization_id");
+CREATE INDEX ON "pages" ("domain");
 
-CREATE INDEX ON "content" ("title");
+CREATE INDEX ON "pages" ("url");
 
-CREATE INDEX ON "content" ("created_at", "updated_at");
+CREATE INDEX ON "posts" ("created_at");
 
-CREATE INDEX ON "content_meta_tags" ("content_id");
+CREATE INDEX ON "posts" ("updated_at");
 
-CREATE INDEX ON "categories" ("name");
+CREATE INDEX ON "posts" ("title");
 
-ALTER TABLE "websites" ADD FOREIGN KEY ("owner_id") REFERENCES "users" ("id");
+CREATE INDEX ON "posts" ("created_at", "updated_at");
 
-ALTER TABLE "websites" ADD FOREIGN KEY ("template_id") REFERENCES "template" ("id");
+ALTER TABLE "pages" ADD FOREIGN KEY ("author_id") REFERENCES "users" ("id");
 
-ALTER TABLE "pages" ADD FOREIGN KEY ("website_id") REFERENCES "websites" ("id");
+ALTER TABLE "pages" ADD FOREIGN KEY ("page_author") REFERENCES "users" ("username");
 
-ALTER TABLE "site_meta_tags" ADD FOREIGN KEY ("page_id") REFERENCES "pages" ("id");
+ALTER TABLE "posts" ADD FOREIGN KEY ("author_id") REFERENCES "users" ("id");
 
-ALTER TABLE "contact_forms" ADD FOREIGN KEY ("website_id") REFERENCES "websites" ("id");
+ALTER TABLE "posts" ADD FOREIGN KEY ("post_author") REFERENCES "users" ("username");
 
-ALTER TABLE "form_fields" ADD FOREIGN KEY ("form_id") REFERENCES "contact_forms" ("id");
+ALTER TABLE "posts" ADD FOREIGN KEY ("published_by") REFERENCES "users" ("username");
 
-ALTER TABLE "users" ADD FOREIGN KEY ("owner_id") REFERENCES "websites" ("id");
+ALTER TABLE "posts" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("username");
 
-ALTER TABLE "content" ADD FOREIGN KEY ("author_id") REFERENCES "users" ("id");
+ALTER TABLE "meta" ADD FOREIGN KEY ("page_id") REFERENCES "pages" ("id");
 
-ALTER TABLE "content" ADD FOREIGN KEY ("organization_id") REFERENCES "organizations" ("id");
-
-ALTER TABLE "content" ADD FOREIGN KEY ("published_by_id") REFERENCES "users" ("id");
-
-ALTER TABLE "content_meta_tags" ADD FOREIGN KEY ("content_id") REFERENCES "content" ("id");
-
-ALTER TABLE "content_categories" ADD FOREIGN KEY ("content_id") REFERENCES "content" ("id");
-
-ALTER TABLE "content_categories" ADD FOREIGN KEY ("category_id") REFERENCES "categories" ("id");
+ALTER TABLE "meta" ADD FOREIGN KEY ("posts_id") REFERENCES "posts" ("id");

@@ -28,9 +28,10 @@ database migrations written in Go.
 
 ### Revision History
 
-| Date       | Version | Description of Changes              | Author |
-|------------|---------|------------------------------------|--------|
+| Date       | Version | Description of Changes  | Author |
+|------------|---------|-------------------------|--------|
 | 2024-05-02 | 1.0     | Initial commit          | @minierparedes    |
-| 2024-05-02 | 1.0     | migration files up/down          | @minierparedes    |
-| 2024-05-02 | 1.0     | makefile          | @minierparedes    |
-| 2024-05-02 | 1.0     | readme          | @minierparedes    |
+| 2024-05-02 | 1.1     | migration files up/down | @minierparedes    |
+| 2024-05-02 | 1.2     | makefile                | @minierparedes    |
+| 2024-05-02 | 1.3     | readme                  | @minierparedes    |
+| 2024-05-10 | 1.4     | db schema v5            | @minierparedes    |
