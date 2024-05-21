@@ -70,7 +70,21 @@ func (store *Store) InitSetupConfigTx(ctx context.Context, args InitSetupConfigT
 			result.Pages = append(result.Pages, page)
 		}
 
+		for _, metaParas := range args.InitialMeta {
+			meta, err := q.CreateMeta(ctx, metaParas)
+			if err != nil {
+				return fmt.Errorf("create meta err: %v", err)
+			}
+			result.Metas = append(result.Metas, meta)
+		}
+
 		return nil
 	})
 	return result, err
 }
+
+// ContentCreationTx creates new content based on user information
+// It utilizes user data to supplement and create data for the `posts`, `pages`, and `meta` tables.
+//func (store *Store) ContentCreationTx(ctx context.Context, args ContentCreationTxParams) (ContentCreationTxResult, error) {
+//
+//}
