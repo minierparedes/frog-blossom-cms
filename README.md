@@ -24,7 +24,7 @@ database migrations written in Go.
 
 ### Run it with docker
 
-There is a make file that has the scripts for running an instance of the frog_blossom_db, postgreSQL
+There is a makefile that has the scripts for running an instance of the frog_blossom_db, postgreSQL
 
 ***start the Postgres docker container***
 

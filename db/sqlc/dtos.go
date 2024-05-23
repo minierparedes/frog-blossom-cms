@@ -11,12 +11,21 @@ type InitSetupConfigTxParams struct {
 }
 
 type InitSetupConfigTxResult struct {
-	User       User   `json:"user"`
-	UserStatus string `json:"user_status"`
-	Pages      []Page `json:"init_page"`
-	PageStatus string `json:"page_status"`
-	Posts      []Post `json:"post_id"`
-	PostStatus string `json:"post_status"`
-	Metas      []Meta `json:"meta_id"`
-	MetaStatus string `json:"meta_status"`
+	User  User   `json:"user"`
+	Pages []Page `json:"init_page"`
+	Posts []Post `json:"post_id"`
+	Metas []Meta `json:"meta_id"`
+}
+
+type CreatePostsTxParams struct {
+	UserId   int64               `json:"user_id"`
+	Username string              `json:"username"`
+	Posts    []CreatePostsParams `json:"posts"`
+	Metas    []CreateMetaParams  `json:"meta"`
+}
+
+type CreatePostsTxResul struct {
+	User  User   `json:"user"`
+	Posts []Post `json:"post"`
+	Metas []Meta `json:"meta"`
 }
