@@ -52,7 +52,6 @@ func (store *Store) InitSetupConfigTx(ctx context.Context, args InitSetupConfigT
 			return fmt.Errorf("get users err: %v", err)
 		}
 		result.User = user
-		result.UserStatus = "User setup completed successfully"
 
 		for _, postsParams := range args.InitialPosts {
 			post, err := q.CreatePosts(ctx, postsParams)
@@ -83,8 +82,37 @@ func (store *Store) InitSetupConfigTx(ctx context.Context, args InitSetupConfigT
 	return result, err
 }
 
-// ContentCreationTx creates new content based on user information
-// It utilizes user data to supplement and create data for the `posts`, `pages`, and `meta` tables.
-//func (store *Store) ContentCreationTx(ctx context.Context, args ContentCreationTxParams) (ContentCreationTxResult, error) {
-//
-//}
+// CreatePostsTx creates new posts content based on user information
+// It utilizes user info(users.id, users.username) to create the `posts` and its respective `meta`.
+func (store *Store) CreatePostsTx(ctx context.Context, args CreatePostsTxParams) (CreatePostsTxResul, error) {
+	var result CreatePostsTxResul
+
+	err := store.executeTx(ctx, func(q *Queries) error {
+		var err error
+
+		user, err := q.GetUsers(ctx, args.UserId)
+		if err != nil {
+			return fmt.Errorf("get users err: %v", err)
+		}
+		result.User = user
+
+		for _, postParams := range args.Posts {
+			post, err := q.CreatePosts(ctx, postParams)
+			if err != nil {
+				return fmt.Errorf("create posts err: %v", err)
+			}
+			result.Posts = append(result.Posts, post)
+		}
+
+		for _, metaParas := range args.Metas {
+			meta, err := q.CreateMeta(ctx, metaParas)
+			if err != nil {
+				return fmt.Errorf("create meta err: %v", err)
+			}
+			result.Metas = append(result.Metas, meta)
+		}
+
+		return nil
+	})
+	return result, err
+}

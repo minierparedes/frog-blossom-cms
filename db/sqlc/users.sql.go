@@ -99,7 +99,7 @@ func (q *Queries) GetUsers(ctx context.Context, id int64) (User, error) {
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
-	return i, err
+return i, err
 }
 
 const listUsers = `-- name: ListUsers :many
