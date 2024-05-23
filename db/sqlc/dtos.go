@@ -20,12 +20,14 @@ type InitSetupConfigTxResult struct {
 type CreatePostsTxParams struct {
 	UserId   int64               `json:"user_id"`
 	Username string              `json:"username"`
+	PageId   int64               `json:"page_id"`
 	Posts    []CreatePostsParams `json:"posts"`
 	Metas    []CreateMetaParams  `json:"meta"`
 }
 
 type CreatePostsTxResul struct {
 	User  User   `json:"user"`
+	Pages Page   `json:"pages"`
 	Posts []Post `json:"post"`
 	Metas []Meta `json:"meta"`
 }

@@ -96,6 +96,12 @@ func (store *Store) CreatePostsTx(ctx context.Context, args CreatePostsTxParams)
 		}
 		result.User = user
 
+		page, err := q.GetPages(ctx, args.PageId)
+		if err != nil {
+			return fmt.Errorf("get pages err: %v", err)
+		}
+		result.Pages = page
+
 		for _, postParams := range args.Posts {
 			post, err := q.CreatePosts(ctx, postParams)
 			if err != nil {
