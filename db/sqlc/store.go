@@ -84,8 +84,8 @@ func (store *Store) InitSetupConfigTx(ctx context.Context, args InitSetupConfigT
 
 // CreatePostsTx creates new posts content based on user information
 // It utilizes user info(users.id, users.username) to create the `posts` and its respective `meta`.
-func (store *Store) CreatePostsTx(ctx context.Context, args CreatePostsTxParams) (CreatePostsTxResul, error) {
-	var result CreatePostsTxResul
+func (store *Store) CreatePostsTx(ctx context.Context, args CreateContentTxParams) (CreateContentTxResult, error) {
+	var result CreateContentTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error
@@ -96,11 +96,13 @@ func (store *Store) CreatePostsTx(ctx context.Context, args CreatePostsTxParams)
 		}
 		result.User = user
 
-		page, err := q.GetPages(ctx, args.PageId)
-		if err != nil {
-			return fmt.Errorf("get pages err: %v", err)
+		if args.PageId != nil {
+			page, err := q.GetPages(ctx, *args.PageId)
+			if err != nil {
+				return fmt.Errorf("get pages err: %v", err)
+			}
+			result.PageId = &page
 		}
-		result.Pages = page
 
 		for _, postParams := range args.Posts {
 			post, err := q.CreatePosts(ctx, postParams)
@@ -122,3 +124,78 @@ func (store *Store) CreatePostsTx(ctx context.Context, args CreatePostsTxParams)
 	})
 	return result, err
 }
+
+// CreatePageTx creates new pages content based on user information
+// It utilizes user info(users.id, users.username) to create the `page` and its respective `meta`.
+func (store *Store) CreatePageTx(ctx context.Context, args CreateContentTxParams) (CreateContentTxResult, error) {
+	var result CreateContentTxResult
+
+	err := store.executeTx(ctx, func(q *Queries) error {
+		var err error
+
+		user, err := q.GetUsers(ctx, args.UserId)
+		if err != nil {
+			return fmt.Errorf("get users err: %v", err)
+		}
+		result.User = user
+
+		posts, err := q.GetPosts(ctx, *args.PostId)
+		if err != nil {
+			return fmt.Errorf("get posts err: %v", err)
+		}
+		result.PostId = &posts
+
+		for _, pageParams := range args.Pages {
+			page, err := q.CreatePages(ctx, pageParams)
+			if err != nil {
+				return fmt.Errorf("create pages err: %v", err)
+			}
+			result.Pages = append(result.Pages, page)
+		}
+
+		for _, metaParas := range args.Metas {
+			meta, err := q.CreateMeta(ctx, metaParas)
+			if err != nil {
+				return fmt.Errorf("create meta err: %v", err)
+			}
+			result.Metas = append(result.Metas, meta)
+		}
+
+		return nil
+	})
+
+	return result, err
+}
+
+// UpdatePostsTx updates existing content in the `posts` table and its respective `meta` table.
+// It utilizes user info (users.id, users.username) to update the content and its associated metadata.
+//func (store *Store) UpdatePostsTx(ctx context.Context, args UpdateContentTxParams) (UpdateContentTxResult, error) {
+//	var result UpdateContentTxResult
+//
+//	err := store.executeTx(ctx, func(q *Queries) error {
+//		var err error
+//
+//		user, err := q.GetUsers(ctx, args.UserId)
+//		if err != nil {
+//			return fmt.Errorf("get user err: %v", err)
+//		}
+//		result.User = user
+//
+//		post, err := q.GetPosts(ctx, args.PostId)
+//		if err != nil {
+//			return fmt.Errorf("get post err: %v", err)
+//		}
+//		result.PostId = post
+//
+//		meta, err := q.GetMeta(ctx, args.)
+//
+//		for _, postParams := range args.Posts {
+//			post, err := q.UpdatePosts(ctx, postParams)
+//			if err != nil {
+//				return fmt.Errorf("update post err: %v", err)
+//			}
+//			result.Posts = append(result.Posts, post)
+//		}
+//	})
+//
+//}

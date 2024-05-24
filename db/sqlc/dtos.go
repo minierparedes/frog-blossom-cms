@@ -17,17 +17,40 @@ type InitSetupConfigTxResult struct {
 	Metas []Meta `json:"meta_id"`
 }
 
-type CreatePostsTxParams struct {
+type CreateContentTxParams struct {
 	UserId   int64               `json:"user_id"`
 	Username string              `json:"username"`
-	PageId   int64               `json:"page_id"`
+	PageId   *int64              `json:"page_id"`
+	PostId   *int64              `json:"post_id"`
+	Pages    []CreatePagesParams `json:"pages"`
 	Posts    []CreatePostsParams `json:"posts"`
 	Metas    []CreateMetaParams  `json:"meta"`
 }
 
-type CreatePostsTxResul struct {
-	User  User   `json:"user"`
-	Pages Page   `json:"pages"`
-	Posts []Post `json:"post"`
-	Metas []Meta `json:"meta"`
+type CreateContentTxResult struct {
+	User   User   `json:"user"`
+	PageId *Page  `json:"pages_id"`
+	PostId *Post  `json:"post_id"`
+	Posts  []Post `json:"post"`
+	Metas  []Meta `json:"meta"`
+	Pages  []Page `json:"page"`
+}
+
+type UpdateContentTxParams struct {
+	UserId   int64               `json:"user_id"`
+	Username string              `json:"username"`
+	PageId   int64               `json:"page_id"`
+	PostId   int64               `json:"post_id"`
+	Pages    []UpdatePagesParams `json:"pages"`
+	Posts    []UpdatePostsParams `json:"posts"`
+	Metas    []UpdateMetaParams  `json:"meta"`
+}
+
+type UpdateContentTxResult struct {
+	User   User   `json:"user"`
+	PageId Page   `json:"pages_id"`
+	PostId Post   `json:"post_id"`
+	Pages  []Page `json:"page"`
+	Posts  []Post `json:"post"`
+	Metas  []Meta `json:"meta"`
 }

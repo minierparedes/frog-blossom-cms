@@ -230,15 +230,15 @@ func TestCreatePostsTx(t *testing.T) {
 	n := 5
 
 	errs := make(chan error)
-	results := make(chan CreatePostsTxResul)
+	results := make(chan CreateContentTxResult)
 
 	// Act
 	for i := 0; i < n; i++ {
 		go func() {
-			result, err := store.CreatePostsTx(context.Background(), CreatePostsTxParams{
+			result, err := store.CreatePostsTx(context.Background(), CreateContentTxParams{
 				UserId:   newUser.ID,
 				Username: newUser.Username,
-				PageId:   newPage.ID,
+				PageId:   &newPage.ID,
 				Posts: []CreatePostsParams{
 					{
 						Title:        newPosts.Title,
@@ -343,7 +343,7 @@ func TestCreatePostsTx(t *testing.T) {
 		_, err = store.GetUsers(context.Background(), user.ID)
 		require.NoError(t, err)
 
-		page := result.Pages
+		page := result.PageId
 		require.NotEmpty(t, page)
 		require.Equal(t, newPage.ID, page.ID)
 
@@ -390,5 +390,138 @@ func TestCreatePostsTx(t *testing.T) {
 			require.Equal(t, meta.MetaKey, storeMeta.MetaKey)
 			require.Equal(t, meta.MetaValue, storeMeta.MetaValue)
 		}
+	}
+}
+
+func TestCreatePageTx(t *testing.T) {
+	// Arrange
+	store := NewStore(testDB)
+
+	newUser := createRandomUser(t)
+	newPage := createRandomPage(t)
+	newPost := createRandomPosts(t)
+
+	n := 5
+
+	errs := make(chan error)
+	results := make(chan CreateContentTxResult)
+
+	// Act
+	for i := 0; i < n; i++ {
+		go func() {
+			result, err := store.CreatePageTx(context.Background(), CreateContentTxParams{
+				UserId:   newUser.ID,
+				Username: newUser.Username,
+				PostId:   &newPost.ID,
+				Pages: []CreatePagesParams{
+					{
+						Domain:         newPage.Domain,
+						AuthorID:       newUser.ID,
+						PageAuthor:     newUser.Username,
+						Title:          newPage.Title,
+						Url:            newPage.Url,
+						MenuOrder:      newPage.MenuOrder,
+						ComponentType:  newPage.ComponentType,
+						ComponentValue: newPage.ComponentValue,
+						PageIdentifier: newPage.PageIdentifier,
+						OptionID:       newPage.OptionID,
+						OptionName:     newPage.OptionName,
+						OptionValue:    newPage.OptionValue,
+						OptionRequired: false,
+					},
+					{
+						Domain:         newPage.Domain,
+						AuthorID:       newUser.ID,
+						PageAuthor:     newUser.Username,
+						Title:          newPage.Title,
+						Url:            newPage.Url,
+						MenuOrder:      newPage.MenuOrder,
+						ComponentType:  newPage.ComponentType,
+						ComponentValue: newPage.ComponentValue,
+						PageIdentifier: newPage.PageIdentifier,
+						OptionID:       newPage.OptionID,
+						OptionName:     newPage.OptionName,
+						OptionValue:    newPage.OptionValue,
+						OptionRequired: false,
+					},
+				},
+				Metas: []CreateMetaParams{
+					{
+						PageID: sql.NullInt64{
+							Int64: newPage.ID, Valid: true,
+						},
+						PostsID: sql.NullInt64{
+							Int64: newPost.ID, Valid: true,
+						},
+						MetaTitle: sql.NullString{
+							String: "Sample Meta Title 1", Valid: true,
+						},
+						MetaDescription: sql.NullString{
+							String: "Sample Meta Description 1", Valid: true,
+						},
+						MetaRobots: sql.NullString{
+							String: "noindex, nofollow", Valid: true,
+						},
+						MetaOgImage: sql.NullString{
+							String: "https://example.com/image1.jpg", Valid: true,
+						},
+						Locale: sql.NullString{
+							String: "en_US", Valid: true,
+						},
+						PageAmount:   100,
+						SiteLanguage: sql.NullString{String: "en", Valid: true},
+						MetaKey:      "sample_key_1",
+						MetaValue:    "sample_value_1",
+					},
+					{
+						PageID: sql.NullInt64{
+							Int64: newPage.ID, Valid: true,
+						},
+						PostsID: sql.NullInt64{
+							Int64: newPost.ID, Valid: true,
+						},
+						MetaTitle: sql.NullString{
+							String: "Sample Meta Title 2", Valid: true,
+						},
+						MetaDescription: sql.NullString{
+							String: "Sample Meta Description 2", Valid: true,
+						},
+						MetaRobots: sql.NullString{
+							String: "index, follow", Valid: true,
+						},
+						MetaOgImage: sql.NullString{
+							String: "https://example.com/image2.jpg", Valid: true,
+						},
+						Locale: sql.NullString{
+							String: "fr_FR", Valid: true,
+						},
+						PageAmount:   200,
+						SiteLanguage: sql.NullString{String: "fr", Valid: true},
+						MetaKey:      "sample_key_2",
+						MetaValue:    "sample_value_2",
+					},
+				},
+			})
+
+			errs <- err
+			results <- result
+		}()
+	}
+
+	// Assert
+	for i := 0; i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
+
+		result := <-results
+		require.NotEmpty(t, result)
+
+		user := result.User
+		require.NotEmpty(t, user)
+		require.Equal(t, newUser.ID, user.ID)
+		require.Equal(t, newUser.Username, user.Username)
+
+		_, err = store.GetUsers(context.Background(), newUser.ID)
+		require.NoError(t, err)
 	}
 }
