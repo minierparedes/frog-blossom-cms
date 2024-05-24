@@ -212,3 +212,49 @@ func (store *Store) UpdatePostsTx(ctx context.Context, args UpdateContentTxParam
 	})
 	return result, err
 }
+
+// UpdatePageTx updates existing content in the `page` table and its respective `meta` table.
+// It utilizes user info (users.id, users.username) to update the content and its associated metadata.
+func (store *Store) UpdatePageTx(ctx context.Context, args UpdateContentTxParams) (UpdateContentTxResult, error) {
+	var result UpdateContentTxResult
+
+	err := store.executeTx(ctx, func(q *Queries) error {
+		var err error
+
+		user, err := q.GetUsers(ctx, args.UserId)
+		if err != nil {
+			return fmt.Errorf("get user err: %v", err)
+		}
+		result.User = user
+
+		page, err := q.GetPages(ctx, *args.PageId)
+		if err != nil {
+			return fmt.Errorf("get pages err: %v", err)
+		}
+		result.PageId = &page
+
+		meta, err := q.GetMetaByPageIDForUpdate(ctx, sql.NullInt64{Int64: *args.MetaPageID, Valid: true})
+		if err != nil {
+			return fmt.Errorf("get meta err: %v", err)
+		}
+		result.MetaPageID = &meta
+
+		for _, pageParams := range args.Pages {
+			page, err := q.UpdatePages(ctx, pageParams)
+			if err != nil {
+				return fmt.Errorf("update pages err: %v", err)
+			}
+			result.Pages = append(result.Pages, page)
+		}
+
+		for _, metaParas := range args.Metas {
+			meta, err := q.UpdateMeta(ctx, metaParas)
+			if err != nil {
+				return fmt.Errorf("update meta err: %v", err)
+			}
+			result.Metas = append(result.Metas, meta)
+		}
+		return nil
+	})
+	return result, err
+}
