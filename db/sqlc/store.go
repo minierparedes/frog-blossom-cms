@@ -169,33 +169,46 @@ func (store *Store) CreatePageTx(ctx context.Context, args CreateContentTxParams
 
 // UpdatePostsTx updates existing content in the `posts` table and its respective `meta` table.
 // It utilizes user info (users.id, users.username) to update the content and its associated metadata.
-//func (store *Store) UpdatePostsTx(ctx context.Context, args UpdateContentTxParams) (UpdateContentTxResult, error) {
-//	var result UpdateContentTxResult
-//
-//	err := store.executeTx(ctx, func(q *Queries) error {
-//		var err error
-//
-//		user, err := q.GetUsers(ctx, args.UserId)
-//		if err != nil {
-//			return fmt.Errorf("get user err: %v", err)
-//		}
-//		result.User = user
-//
-//		post, err := q.GetPosts(ctx, args.PostId)
-//		if err != nil {
-//			return fmt.Errorf("get post err: %v", err)
-//		}
-//		result.PostId = post
-//
-//		meta, err := q.GetMeta(ctx, args.)
-//
-//		for _, postParams := range args.Posts {
-//			post, err := q.UpdatePosts(ctx, postParams)
-//			if err != nil {
-//				return fmt.Errorf("update post err: %v", err)
-//			}
-//			result.Posts = append(result.Posts, post)
-//		}
-//	})
-//
-//}
+func (store *Store) UpdatePostsTx(ctx context.Context, args UpdateContentTxParams) (UpdateContentTxResult, error) {
+	var result UpdateContentTxResult
+
+	err := store.executeTx(ctx, func(q *Queries) error {
+		var err error
+
+		user, err := q.GetUsers(ctx, args.UserId)
+		if err != nil {
+			return fmt.Errorf("get user err: %v", err)
+		}
+		result.User = user
+
+		post, err := q.GetPosts(ctx, *args.PostId)
+		if err != nil {
+			return fmt.Errorf("get post err: %v", err)
+		}
+		result.PostId = &post
+
+		meta, err := q.GetMetaByPostsIDForUpdate(ctx, sql.NullInt64{Int64: *args.MetaPostID, Valid: true})
+		if err != nil {
+			return fmt.Errorf("get meta err: %v", err)
+		}
+		result.MetaPostID = &meta
+
+		for _, postParams := range args.Posts {
+			post, err := q.UpdatePosts(ctx, postParams)
+			if err != nil {
+				return fmt.Errorf("update post err: %v", err)
+			}
+			result.Posts = append(result.Posts, post)
+		}
+
+		for _, metaParas := range args.Metas {
+			meta, err := q.UpdateMeta(ctx, metaParas)
+			if err != nil {
+				return fmt.Errorf("update meta err: %v", err)
+			}
+			result.Metas = append(result.Metas, meta)
+		}
+		return nil
+	})
+	return result, err
+}
