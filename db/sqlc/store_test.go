@@ -525,3 +525,135 @@ func TestCreatePageTx(t *testing.T) {
 		require.NoError(t, err)
 	}
 }
+
+func TestUpadePostsTx(t *testing.T) {
+	// Arrange
+	store := NewStore(testDB)
+
+	newUser := createRandomUser(t)
+	newMeta := createRandomMeta(t)
+	now := time.Now().UTC()
+
+	n := 1
+
+	errs := make(chan error)
+	results := make(chan UpdateContentTxResult)
+
+	// Act
+	for i := 0; i < n; i++ {
+		go func() {
+
+			postMeta, err := store.GetMetaByPostsIDForUpdate(context.Background(), sql.NullInt64{
+				Int64: newMeta.PostsID.Int64,
+				Valid: true,
+			})
+			require.NoError(t, err)
+
+			result, err := store.UpdatePostsTx(context.Background(), UpdateContentTxParams{
+				UserId:     newUser.ID,
+				Username:   newUser.Username,
+				PageId:     nil,
+				PostId:     &postMeta.PostsID.Int64,
+				MetaPageID: nil,
+				MetaPostID: &postMeta.PostsID.Int64,
+				Pages:      nil,
+				Posts: []UpdatePostsParams{
+					{
+						ID:           postMeta.PostsID.Int64,
+						Title:        "Lorem ipsum dolor sit amet",
+						Content:      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+						AuthorID:     newUser.ID,
+						Url:          "https://example.com",
+						UpdatedAt:    now,
+						Status:       "admin",
+						PublishedAt:  now,
+						EditedAt:     now,
+						PostAuthor:   newUser.Username,
+						PostMimeType: "text/plain",
+						PublishedBy:  newUser.Username,
+						UpdatedBy:    newUser.Username,
+					},
+				},
+				Metas: []UpdateMetaParams{
+					{
+						ID:              postMeta.ID,
+						PageID:          sql.NullInt64{Int64: 0, Valid: false},
+						PostsID:         sql.NullInt64{Int64: postMeta.PostsID.Int64, Valid: true},
+						MetaTitle:       sql.NullString{String: "Sample Meta Title", Valid: true},
+						MetaDescription: sql.NullString{String: "Sample Meta Description", Valid: true},
+						MetaRobots:      sql.NullString{String: "index, follow", Valid: true},
+						MetaOgImage:     sql.NullString{String: "https://example.com/image.jpg", Valid: true},
+						Locale:          sql.NullString{String: "ja_JP", Valid: true},
+						PageAmount:      3,
+						SiteLanguage: sql.NullString{
+							String: "ja", Valid: true,
+						},
+						MetaKey:   "_thumbnail_id",
+						MetaValue: "12345",
+					},
+				},
+			})
+
+			errs <- err
+			results <- result
+		}()
+	}
+
+	// Assert
+	for i := 0; i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
+
+		result := <-results
+		require.NotEmpty(t, result)
+
+		user := result.User
+		require.NotEmpty(t, user)
+		require.Equal(t, newUser.ID, user.ID)
+		require.Equal(t, newUser.Username, user.Username)
+
+		_, err = store.GetUsers(context.Background(), user.ID)
+		require.NoError(t, err)
+
+		posts := result.Posts
+		require.NotEmpty(t, posts)
+
+		for _, post := range posts {
+			storePosts, err := store.GetPosts(context.Background(), post.ID)
+			require.NoError(t, err)
+			require.NotEmpty(t, storePosts)
+			require.Equal(t, post.ID, storePosts.ID)
+			require.Equal(t, post.Title, storePosts.Title)
+			require.Equal(t, post.Content, storePosts.Content)
+			require.Equal(t, post.AuthorID, storePosts.AuthorID)
+			require.Equal(t, post.Url, storePosts.Url)
+			require.Equal(t, post.Status, storePosts.Status)
+			require.Equal(t, post.PublishedAt, storePosts.PublishedAt)
+			require.Equal(t, post.EditedAt, storePosts.EditedAt)
+			require.Equal(t, post.PostAuthor, storePosts.PostAuthor)
+			require.Equal(t, post.PostMimeType, storePosts.PostMimeType)
+			require.Equal(t, post.PublishedBy, storePosts.PublishedBy)
+			require.Equal(t, post.UpdatedAt, storePosts.UpdatedAt)
+		}
+
+		metas := result.Metas
+		require.NotEmpty(t, metas)
+
+		for _, meta := range metas {
+			storeMeta, err := store.GetMeta(context.Background(), meta.ID)
+			require.NoError(t, err)
+			require.NotEmpty(t, storeMeta)
+			require.Equal(t, meta.ID, storeMeta.ID)
+			require.Equal(t, meta.PostsID, storeMeta.PostsID)
+			require.Equal(t, meta.MetaTitle, storeMeta.MetaTitle)
+			require.Equal(t, meta.MetaDescription, storeMeta.MetaDescription)
+			require.Equal(t, meta.MetaRobots, storeMeta.MetaRobots)
+			require.Equal(t, meta.MetaOgImage, storeMeta.MetaOgImage)
+			require.Equal(t, meta.Locale, storeMeta.Locale)
+			require.Equal(t, meta.PageAmount, storeMeta.PageAmount)
+			require.Equal(t, meta.SiteLanguage, storeMeta.SiteLanguage)
+			require.Equal(t, meta.MetaKey, storeMeta.MetaKey)
+			require.Equal(t, meta.MetaValue, storeMeta.MetaValue)
+		}
+	}
+}
