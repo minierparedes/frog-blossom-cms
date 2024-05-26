@@ -84,6 +84,24 @@ func (q *Queries) DeleteMeta(ctx context.Context, id int64) error {
 	return err
 }
 
+const deleteMetaByPageId = `-- name: DeleteMetaByPageId :exec
+DELETE FROM meta WHERE page_id = $1
+`
+
+func (q *Queries) DeleteMetaByPageId(ctx context.Context, pageID sql.NullInt64) error {
+	_, err := q.db.ExecContext(ctx, deleteMetaByPageId, pageID)
+	return err
+}
+
+const deleteMetaByPostId = `-- name: DeleteMetaByPostId :exec
+DELETE FROM meta WHERE posts_id = $1
+`
+
+func (q *Queries) DeleteMetaByPostId(ctx context.Context, postsID sql.NullInt64) error {
+	_, err := q.db.ExecContext(ctx, deleteMetaByPostId, postsID)
+	return err
+}
+
 const getMeta = `-- name: GetMeta :one
 SELECT id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_og_image, locale, page_amount, site_language, meta_key, meta_value FROM meta
 WHERE id = $1 LIMIT 1
