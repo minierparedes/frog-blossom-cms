@@ -258,3 +258,31 @@ func (store *Store) UpdatePageTx(ctx context.Context, args UpdateContentTxParams
 	})
 	return result, err
 }
+
+// DeletePostsTx deletes existing content in the `posts` table and its respective `meta` table.
+// It utilizes posts info (post.id) to delete posts content and its associated metadata.
+func (store *Store) DeletePostsTx(ctx context.Context, args DeleteContentTxParams) (DeleteContentTxResult, error) {
+	var result DeleteContentTxResult
+
+	err := store.executeTx(ctx, func(q *Queries) error {
+		var err error
+
+		err = q.DeleteMetaByPostId(ctx, sql.NullInt64{
+			Int64: *args.PostId,
+			Valid: true,
+		})
+		if err != nil {
+			return fmt.Errorf("delete meta err: %v", err)
+		}
+		result.DeletedMeta = true
+
+		err = q.DeletePosts(ctx, *args.PostId)
+		if err != nil {
+			return fmt.Errorf("delete posts err: %v", err)
+		}
+		result.DeletedPost = true
+
+		return nil
+	})
+	return result, err
+}
