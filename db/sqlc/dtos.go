@@ -58,3 +58,14 @@ type UpdateContentTxResult struct {
 	Posts      []Post `json:"post"`
 	Metas      []Meta `json:"meta"`
 }
+
+type DeleteContentTxParams struct {
+	PageId *int64 `json:"page_id"`
+	PostId *int64 `json:"post_id"`
+}
+
+type DeleteContentTxResult struct {
+	DeletedPost bool `json:"deleted_post"`
+	DeletedPage bool `json:"deleted_page"`
+	DeletedMeta bool `json:"deleted_meta"`
+}

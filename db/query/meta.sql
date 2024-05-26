@@ -54,3 +54,9 @@ RETURNING *;
 -- name: DeleteMeta :exec
 DELETE FROM meta
 WHERE id = $1;
+
+-- name: DeleteMetaByPostId :exec
+DELETE FROM meta WHERE posts_id = $1;
+
+-- name: DeleteMetaByPageId :exec
+DELETE FROM meta WHERE page_id = $1;
