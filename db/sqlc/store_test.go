@@ -834,3 +834,46 @@ func TestDeletePostsTx(t *testing.T) {
 		require.Empty(t, meta)
 	}
 }
+
+func TestDeletePageTx(t *testing.T) {
+	// Arrange
+	store := NewStore(testDB)
+
+	newPage := createRandomPage(t)
+
+	n := 5
+
+	errs := make(chan error)
+
+	// Act
+	for i := 0; i < n; i++ {
+		go func() {
+
+			_, err := store.DeletePageTx(context.Background(), DeleteContentTxParams{
+				PageId: &newPage.ID,
+				PostId: nil,
+			})
+
+			errs <- err
+		}()
+	}
+
+	// Assert
+	for i := 0; i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
+
+		page, err := store.GetPages(context.Background(), newPage.ID)
+		require.Error(t, err)
+		require.EqualError(t, err, sql.ErrNoRows.Error())
+		require.Empty(t, page)
+
+		meta, err := store.GetMetaByPageIDForUpdate(context.Background(), sql.NullInt64{
+			Int64: newPage.ID,
+			Valid: true,
+		})
+		require.Error(t, err)
+		require.EqualError(t, err, sql.ErrNoRows.Error())
+		require.Empty(t, meta)
+	}
+}
