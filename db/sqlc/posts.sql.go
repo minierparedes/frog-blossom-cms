@@ -27,22 +27,22 @@ INSERT INTO posts (
   updated_by
 ) VALUES (
   $1, $2, $3, $4, DEFAULT, $5, $6, $7, $8, $9, $10, $11, $12
-) RETURNING id, title, content, author_id, url, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type, published_by, updated_by
+) RETURNING id, title, content, author_id, url, created_at, updated_at, published_at, edited_at, post_author, post_mime_type, published_by, updated_by, status
 `
 
 type CreatePostsParams struct {
-	Title        string    `json:"title"`
-	Content      string    `json:"content"`
-	AuthorID     int64     `json:"author_id"`
-	Url          string    `json:"url"`
-	UpdatedAt    time.Time `json:"updated_at"`
-	Status       string    `json:"status"`
-	PublishedAt  time.Time `json:"published_at"`
-	EditedAt     time.Time `json:"edited_at"`
-	PostAuthor   string    `json:"post_author"`
-	PostMimeType string    `json:"post_mime_type"`
-	PublishedBy  string    `json:"published_by"`
-	UpdatedBy    string    `json:"updated_by"`
+	Title        string      `json:"title"`
+	Content      string      `json:"content"`
+	AuthorID     int64       `json:"author_id"`
+	Url          string      `json:"url"`
+	UpdatedAt    time.Time   `json:"updated_at"`
+	Status       interface{} `json:"status"`
+	PublishedAt  time.Time   `json:"published_at"`
+	EditedAt     time.Time   `json:"edited_at"`
+	PostAuthor   string      `json:"post_author"`
+	PostMimeType string      `json:"post_mime_type"`
+	PublishedBy  string      `json:"published_by"`
+	UpdatedBy    string      `json:"updated_by"`
 }
 
 func (q *Queries) CreatePosts(ctx context.Context, arg CreatePostsParams) (Post, error) {
@@ -69,13 +69,13 @@ func (q *Queries) CreatePosts(ctx context.Context, arg CreatePostsParams) (Post,
 		&i.Url,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.Status,
 		&i.PublishedAt,
 		&i.EditedAt,
 		&i.PostAuthor,
 		&i.PostMimeType,
 		&i.PublishedBy,
 		&i.UpdatedBy,
+		&i.Status,
 	)
 	return i, err
 }
@@ -91,7 +91,7 @@ func (q *Queries) DeletePosts(ctx context.Context, id int64) error {
 }
 
 const getPosts = `-- name: GetPosts :one
-SELECT id, title, content, author_id, url, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type, published_by, updated_by FROM posts
+SELECT id, title, content, author_id, url, created_at, updated_at, published_at, edited_at, post_author, post_mime_type, published_by, updated_by, status FROM posts
 WHERE id = $1 LIMIT 1
 `
 
@@ -106,19 +106,19 @@ func (q *Queries) GetPosts(ctx context.Context, id int64) (Post, error) {
 		&i.Url,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.Status,
 		&i.PublishedAt,
 		&i.EditedAt,
 		&i.PostAuthor,
 		&i.PostMimeType,
 		&i.PublishedBy,
 		&i.UpdatedBy,
+		&i.Status,
 	)
 	return i, err
 }
 
 const listPosts = `-- name: ListPosts :many
-SELECT id, title, content, author_id, url, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type, published_by, updated_by FROM posts
+SELECT id, title, content, author_id, url, created_at, updated_at, published_at, edited_at, post_author, post_mime_type, published_by, updated_by, status FROM posts
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -146,13 +146,13 @@ func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, e
 			&i.Url,
 			&i.CreatedAt,
 			&i.UpdatedAt,
-			&i.Status,
 			&i.PublishedAt,
 			&i.EditedAt,
 			&i.PostAuthor,
 			&i.PostMimeType,
 			&i.PublishedBy,
 			&i.UpdatedBy,
+			&i.Status,
 		); err != nil {
 			return nil, err
 		}
@@ -182,23 +182,23 @@ UPDATE posts
   published_by = $12,
   updated_by = $13
 WHERE id = $1
-RETURNING id, title, content, author_id, url, created_at, updated_at, status, published_at, edited_at, post_author, post_mime_type, published_by, updated_by
+RETURNING id, title, content, author_id, url, created_at, updated_at, published_at, edited_at, post_author, post_mime_type, published_by, updated_by, status
 `
 
 type UpdatePostsParams struct {
-	ID           int64     `json:"id"`
-	Title        string    `json:"title"`
-	Content      string    `json:"content"`
-	AuthorID     int64     `json:"author_id"`
-	Url          string    `json:"url"`
-	UpdatedAt    time.Time `json:"updated_at"`
-	Status       string    `json:"status"`
-	PublishedAt  time.Time `json:"published_at"`
-	EditedAt     time.Time `json:"edited_at"`
-	PostAuthor   string    `json:"post_author"`
-	PostMimeType string    `json:"post_mime_type"`
-	PublishedBy  string    `json:"published_by"`
-	UpdatedBy    string    `json:"updated_by"`
+	ID           int64       `json:"id"`
+	Title        string      `json:"title"`
+	Content      string      `json:"content"`
+	AuthorID     int64       `json:"author_id"`
+	Url          string      `json:"url"`
+	UpdatedAt    time.Time   `json:"updated_at"`
+	Status       interface{} `json:"status"`
+	PublishedAt  time.Time   `json:"published_at"`
+	EditedAt     time.Time   `json:"edited_at"`
+	PostAuthor   string      `json:"post_author"`
+	PostMimeType string      `json:"post_mime_type"`
+	PublishedBy  string      `json:"published_by"`
+	UpdatedBy    string      `json:"updated_by"`
 }
 
 func (q *Queries) UpdatePosts(ctx context.Context, arg UpdatePostsParams) (Post, error) {
@@ -226,13 +226,13 @@ func (q *Queries) UpdatePosts(ctx context.Context, arg UpdatePostsParams) (Post,
 		&i.Url,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.Status,
 		&i.PublishedAt,
 		&i.EditedAt,
 		&i.PostAuthor,
 		&i.PostMimeType,
 		&i.PublishedBy,
 		&i.UpdatedBy,
+		&i.Status,
 	)
 	return i, err
 }
