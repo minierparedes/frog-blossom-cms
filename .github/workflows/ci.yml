@@ -17,10 +17,11 @@ jobs:
       postgres:
         # Docker Hub image
         image: postgres:12
-        # Provide the password for postgres
+        # Provide the env vars for postgres
         env:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: secret
+          POSTGRES_DB: frog-blossom-db
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -38,6 +39,15 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.22.2'
+
+    - name:
+      run: |
+       $ curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.1/migrate.linux-amd64.tar.gz | tar xvz
+       sudo mv migrate /usr/bin
+       which migrate
+
+    - name:
+      run: make migrateup
 
     - name: Test
       run: make test
