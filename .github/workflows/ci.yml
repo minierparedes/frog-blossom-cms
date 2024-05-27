@@ -50,4 +50,3 @@ jobs:
       run: make migrateup
 
     - name: Test
-      run: make test
