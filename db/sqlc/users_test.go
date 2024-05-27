@@ -71,9 +71,11 @@ func TestGetUser(t *testing.T) {
 
 func TestUpdateUser(t *testing.T) {
 	// Arrange
+	newUser := createRandomUser(t)
+
 	args := UpdateUsersParams{
-		ID:          11,
-		Username:    "holyunin8 hello nurse",
+		ID:          newUser.ID,
+		Username:    newUser.Username,
 		Email:       "holyunin8@si.edu",
 		Password:    "gY0_OzLmifL1",
 		Role:        "user",
