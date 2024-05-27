@@ -84,24 +84,6 @@ func (q *Queries) DeleteMeta(ctx context.Context, id int64) error {
 	return err
 }
 
-const deleteMetaByPageId = `-- name: DeleteMetaByPageId :exec
-DELETE FROM meta WHERE page_id = $1
-`
-
-func (q *Queries) DeleteMetaByPageId(ctx context.Context, pageID sql.NullInt64) error {
-	_, err := q.db.ExecContext(ctx, deleteMetaByPageId, pageID)
-	return err
-}
-
-const deleteMetaByPostId = `-- name: DeleteMetaByPostId :exec
-DELETE FROM meta WHERE posts_id = $1
-`
-
-func (q *Queries) DeleteMetaByPostId(ctx context.Context, postsID sql.NullInt64) error {
-	_, err := q.db.ExecContext(ctx, deleteMetaByPostId, postsID)
-	return err
-}
-
 const getMeta = `-- name: GetMeta :one
 SELECT id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_og_image, locale, page_amount, site_language, meta_key, meta_value FROM meta
 WHERE id = $1 LIMIT 1
@@ -109,58 +91,6 @@ WHERE id = $1 LIMIT 1
 
 func (q *Queries) GetMeta(ctx context.Context, id int64) (Meta, error) {
 	row := q.db.QueryRowContext(ctx, getMeta, id)
-	var i Meta
-	err := row.Scan(
-		&i.ID,
-		&i.PageID,
-		&i.PostsID,
-		&i.MetaTitle,
-		&i.MetaDescription,
-		&i.MetaRobots,
-		&i.MetaOgImage,
-		&i.Locale,
-		&i.PageAmount,
-		&i.SiteLanguage,
-		&i.MetaKey,
-		&i.MetaValue,
-	)
-	return i, err
-}
-
-const getMetaByPageIDForUpdate = `-- name: GetMetaByPageIDForUpdate :one
-SELECT id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_og_image, locale, page_amount, site_language, meta_key, meta_value FROM meta
-WHERE page_id = $1 LIMIT 1
-FOR NO KEY UPDATE
-`
-
-func (q *Queries) GetMetaByPageIDForUpdate(ctx context.Context, pageID sql.NullInt64) (Meta, error) {
-	row := q.db.QueryRowContext(ctx, getMetaByPageIDForUpdate, pageID)
-	var i Meta
-	err := row.Scan(
-		&i.ID,
-		&i.PageID,
-		&i.PostsID,
-		&i.MetaTitle,
-		&i.MetaDescription,
-		&i.MetaRobots,
-		&i.MetaOgImage,
-		&i.Locale,
-		&i.PageAmount,
-		&i.SiteLanguage,
-		&i.MetaKey,
-		&i.MetaValue,
-	)
-	return i, err
-}
-
-const getMetaByPostsIDForUpdate = `-- name: GetMetaByPostsIDForUpdate :one
-SELECT id, page_id, posts_id, meta_title, meta_description, meta_robots, meta_og_image, locale, page_amount, site_language, meta_key, meta_value FROM meta
-WHERE posts_id = $1 LIMIT 1
-FOR NO KEY UPDATE
-`
-
-func (q *Queries) GetMetaByPostsIDForUpdate(ctx context.Context, postsID sql.NullInt64) (Meta, error) {
-	row := q.db.QueryRowContext(ctx, getMetaByPostsIDForUpdate, postsID)
 	var i Meta
 	err := row.Scan(
 		&i.ID,
