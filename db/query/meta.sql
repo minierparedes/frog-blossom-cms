@@ -19,6 +19,16 @@ INSERT INTO meta (
 SELECT * FROM meta
 WHERE id = $1 LIMIT 1;
 
+-- name: GetMetaByPageIDForUpdate :one
+SELECT * FROM meta
+WHERE page_id = $1 LIMIT 1
+FOR NO KEY UPDATE;
+
+-- name: GetMetaByPostsIDForUpdate :one
+SELECT * FROM meta
+WHERE posts_id = $1 LIMIT 1
+FOR NO KEY UPDATE;
+
 -- name: ListMeta :many
 SELECT * FROM meta
 ORDER BY id
@@ -44,3 +54,9 @@ RETURNING *;
 -- name: DeleteMeta :exec
 DELETE FROM meta
 WHERE id = $1;
+
+-- name: DeleteMetaByPostId :exec
+DELETE FROM meta WHERE posts_id = $1;
+
+-- name: DeleteMetaByPageId :exec
+DELETE FROM meta WHERE page_id = $1;
