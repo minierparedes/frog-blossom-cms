@@ -3,9 +3,10 @@ package frog_blossom_db
 import (
 	"context"
 	"database/sql"
-	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestInitSetupConfigTx(t *testing.T) {
@@ -528,6 +529,7 @@ func TestCreatePageTx(t *testing.T) {
 
 func TestUpdatePostsTx(t *testing.T) {
 	// Arrange
+
 	store := NewStore(testDB)
 
 	newUser := createRandomUser(t)
