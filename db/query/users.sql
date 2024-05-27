@@ -8,9 +8,10 @@ INSERT INTO Users (
   last_name,
   user_url,
   description,
-  updated_at
+  updated_at,
+  is_deleted
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
 ) RETURNING *;
 
 -- name: GetUsers :one
@@ -33,7 +34,8 @@ UPDATE users
   last_name = $7,
   user_url = $8,
   description = $9,
-  updated_at = $10
+  updated_at = $10,
+  is_deleted = $11
 WHERE id = $1
 RETURNING *;
 
