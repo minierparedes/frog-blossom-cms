@@ -529,7 +529,6 @@ func TestCreatePageTx(t *testing.T) {
 
 func TestUpdatePostsTx(t *testing.T) {
 	// Arrange
-
 	store := NewStore(testDB)
 
 	newUser := createRandomUser(t)
