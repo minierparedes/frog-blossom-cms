@@ -42,20 +42,20 @@ type Page struct {
 }
 
 type Post struct {
-	ID           int64       `json:"id"`
-	Title        string      `json:"title"`
-	Content      string      `json:"content"`
-	AuthorID     int64       `json:"author_id"`
-	Url          string      `json:"url"`
-	CreatedAt    time.Time   `json:"created_at"`
-	UpdatedAt    time.Time   `json:"updated_at"`
-	PublishedAt  time.Time   `json:"published_at"`
-	EditedAt     time.Time   `json:"edited_at"`
-	PostAuthor   string      `json:"post_author"`
-	PostMimeType string      `json:"post_mime_type"`
-	PublishedBy  string      `json:"published_by"`
-	UpdatedBy    string      `json:"updated_by"`
-	Status       interface{} `json:"status"`
+	ID           int64     `json:"id"`
+	Title        string    `json:"title"`
+	Content      string    `json:"content"`
+	AuthorID     int64     `json:"author_id"`
+	Url          string    `json:"url"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	Status       string    `json:"status"`
+	PublishedAt  time.Time `json:"published_at"`
+	EditedAt     time.Time `json:"edited_at"`
+	PostAuthor   string    `json:"post_author"`
+	PostMimeType string    `json:"post_mime_type"`
+	PublishedBy  string    `json:"published_by"`
+	UpdatedBy    string    `json:"updated_by"`
 }
 
 type User struct {
@@ -63,12 +63,12 @@ type User struct {
 	Username    string         `json:"username"`
 	Email       string         `json:"email"`
 	Password    string         `json:"password"`
+	Role        string         `json:"role"`
 	FirstName   string         `json:"first_name"`
 	LastName    string         `json:"last_name"`
 	UserUrl     sql.NullString `json:"user_url"`
 	Description sql.NullString `json:"description"`
 	CreatedAt   time.Time      `json:"created_at"`
 	UpdatedAt   time.Time      `json:"updated_at"`
-	Role        interface{}    `json:"role"`
 	IsDeleted   sql.NullBool   `json:"is_deleted"`
 }

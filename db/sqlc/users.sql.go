@@ -25,14 +25,14 @@ INSERT INTO Users (
   is_deleted
 ) VALUES (
   $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
-) RETURNING id, username, email, password, first_name, last_name, user_url, description, created_at, updated_at, role, is_deleted
+) RETURNING id, username, email, password, role, first_name, last_name, user_url, description, created_at, updated_at, is_deleted
 `
 
 type CreateUsersParams struct {
 	Username    string         `json:"username"`
 	Email       string         `json:"email"`
 	Password    string         `json:"password"`
-	Role        interface{}    `json:"role"`
+	Role        string         `json:"role"`
 	FirstName   string         `json:"first_name"`
 	LastName    string         `json:"last_name"`
 	UserUrl     sql.NullString `json:"user_url"`
@@ -60,13 +60,13 @@ func (q *Queries) CreateUsers(ctx context.Context, arg CreateUsersParams) (User,
 		&i.Username,
 		&i.Email,
 		&i.Password,
+		&i.Role,
 		&i.FirstName,
 		&i.LastName,
 		&i.UserUrl,
 		&i.Description,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.Role,
 		&i.IsDeleted,
 	)
 	return i, err
@@ -83,7 +83,7 @@ func (q *Queries) DeleteUsers(ctx context.Context, id int64) error {
 }
 
 const getUsers = `-- name: GetUsers :one
-SELECT id, username, email, password, first_name, last_name, user_url, description, created_at, updated_at, role, is_deleted FROM users
+SELECT id, username, email, password, role, first_name, last_name, user_url, description, created_at, updated_at, is_deleted FROM users
 WHERE id = $1 LIMIT 1
 `
 
@@ -95,20 +95,20 @@ func (q *Queries) GetUsers(ctx context.Context, id int64) (User, error) {
 		&i.Username,
 		&i.Email,
 		&i.Password,
+		&i.Role,
 		&i.FirstName,
 		&i.LastName,
 		&i.UserUrl,
 		&i.Description,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.Role,
 		&i.IsDeleted,
 	)
 	return i, err
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, username, email, password, first_name, last_name, user_url, description, created_at, updated_at, role, is_deleted FROM users
+SELECT id, username, email, password, role, first_name, last_name, user_url, description, created_at, updated_at, is_deleted FROM users
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -133,13 +133,13 @@ func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, e
 			&i.Username,
 			&i.Email,
 			&i.Password,
+			&i.Role,
 			&i.FirstName,
 			&i.LastName,
 			&i.UserUrl,
 			&i.Description,
 			&i.CreatedAt,
 			&i.UpdatedAt,
-			&i.Role,
 			&i.IsDeleted,
 		); err != nil {
 			return nil, err
@@ -168,7 +168,7 @@ UPDATE users
   updated_at = $10,
   is_deleted = $11
 WHERE id = $1
-RETURNING id, username, email, password, first_name, last_name, user_url, description, created_at, updated_at, role, is_deleted
+RETURNING id, username, email, password, role, first_name, last_name, user_url, description, created_at, updated_at, is_deleted
 `
 
 type UpdateUsersParams struct {
@@ -176,7 +176,7 @@ type UpdateUsersParams struct {
 	Username    string         `json:"username"`
 	Email       string         `json:"email"`
 	Password    string         `json:"password"`
-	Role        interface{}    `json:"role"`
+	Role        string         `json:"role"`
 	FirstName   string         `json:"first_name"`
 	LastName    string         `json:"last_name"`
 	UserUrl     sql.NullString `json:"user_url"`
@@ -205,13 +205,13 @@ func (q *Queries) UpdateUsers(ctx context.Context, arg UpdateUsersParams) (User,
 		&i.Username,
 		&i.Email,
 		&i.Password,
+		&i.Role,
 		&i.FirstName,
 		&i.LastName,
 		&i.UserUrl,
 		&i.Description,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.Role,
 		&i.IsDeleted,
 	)
 	return i, err
