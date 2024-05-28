@@ -22,7 +22,6 @@ database migrations written in Go.
 
 ## Getting Started
 
-<<<<<<< HEAD
 ### Run it with docker
 
 There is a makefile that has the scripts for running an instance of the frog_blossom_db, postgreSQL
@@ -68,11 +67,6 @@ You clean your migration, and then force clean and then attempt to migrate up/do
 ```bash
 make migrateforce
 ```
-=======
-### Basic usage
-
-### Docker usage
->>>>>>> 75c7508e84c838784a1d79412c17aef70377e4c4
 
 ### Revision History
 
@@ -83,8 +77,5 @@ make migrateforce
 | 2024-05-02 | 1.2     | makefile                | @minierparedes    |
 | 2024-05-02 | 1.3     | readme                  | @minierparedes    |
 | 2024-05-10 | 1.4     | db schema v5            | @minierparedes    |
-<<<<<<< HEAD
 | 2024-05-20 | 1.5     | readme: run docker      | @minierparedes    |
 | 2024-05-27 | 1.6     | github actions      | @minierparedes    |
-=======
->>>>>>> 75c7508e84c838784a1d79412c17aef70377e4c4
