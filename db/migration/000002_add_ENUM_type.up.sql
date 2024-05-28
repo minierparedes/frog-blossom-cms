@@ -1,10 +1,14 @@
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'access') THEN
+    BEGIN
         CREATE TYPE access AS ENUM ('admin', 'user');
-    END IF;
+    EXCEPTION WHEN duplicate_object THEN
+        NULL;
+    END;
 
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'level') THEN
+    BEGIN
         CREATE TYPE level AS ENUM ('draft', 'pending', 'private', 'publish');
-    END IF;
+    EXCEPTION WHEN duplicate_object THEN
+        NULL;
+    END;
 END $$;
