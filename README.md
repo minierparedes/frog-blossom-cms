@@ -22,9 +22,57 @@ database migrations written in Go.
 
 ## Getting Started
 
+<<<<<<< HEAD
+### Run it with docker
+
+There is a makefile that has the scripts for running an instance of the frog_blossom_db, postgreSQL
+
+***start the Postgres docker container***
+
+```bash
+make postgres
+
+```
+
+***create frog_blossom_db database***
+
+```bash
+make cratedb
+```
+
+***drop frog_blossom_db database***
+
+```bash
+make dropdb
+```
+
+### schema migration
+
+***migrate up frog_blossom_db database***
+
+```bash
+make migrateup
+```
+
+***migrate down frog_blossom_db database***
+
+```bash
+make migratedown
+```
+
+
+***warning: dirty migration error!***
+
+You clean your migration, and then force clean and then attempt to migrate up/down again
+
+```bash
+make migrateforce
+```
+=======
 ### Basic usage
 
 ### Docker usage
+>>>>>>> 75c7508e84c838784a1d79412c17aef70377e4c4
 
 ### Revision History
 
@@ -35,3 +83,8 @@ database migrations written in Go.
 | 2024-05-02 | 1.2     | makefile                | @minierparedes    |
 | 2024-05-02 | 1.3     | readme                  | @minierparedes    |
 | 2024-05-10 | 1.4     | db schema v5            | @minierparedes    |
+<<<<<<< HEAD
+| 2024-05-20 | 1.5     | readme: run docker      | @minierparedes    |
+| 2024-05-27 | 1.6     | github actions      | @minierparedes    |
+=======
+>>>>>>> 75c7508e84c838784a1d79412c17aef70377e4c4

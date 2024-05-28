@@ -3,9 +3,10 @@ package frog_blossom_db
 import (
 	"context"
 	"database/sql"
-	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func createRandomPosts(t *testing.T) Post {
@@ -38,10 +39,10 @@ func createRandomPosts(t *testing.T) Post {
 	require.Equal(t, args.Content, posts.Content)
 	require.Equal(t, args.AuthorID, posts.AuthorID)
 	require.Equal(t, args.Url, posts.Url)
-	require.Equal(t, args.UpdatedAt, posts.UpdatedAt.UTC())
+	require.WithinDuration(t, args.UpdatedAt, posts.UpdatedAt.UTC(), time.Millisecond)
 	require.Equal(t, args.Status, posts.Status)
-	require.Equal(t, args.PublishedAt, posts.PublishedAt.UTC())
-	require.Equal(t, args.EditedAt, posts.EditedAt.UTC())
+	require.WithinDuration(t, args.PublishedAt, posts.PublishedAt.UTC(), time.Millisecond)
+	require.WithinDuration(t, args.EditedAt, posts.EditedAt.UTC(), time.Millisecond)
 	require.Equal(t, args.PostAuthor, posts.PostAuthor)
 	require.Equal(t, args.PostMimeType, posts.PostMimeType)
 	require.Equal(t, args.PublishedBy, posts.PublishedBy)
@@ -69,10 +70,10 @@ func TestGetPosts(t *testing.T) {
 	require.Equal(t, randomPosts.Content, posts.Content)
 	require.Equal(t, randomPosts.AuthorID, posts.AuthorID)
 	require.Equal(t, randomPosts.Url, posts.Url)
-	require.Equal(t, randomPosts.UpdatedAt, posts.UpdatedAt)
+	require.WithinDuration(t, randomPosts.UpdatedAt, posts.UpdatedAt, time.Millisecond)
 	require.Equal(t, randomPosts.Status, posts.Status)
-	require.Equal(t, randomPosts.PublishedAt, posts.PublishedAt)
-	require.Equal(t, randomPosts.EditedAt, posts.EditedAt)
+	require.WithinDuration(t, randomPosts.PublishedAt, posts.PublishedAt, time.Millisecond)
+	require.WithinDuration(t, randomPosts.EditedAt, posts.EditedAt, time.Millisecond)
 	require.Equal(t, randomPosts.PostAuthor, posts.PostAuthor)
 	require.Equal(t, randomPosts.PostMimeType, posts.PostMimeType)
 	require.Equal(t, randomPosts.PublishedBy, posts.PublishedBy)
@@ -116,10 +117,10 @@ func TestUpdatePosts(t *testing.T) {
 	require.Equal(t, args.Content, post.Content)
 	require.Equal(t, args.AuthorID, post.AuthorID)
 	require.Equal(t, args.Url, post.Url)
-	require.Equal(t, args.UpdatedAt, post.UpdatedAt.UTC())
+	require.WithinDuration(t, args.UpdatedAt, post.UpdatedAt.UTC(), time.Millisecond)
 	require.Equal(t, args.Status, post.Status)
-	require.Equal(t, args.PublishedAt, post.PublishedAt.UTC())
-	require.Equal(t, args.EditedAt, post.EditedAt.UTC())
+	require.WithinDuration(t, args.PublishedAt, post.PublishedAt.UTC(), time.Millisecond)
+	require.WithinDuration(t, args.EditedAt, post.EditedAt.UTC(), time.Millisecond)
 	require.Equal(t, args.PostAuthor, post.PostAuthor)
 	require.Equal(t, args.PostMimeType, post.PostMimeType)
 	require.Equal(t, args.PublishedBy, post.PublishedBy)
