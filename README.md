@@ -68,9 +68,6 @@ You clean your migration, and then force clean and then attempt to migrate up/do
 make migrateforce
 ```
 
-
-
-
 ### Revision History
 
 | Date       | Version | Description of Changes  | Author |
@@ -81,3 +78,4 @@ make migrateforce
 | 2024-05-02 | 1.3     | readme                  | @minierparedes    |
 | 2024-05-10 | 1.4     | db schema v5            | @minierparedes    |
 | 2024-05-20 | 1.5     | readme: run docker      | @minierparedes    |
+| 2024-05-27 | 1.6     | github actions      | @minierparedes    |
