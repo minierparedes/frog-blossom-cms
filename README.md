@@ -1,8 +1,8 @@
 # frog blossom
 
-## Database for frog blossom CMS
+## Frog Blossom CMS
 
-Database repository for a web-based CMS. Herein are the scripts, configurations, and documentation related to the database architecture and management of the CMS application.
+Repository for a web-based CMS.
 
 ## About the CMS System
 
@@ -13,6 +13,9 @@ The CMS system is a web-based platform designed to empower users to create, mana
 - **Content Management**: The CMS system enables users to create, edit, organize, and publish various types of digital content such as articles, blog posts, images, and videos. Content can be saved as drafts, published, or archived as needed.
 
 ## Technologies used
+
+**HTTP server**: GO Gin
+HTTP web framework that contain a set of commonly used functionalities (e.g., routing, middleware support, rendering, etc)
 
 **db**: postgresql
 open-source relational database management system used for storing and managing structured data within the application.
