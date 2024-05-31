@@ -18,7 +18,9 @@ func NewServer(store *db.Store) *Server {
 	router := gin.Default()
 
 	subrouter := router.Group("api/v1")
+
 	subrouter.POST("/users", handler.CreateUsersHandler(store))
+	subrouter.GET("/users/:id", handler.GetUsersHandler(store))
 
 	server.router = router
 	return server

@@ -20,7 +20,7 @@ sqlc:
 	sqlc generate
 
 server:
-	go run main.go
+	go run cmd/main.go
 
 test:
 	go test -v -cover ./...
