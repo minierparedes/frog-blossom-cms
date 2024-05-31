@@ -7,25 +7,19 @@ import (
 	"testing"
 
 	_ "github.com/lib/pq"
-)
-
-const (
-	dbDriver = "postgres"
-	dbSource = "postgresql://root:secret@localhost:5432/frog-blossom-db?sslmode=disable"
+	"github.com/reflection/frog_blossom_db/config"
 )
 
 var testQueries *Queries
 var testDB *sql.DB
 
 func TestMain(m *testing.M) {
-	var err error
+	config, err := config.LoadConfig("../..")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
 
-	//conn, err := sql.Open(dbDriver, dbSource)
-	//if err != nil {
-	//	log.Fatal("cannot connect to database:", err)
-	//}
-
-	testDB, err = sql.Open(dbDriver, dbSource)
+	testDB, err = sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to database:", err)
 	}
