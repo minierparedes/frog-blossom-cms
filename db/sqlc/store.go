@@ -7,6 +7,7 @@ import (
 )
 
 // Functions for executing db queries and transactions
+
 type Store struct {
 	*Queries
 	db *sql.DB
@@ -20,6 +21,7 @@ func NewStore(db *sql.DB) *Store {
 }
 
 // executes a function within a db transaction
+
 func (store *Store) executeTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
