@@ -1,8 +1,8 @@
 # frog blossom
 
-## Database for frog blossom CMS
+## Frog Blossom CMS
 
-Database repository for a web-based CMS. Herein are the scripts, configurations, and documentation related to the database architecture and management of the CMS application.
+Repository for a web-based CMS.
 
 ## About the CMS System
 
@@ -14,6 +14,9 @@ The CMS system is a web-based platform designed to empower users to create, mana
 
 ## Technologies used
 
+**HTTP server**: GO Gin
+HTTP web framework that contain a set of commonly used functionalities (e.g., routing, middleware support, rendering, etc)
+
 **db**: postgresql
 open-source relational database management system used for storing and managing structured data within the application.
 
@@ -24,7 +27,7 @@ database migrations written in Go.
 
 ### Run it with docker
 
-There is a makefile that has the scripts for running an instance of the frog_blossom_db, postgreSQL
+There is a makefile that has the scripts for running an instance of the frog_blossom_db, postgreSQL, and server
 
 ***start the Postgres docker container***
 
@@ -39,12 +42,6 @@ make postgres
 make cratedb
 ```
 
-***drop frog_blossom_db database***
-
-```bash
-make dropdb
-```
-
 ### schema migration
 
 ***migrate up frog_blossom_db database***
@@ -53,19 +50,10 @@ make dropdb
 make migrateup
 ```
 
-***migrate down frog_blossom_db database***
+***Run server***
 
 ```bash
-make migratedown
-```
-
-
-***warning: dirty migration error!***
-
-You clean your migration, and then force clean and then attempt to migrate up/down again
-
-```bash
-make migrateforce
+make server
 ```
 
 ### Revision History
