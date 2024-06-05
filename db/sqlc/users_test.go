@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/reflection/frog_blossom_db/utils"
+	"github.com/reflection/frog_blossom_cms/utils"
 	"github.com/stretchr/testify/require"
 )
 

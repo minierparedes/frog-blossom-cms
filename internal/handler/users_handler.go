@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	db "github.com/reflection/frog_blossom_db/db/sqlc"
+	db "github.com/reflection/frog_blossom_cms/db/sqlc"
 )
 
 // CreateUsers handler
