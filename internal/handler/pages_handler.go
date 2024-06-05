@@ -38,6 +38,11 @@ func CreatePagesHandler(store *db.Store) gin.HandlerFunc {
 			return
 		}
 
+		if user.Username != req.PageAuthor {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Page author does not match the provided author ID"})
+			return
+		}
+
 		args := db.CreatePagesParams{
 			Domain:         req.Domain,
 			AuthorID:       user.ID,
