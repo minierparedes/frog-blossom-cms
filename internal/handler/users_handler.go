@@ -8,8 +8,6 @@ import (
 	db "github.com/reflection/frog_blossom_db/db/sqlc"
 )
 
-// CreateUsers handler
-
 type createUsersRequest struct {
 	Username    string `json:"username" binding:"required"`
 	Email       string `json:"email" binding:"required"`
