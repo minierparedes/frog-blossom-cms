@@ -32,10 +32,16 @@ func CreatePagesHandler(store *db.Store) gin.HandlerFunc {
 			return
 		}
 
+		user, err := store.GetUsers(ctx, req.AuthorID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
 		args := db.CreatePagesParams{
 			Domain:         req.Domain,
-			AuthorID:       req.AuthorID,
-			PageAuthor:     req.PageAuthor,
+			AuthorID:       user.ID,
+			PageAuthor:     user.Username,
 			Title:          req.Title,
 			Url:            req.Url,
 			MenuOrder:      req.MenuOrder,
