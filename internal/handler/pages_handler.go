@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -63,6 +64,32 @@ func CreatePagesHandler(store *db.Store) gin.HandlerFunc {
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
+		}
+		ctx.JSON(http.StatusOK, page)
+	}
+}
+
+type getPagesRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+func GetPagesHandler(store *db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		var req getPagesRequest
+		if err := ctx.ShouldBindUri(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		page, err := store.GetPages(ctx, req.ID)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				ctx.JSON(http.StatusNotFound, errorResponse(err))
+				return
+			}
+
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		}
 		ctx.JSON(http.StatusOK, page)
 	}

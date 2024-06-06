@@ -19,9 +19,11 @@ func NewServer(store *db.Store) *Server {
 
 	subrouter := router.Group("api/v1")
 
+	// Users router
 	subrouter.POST("/users", handler.CreateUsersHandler(store))
 	subrouter.GET("/users/:id", handler.GetUsersHandler(store))
 
+	// Pages router
 	subrouter.POST("/create-page", handler.CreatePagesHandler(store))
 
 	server.router = router
