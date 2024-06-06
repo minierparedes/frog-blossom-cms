@@ -5,9 +5,9 @@ import (
 	"log"
 
 	_ "github.com/lib/pq"
-	"github.com/reflection/frog_blossom_db/api"
-	"github.com/reflection/frog_blossom_db/config"
-	db "github.com/reflection/frog_blossom_db/db/sqlc"
+	"github.com/reflection/frog-blossom-cms/api"
+	"github.com/reflection/frog-blossom-cms/config"
+	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 )
 
 func main() {
