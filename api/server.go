@@ -2,8 +2,8 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	db "github.com/reflection/frog_blossom_cms/db/sqlc"
-	"github.com/reflection/frog_blossom_cms/internal/handler"
+	db "github.com/reflection/frog-blossom-cms/db/sqlc"
+	"github.com/reflection/frog-blossom-cms/internal/handler"
 )
 
 // Server serves HTTP requets for CMS

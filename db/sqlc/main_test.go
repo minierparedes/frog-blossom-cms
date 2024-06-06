@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	_ "github.com/lib/pq"
-	"github.com/reflection/frog_blossom_cms/config"
+	"github.com/reflection/frog-blossom-cms/config"
 )
 
 var testQueries *Queries

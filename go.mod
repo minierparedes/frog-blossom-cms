@@ -1,4 +1,4 @@
-module github.com/reflection/frog_blossom_cms
+module github.com/reflection/frog-blossom-cms
 
 go 1.22.2
 
