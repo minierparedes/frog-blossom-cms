@@ -95,32 +95,27 @@ func GetPageHandler(store *db.Store) gin.HandlerFunc {
 	}
 }
 
-type getListPagesRequest struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
+type listPagesRequest struct {
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
-func GetListPagesHandler(store *db.Store) gin.HandlerFunc {
+func ListPagesHandler(store *db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var req getListPagesRequest
-		if err := ctx.ShouldBindUri(&req); err != nil {
+		var req listPagesRequest
+		if err := ctx.ShouldBindQuery(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}
 
 		args := db.ListPagesParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  req.PageSize,
+			Offset: (req.PageID - 1) * req.PageSize,
 		}
 
 		pages, err := store.ListPages(ctx, args)
 		if err != nil {
-			if err == sql.ErrNoRows {
-				ctx.JSON(http.StatusNotFound, errorResponse(err))
-				return
-			}
-
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		}
 		ctx.JSON(http.StatusOK, pages)
