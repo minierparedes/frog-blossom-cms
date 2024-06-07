@@ -24,7 +24,9 @@ func NewServer(store *db.Store) *Server {
 	subrouter.GET("/users/:id", handler.GetUsersHandler(store))
 
 	// Pages router
-	subrouter.POST("/create-page", handler.CreatePagesHandler(store))
+	subrouter.POST("/pages", handler.CreatePagesHandler(store))
+	subrouter.GET("/pages/:id", handler.GetPageHandler(store))
+	subrouter.GET("/pages", handler.GetListPagesHandler(store))
 
 	server.router = router
 	return server

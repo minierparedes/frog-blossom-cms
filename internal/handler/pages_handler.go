@@ -10,8 +10,8 @@ import (
 
 type createPagesRequest struct {
 	Domain         string `json:"domain"`
-	AuthorID       int64  `json:"author_id"`
-	PageAuthor     string `json:"page_author"`
+	AuthorID       int64  `json:"author_id" binding:"required"`
+	PageAuthor     string `json:"page_author" binding:"required"`
 	Title          string `json:"title"`
 	Url            string `json:"url"`
 	MenuOrder      int64  `json:"menu_order"`
@@ -69,14 +69,14 @@ func CreatePagesHandler(store *db.Store) gin.HandlerFunc {
 	}
 }
 
-type getPagesRequest struct {
+type getPageRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-func GetPagesHandler(store *db.Store) gin.HandlerFunc {
+func GetPageHandler(store *db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var req getPagesRequest
+		var req getPageRequest
 		if err := ctx.ShouldBindUri(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
@@ -92,5 +92,37 @@ func GetPagesHandler(store *db.Store) gin.HandlerFunc {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		}
 		ctx.JSON(http.StatusOK, page)
+	}
+}
+
+type getListPagesRequest struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func GetListPagesHandler(store *db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		var req getListPagesRequest
+		if err := ctx.ShouldBindUri(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		args := db.ListPagesParams{
+			Limit:  req.Limit,
+			Offset: req.Offset,
+		}
+
+		pages, err := store.ListPages(ctx, args)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				ctx.JSON(http.StatusNotFound, errorResponse(err))
+				return
+			}
+
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		}
+		ctx.JSON(http.StatusOK, pages)
 	}
 }
