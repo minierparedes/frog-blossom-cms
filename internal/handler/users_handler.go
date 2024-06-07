@@ -9,6 +9,10 @@ import (
 	db "github.com/reflection/frog_blossom_db/db/sqlc"
 )
 
+func errorResponse(err error) gin.H {
+	return gin.H{"error": err.Error()}
+}
+
 // CreateUsers handler
 
 type createUsersRequest struct {
@@ -51,9 +55,7 @@ func CreateUsersHandler(store *db.Store) gin.HandlerFunc {
 	}
 }
 
-func errorResponse(err error) gin.H {
-	return gin.H{"error": err.Error()}
-}
+// GetUsers handler
 
 type getUsersRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
@@ -82,9 +84,10 @@ func GetUsersHandler(store *db.Store) gin.HandlerFunc {
 }
 
 // ListUsers handler
+
 type listUsersRequest struct {
-	Limit  int32 `form:"limit" binding:"required,min=1"`
-	Offset int32 `form:"offset" binding:"required,min=0"`
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
 func ListUsersHandler(store *db.Store) gin.HandlerFunc {
@@ -96,8 +99,8 @@ func ListUsersHandler(store *db.Store) gin.HandlerFunc {
 		}
 
 		args := db.ListUsersParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  req.PageSize,
+			Offset: (req.PageID - 1) * req.PageSize,
 		}
 
 		users, err := store.ListUsers(ctx, args)
@@ -109,29 +112,7 @@ func ListUsersHandler(store *db.Store) gin.HandlerFunc {
 	}
 }
 
-// Delete user//
-// type deleteUsersRequest struct {
-// 	ID int64 `uri:"id" binding:"required,min=1"`
-// }
-
-// func DeleteUsersHandler(store *db.Store) gin.HandlerFunc {
-// 	return func(ctx *gin.Context) {
-// 		var req deleteUsersRequest
-// 		if err := ctx.ShouldBindUri(&req); err != nil {
-// 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
-// 			return
-// 		}
-
-// 		err := store.DeleteUsers(ctx, req.ID)
-// 		if err != nil {
-// 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-// 			return
-// 		}
-// 		ctx.Status(http.StatusNoContent)
-// 	}
-// }
-
-// update user //
+// UpdateUsers handler
 
 type updateUsersRequest struct {
 	ID          int64  `json:"id" binding:"required"`
