@@ -143,12 +143,14 @@ func UpdatePagesHandler(store *db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req updatePagesRequest
-		if err := ctx.ShouldBindUri(&req); err != nil {
+		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}
 
-		pages, err := store.GetPages(ctx, req.ID)
+		var pageID = req.ID
+
+		pages, err := store.GetPages(ctx, pageID)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				ctx.JSON(http.StatusBadRequest, errorResponse(err))
