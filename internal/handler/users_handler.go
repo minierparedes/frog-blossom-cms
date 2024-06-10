@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"context"
 	"database/sql"
+	"errors"
 	"net/http"
 	"time"
 
@@ -127,6 +129,23 @@ type updateUsersRequest struct {
 	IsDeleted   bool   `json:"is_deleted"`
 }
 
+func checkID(store *db.Store, req updateUsersRequest) bool {
+	if req.ID == 0 {
+		return false
+	}
+
+	user, err := store.GetUsers(context.Background(), req.ID)
+	if err != nil {
+		return false
+	}
+
+	if user.Username == req.Username {
+		return true
+	} else {
+		return false
+	}
+}
+
 func UpdateUsersHandler(store *db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req updateUsersRequest
@@ -147,6 +166,11 @@ func UpdateUsersHandler(store *db.Store) gin.HandlerFunc {
 			Description: sql.NullString{String: req.Description, Valid: true},
 			UpdatedAt:   time.Now(),
 			IsDeleted:   sql.NullBool{Bool: req.IsDeleted, Valid: true},
+		}
+
+		if !checkID(store, req) {
+			ctx.JSON(http.StatusUnauthorized, errorResponse(errors.New("unauthorized")))
+			return
 		}
 
 		user, err := store.UpdateUsers(ctx, args)
