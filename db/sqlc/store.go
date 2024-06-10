@@ -137,11 +137,13 @@ func (store *Store) CreatePageTx(ctx context.Context, args CreateContentTxParams
 		}
 		result.User = user
 
-		posts, err := q.GetPosts(ctx, *args.PostId)
-		if err != nil {
-			return fmt.Errorf("get posts err: %v", err)
+		if args.PostId != nil {
+			posts, err := q.GetPosts(ctx, *args.PostId)
+			if err != nil {
+				return fmt.Errorf("get posts err: %v", err)
+			}
+			result.PostId = &posts
 		}
-		result.PostId = &posts
 
 		for _, pageParams := range args.Pages {
 			page, err := q.CreatePages(ctx, pageParams)
