@@ -37,26 +37,19 @@ type CreateContentTxResult struct {
 }
 
 type UpdateContentTxParams struct {
-	UserId     int64               `json:"user_id"`
-	Username   string              `json:"username"`
-	PageId     *int64              `json:"page_id"`
-	PostId     *int64              `json:"post_id"`
-	MetaPageID *int64              `json:"meta_page_id"`
-	MetaPostID *int64              `json:"meta_post_id"`
-	Pages      []UpdatePagesParams `json:"pages"`
-	Posts      []UpdatePostsParams `json:"posts"`
-	Metas      []UpdateMetaParams  `json:"meta"`
+	UserId   int64             `json:"user_id"`
+	Username string            `json:"username"`
+	PageId   *int64            `json:"page_id"`
+	PostId   *int64            `json:"post_id"`
+	Pages    UpdatePagesParams `json:"pages"`
+	Posts    UpdatePostsParams `json:"posts"`
+	Metas    UpdateMetaParams  `json:"meta"`
 }
 
 type UpdateContentTxResult struct {
-	User       User   `json:"user"`
-	PageId     *Page  `json:"pages_id"`
-	PostId     *Post  `json:"post_id"`
-	MetaPageID *Meta  `json:"meta_page_id"`
-	MetaPostID *Meta  `json:"meta_post_id"`
-	Pages      []Page `json:"page"`
-	Posts      []Post `json:"post"`
-	Metas      []Meta `json:"meta"`
+	Pages Page `json:"page"`
+	Posts Post `json:"post"`
+	Metas Meta `json:"meta"`
 }
 
 type DeleteContentTxParams struct {
