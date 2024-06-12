@@ -550,47 +550,41 @@ func TestUpdatePostsTx(t *testing.T) {
 			require.NoError(t, err)
 
 			result, err := store.UpdatePostsTx(context.Background(), UpdateContentTxParams{
-				UserId:     newUser.ID,
-				Username:   newUser.Username,
-				PageId:     nil,
-				PostId:     &postMeta.PostsID.Int64,
-				MetaPageID: nil,
-				MetaPostID: &postMeta.PostsID.Int64,
-				Pages:      nil,
-				Posts: []UpdatePostsParams{
-					{
-						ID:           postMeta.PostsID.Int64,
-						Title:        "Lorem ipsum dolor sit amet",
-						Content:      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-						AuthorID:     newUser.ID,
-						Url:          "https://example.com",
-						UpdatedAt:    now,
-						Status:       "admin",
-						PublishedAt:  now,
-						EditedAt:     now,
-						PostAuthor:   newUser.Username,
-						PostMimeType: "text/plain",
-						PublishedBy:  newUser.Username,
-						UpdatedBy:    newUser.Username,
-					},
+				UserId:   newUser.ID,
+				Username: newUser.Username,
+				PageId:   nil,
+				PostId:   &postMeta.PostsID.Int64,
+				Pages:    nil,
+				Posts: &UpdatePostsParams{
+					ID:           postMeta.PostsID.Int64,
+					Title:        "Lorem ipsum dolor sit amet",
+					Content:      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+					AuthorID:     newUser.ID,
+					Url:          "https://example.com",
+					UpdatedAt:    now,
+					Status:       "admin",
+					PublishedAt:  now,
+					EditedAt:     now,
+					PostAuthor:   newUser.Username,
+					PostMimeType: "text/plain",
+					PublishedBy:  newUser.Username,
+					UpdatedBy:    newUser.Username,
 				},
-				Metas: []UpdateMetaParams{
-					{
-						ID:              postMeta.ID,
-						PageID:          sql.NullInt64{Int64: 0, Valid: false},
-						PostsID:         sql.NullInt64{Int64: postMeta.PostsID.Int64, Valid: true},
-						MetaTitle:       sql.NullString{String: "Sample Meta Title", Valid: true},
-						MetaDescription: sql.NullString{String: "Sample Meta Description", Valid: true},
-						MetaRobots:      sql.NullString{String: "index, follow", Valid: true},
-						MetaOgImage:     sql.NullString{String: "https://example.com/image.jpg", Valid: true},
-						Locale:          sql.NullString{String: "ja_JP", Valid: true},
-						PageAmount:      3,
-						SiteLanguage: sql.NullString{
-							String: "ja", Valid: true,
-						},
-						MetaKey:   "_thumbnail_id",
-						MetaValue: "12345",
+				Metas: UpdateMetaParams{
+					ID:              postMeta.ID,
+					PageID:          sql.NullInt64{Int64: 0, Valid: false},
+					PostsID:         sql.NullInt64{Int64: postMeta.PostsID.Int64, Valid: true},
+					MetaTitle:       sql.NullString{String: "Sample Meta Title", Valid: true},
+					MetaDescription: sql.NullString{String: "Sample Meta Description", Valid: true},
+					MetaRobots:      sql.NullString{String: "index, follow", Valid: true},
+					MetaOgImage:     sql.NullString{String: "https://example.com/image.jpg", Valid: true},
+					Locale:          sql.NullString{String: "ja_JP", Valid: true},
+					PageAmount:      3,
+					SiteLanguage: sql.NullString{
+						String: "ja", Valid: true,
 					},
+					MetaKey:   "_thumbnail_id",
+					MetaValue: "12345",
 				},
 			})
 
@@ -607,54 +601,42 @@ func TestUpdatePostsTx(t *testing.T) {
 		result := <-results
 		require.NotEmpty(t, result)
 
-		user := result.User
-		require.NotEmpty(t, user)
-		require.Equal(t, newUser.ID, user.ID)
-		require.Equal(t, newUser.Username, user.Username)
-
-		_, err = store.GetUsers(context.Background(), user.ID)
-		require.NoError(t, err)
-
 		posts := result.Posts
 		require.NotEmpty(t, posts)
 
-		for _, post := range posts {
-			storePosts, err := store.GetPosts(context.Background(), post.ID)
-			require.NoError(t, err)
-			require.NotEmpty(t, storePosts)
-			require.Equal(t, post.ID, storePosts.ID)
-			require.Equal(t, post.Title, storePosts.Title)
-			require.Equal(t, post.Content, storePosts.Content)
-			require.Equal(t, post.AuthorID, storePosts.AuthorID)
-			require.Equal(t, post.Url, storePosts.Url)
-			require.Equal(t, post.Status, storePosts.Status)
-			require.Equal(t, post.PublishedAt, storePosts.PublishedAt)
-			require.Equal(t, post.EditedAt, storePosts.EditedAt)
-			require.Equal(t, post.PostAuthor, storePosts.PostAuthor)
-			require.Equal(t, post.PostMimeType, storePosts.PostMimeType)
-			require.Equal(t, post.PublishedBy, storePosts.PublishedBy)
-			require.Equal(t, post.UpdatedAt, storePosts.UpdatedAt)
-		}
+		storePosts, err := store.GetPosts(context.Background(), posts.ID)
+		require.NoError(t, err)
+		require.NotEmpty(t, storePosts)
+		require.Equal(t, posts.ID, storePosts.ID)
+		require.Equal(t, posts.Title, storePosts.Title)
+		require.Equal(t, posts.Content, storePosts.Content)
+		require.Equal(t, posts.AuthorID, storePosts.AuthorID)
+		require.Equal(t, posts.Url, storePosts.Url)
+		require.Equal(t, posts.Status, storePosts.Status)
+		require.Equal(t, posts.PublishedAt, storePosts.PublishedAt)
+		require.Equal(t, posts.EditedAt, storePosts.EditedAt)
+		require.Equal(t, posts.PostAuthor, storePosts.PostAuthor)
+		require.Equal(t, posts.PostMimeType, storePosts.PostMimeType)
+		require.Equal(t, posts.PublishedBy, storePosts.PublishedBy)
+		require.Equal(t, posts.UpdatedAt, storePosts.UpdatedAt)
 
 		metas := result.Metas
 		require.NotEmpty(t, metas)
 
-		for _, meta := range metas {
-			storeMeta, err := store.GetMeta(context.Background(), meta.ID)
-			require.NoError(t, err)
-			require.NotEmpty(t, storeMeta)
-			require.Equal(t, meta.ID, storeMeta.ID)
-			require.Equal(t, meta.PostsID, storeMeta.PostsID)
-			require.Equal(t, meta.MetaTitle, storeMeta.MetaTitle)
-			require.Equal(t, meta.MetaDescription, storeMeta.MetaDescription)
-			require.Equal(t, meta.MetaRobots, storeMeta.MetaRobots)
-			require.Equal(t, meta.MetaOgImage, storeMeta.MetaOgImage)
-			require.Equal(t, meta.Locale, storeMeta.Locale)
-			require.Equal(t, meta.PageAmount, storeMeta.PageAmount)
-			require.Equal(t, meta.SiteLanguage, storeMeta.SiteLanguage)
-			require.Equal(t, meta.MetaKey, storeMeta.MetaKey)
-			require.Equal(t, meta.MetaValue, storeMeta.MetaValue)
-		}
+		storeMeta, err := store.GetMeta(context.Background(), metas.ID)
+		require.NoError(t, err)
+		require.NotEmpty(t, storeMeta)
+		require.Equal(t, metas.ID, storeMeta.ID)
+		require.Equal(t, metas.PostsID, storeMeta.PostsID)
+		require.Equal(t, metas.MetaTitle, storeMeta.MetaTitle)
+		require.Equal(t, metas.MetaDescription, storeMeta.MetaDescription)
+		require.Equal(t, metas.MetaRobots, storeMeta.MetaRobots)
+		require.Equal(t, metas.MetaOgImage, storeMeta.MetaOgImage)
+		require.Equal(t, metas.Locale, storeMeta.Locale)
+		require.Equal(t, metas.PageAmount, storeMeta.PageAmount)
+		require.Equal(t, metas.SiteLanguage, storeMeta.SiteLanguage)
+		require.Equal(t, metas.MetaKey, storeMeta.MetaKey)
+		require.Equal(t, metas.MetaValue, storeMeta.MetaValue)
 	}
 }
 
@@ -681,48 +663,42 @@ func TestUpdatePageTx(t *testing.T) {
 			require.NoError(t, err)
 
 			result, err := store.UpdatePageTx(context.Background(), UpdateContentTxParams{
-				UserId:     newUser.ID,
-				Username:   newUser.Username,
-				PageId:     &postMeta.PageID.Int64,
-				PostId:     nil,
-				MetaPageID: &postMeta.PageID.Int64,
-				MetaPostID: nil,
-				Pages: []UpdatePagesParams{
-					{
-						ID:             postMeta.PageID.Int64,
-						Domain:         "example.com",
-						AuthorID:       newUser.ID,
-						PageAuthor:     newUser.Username,
-						Title:          "Homepage",
-						Url:            "/home",
-						MenuOrder:      1,
-						ComponentType:  "Text",
-						ComponentValue: "Welcome to our website!",
-						PageIdentifier: "home",
-						OptionID:       98765,
-						OptionName:     "site_title",
-						OptionValue:    "My Website",
-						OptionRequired: true,
-					},
+				UserId:   newUser.ID,
+				Username: newUser.Username,
+				PageId:   &postMeta.PageID.Int64,
+				PostId:   nil,
+				Pages: &UpdatePagesParams{
+					ID:             postMeta.PageID.Int64,
+					Domain:         "example.com",
+					AuthorID:       newUser.ID,
+					PageAuthor:     newUser.Username,
+					Title:          "Homepage",
+					Url:            "/home",
+					MenuOrder:      1,
+					ComponentType:  "Text",
+					ComponentValue: "Welcome to our website!",
+					PageIdentifier: "home",
+					OptionID:       98765,
+					OptionName:     "site_title",
+					OptionValue:    "My Website",
+					OptionRequired: true,
 				},
 				Posts: nil,
-				Metas: []UpdateMetaParams{
-					{
-						ID:              postMeta.ID,
-						PageID:          sql.NullInt64{Int64: postMeta.PageID.Int64, Valid: true},
-						PostsID:         sql.NullInt64{Int64: 0, Valid: false},
-						MetaTitle:       sql.NullString{String: "Sample Meta Title", Valid: true},
-						MetaDescription: sql.NullString{String: "Sample Meta Description", Valid: true},
-						MetaRobots:      sql.NullString{String: "index, follow", Valid: true},
-						MetaOgImage:     sql.NullString{String: "https://example.com/image.jpg", Valid: true},
-						Locale:          sql.NullString{String: "ja_JP", Valid: true},
-						PageAmount:      3,
-						SiteLanguage: sql.NullString{
-							String: "ja", Valid: true,
-						},
-						MetaKey:   "_thumbnail_id",
-						MetaValue: "12345",
+				Metas: UpdateMetaParams{
+					ID:              postMeta.ID,
+					PageID:          sql.NullInt64{Int64: postMeta.PageID.Int64, Valid: true},
+					PostsID:         sql.NullInt64{Int64: 0, Valid: false},
+					MetaTitle:       sql.NullString{String: "Sample Meta Title", Valid: true},
+					MetaDescription: sql.NullString{String: "Sample Meta Description", Valid: true},
+					MetaRobots:      sql.NullString{String: "index, follow", Valid: true},
+					MetaOgImage:     sql.NullString{String: "https://example.com/image.jpg", Valid: true},
+					Locale:          sql.NullString{String: "ja_JP", Valid: true},
+					PageAmount:      3,
+					SiteLanguage: sql.NullString{
+						String: "ja", Valid: true,
 					},
+					MetaKey:   "_thumbnail_id",
+					MetaValue: "12345",
 				},
 			})
 
@@ -739,56 +715,47 @@ func TestUpdatePageTx(t *testing.T) {
 		result := <-results
 		require.NotEmpty(t, result)
 
-		user := result.User
-		require.NotEmpty(t, user)
-		require.Equal(t, newUser.ID, user.ID)
-		require.Equal(t, newUser.Username, user.Username)
-
-		_, err = store.GetUsers(context.Background(), user.ID)
+		_, err = store.GetUsers(context.Background(), newUser.ID)
 		require.NoError(t, err)
 
 		pages := result.Pages
 		require.NotEmpty(t, pages)
 
-		for _, page := range pages {
-			storePage, err := store.GetPages(context.Background(), page.ID)
-			require.NoError(t, err)
-			require.NotEmpty(t, storePage)
-			require.Equal(t, storePage.ID, page.ID)
-			require.Equal(t, storePage.Domain, page.Domain)
-			require.Equal(t, storePage.AuthorID, page.AuthorID)
-			require.Equal(t, storePage.PageAuthor, page.PageAuthor)
-			require.Equal(t, storePage.Title, page.Title)
-			require.Equal(t, storePage.Url, page.Url)
-			require.Equal(t, storePage.MenuOrder, page.MenuOrder)
-			require.Equal(t, storePage.ComponentType, page.ComponentType)
-			require.Equal(t, storePage.ComponentValue, page.ComponentValue)
-			require.Equal(t, storePage.PageIdentifier, page.PageIdentifier)
-			require.Equal(t, storePage.OptionID, page.OptionID)
-			require.Equal(t, storePage.OptionName, page.OptionName)
-			require.Equal(t, storePage.OptionValue, page.OptionValue)
-			require.Equal(t, storePage.OptionRequired, page.OptionRequired)
-		}
+		storePage, err := store.GetPages(context.Background(), pages.ID)
+		require.NoError(t, err)
+		require.NotEmpty(t, storePage)
+		require.Equal(t, storePage.ID, pages.ID)
+		require.Equal(t, storePage.Domain, pages.Domain)
+		require.Equal(t, storePage.AuthorID, pages.AuthorID)
+		require.Equal(t, storePage.PageAuthor, pages.PageAuthor)
+		require.Equal(t, storePage.Title, pages.Title)
+		require.Equal(t, storePage.Url, pages.Url)
+		require.Equal(t, storePage.MenuOrder, pages.MenuOrder)
+		require.Equal(t, storePage.ComponentType, pages.ComponentType)
+		require.Equal(t, storePage.ComponentValue, pages.ComponentValue)
+		require.Equal(t, storePage.PageIdentifier, pages.PageIdentifier)
+		require.Equal(t, storePage.OptionID, pages.OptionID)
+		require.Equal(t, storePage.OptionName, pages.OptionName)
+		require.Equal(t, storePage.OptionValue, pages.OptionValue)
+		require.Equal(t, storePage.OptionRequired, pages.OptionRequired)
 
 		metas := result.Metas
 		require.NotEmpty(t, metas)
 
-		for _, meta := range metas {
-			storeMeta, err := store.GetMeta(context.Background(), meta.ID)
-			require.NoError(t, err)
-			require.NotEmpty(t, storeMeta)
-			require.Equal(t, meta.ID, storeMeta.ID)
-			require.Equal(t, meta.PageID, storeMeta.PageID)
-			require.Equal(t, meta.MetaTitle, storeMeta.MetaTitle)
-			require.Equal(t, meta.MetaDescription, storeMeta.MetaDescription)
-			require.Equal(t, meta.MetaRobots, storeMeta.MetaRobots)
-			require.Equal(t, meta.MetaOgImage, storeMeta.MetaOgImage)
-			require.Equal(t, meta.Locale, storeMeta.Locale)
-			require.Equal(t, meta.PageAmount, storeMeta.PageAmount)
-			require.Equal(t, meta.SiteLanguage, storeMeta.SiteLanguage)
-			require.Equal(t, meta.MetaKey, storeMeta.MetaKey)
-			require.Equal(t, meta.MetaValue, storeMeta.MetaValue)
-		}
+		storeMeta, err := store.GetMeta(context.Background(), metas.ID)
+		require.NoError(t, err)
+		require.NotEmpty(t, storeMeta)
+		require.Equal(t, metas.ID, storeMeta.ID)
+		require.Equal(t, metas.PageID, storeMeta.PageID)
+		require.Equal(t, metas.MetaTitle, storeMeta.MetaTitle)
+		require.Equal(t, metas.MetaDescription, storeMeta.MetaDescription)
+		require.Equal(t, metas.MetaRobots, storeMeta.MetaRobots)
+		require.Equal(t, metas.MetaOgImage, storeMeta.MetaOgImage)
+		require.Equal(t, metas.Locale, storeMeta.Locale)
+		require.Equal(t, metas.PageAmount, storeMeta.PageAmount)
+		require.Equal(t, metas.SiteLanguage, storeMeta.SiteLanguage)
+		require.Equal(t, metas.MetaKey, storeMeta.MetaKey)
+		require.Equal(t, metas.MetaValue, storeMeta.MetaValue)
 	}
 }
 

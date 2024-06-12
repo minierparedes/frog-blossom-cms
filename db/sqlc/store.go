@@ -179,35 +179,57 @@ func (store *Store) UpdatePostsTx(ctx context.Context, args UpdateContentTxParam
 		if err != nil {
 			return fmt.Errorf("get user err: %v", err)
 		}
-		result.User = user
 
 		post, err := q.GetPosts(ctx, *args.PostId)
 		if err != nil {
 			return fmt.Errorf("get post err: %v", err)
 		}
-		result.PostId = &post
 
-		meta, err := q.GetMetaByPostsIDForUpdate(ctx, sql.NullInt64{Int64: *args.MetaPostID, Valid: true})
+		meta, err := q.GetMetaByPostsIDForUpdate(ctx, sql.NullInt64{Int64: *args.PostId, Valid: true})
 		if err != nil {
 			return fmt.Errorf("get meta err: %v", err)
 		}
-		result.MetaPostID = &meta
 
-		for _, postParams := range args.Posts {
-			post, err := q.UpdatePosts(ctx, postParams)
-			if err != nil {
-				return fmt.Errorf("update post err: %v", err)
-			}
-			result.Posts = append(result.Posts, post)
+		postArgs := UpdatePostsParams{
+			ID:           post.ID,
+			Title:        args.Posts.Title,
+			Content:      args.Posts.Content,
+			AuthorID:     user.ID,
+			Url:          args.Posts.Url,
+			UpdatedAt:    args.Posts.UpdatedAt,
+			Status:       args.Posts.Status,
+			PublishedAt:  args.Posts.PublishedAt,
+			EditedAt:     args.Posts.EditedAt,
+			PostAuthor:   user.Username,
+			PostMimeType: args.Posts.PostMimeType,
+			PublishedBy:  args.Posts.PublishedBy,
+			UpdatedBy:    args.Posts.UpdatedBy,
 		}
 
-		for _, metaParas := range args.Metas {
-			meta, err := q.UpdateMeta(ctx, metaParas)
-			if err != nil {
-				return fmt.Errorf("update meta err: %v", err)
-			}
-			result.Metas = append(result.Metas, meta)
+		metaArgs := UpdateMetaParams{
+			ID:              meta.ID,
+			PostsID:         sql.NullInt64{Int64: post.ID},
+			MetaTitle:       args.Metas.MetaTitle,
+			MetaDescription: args.Metas.MetaDescription,
+			MetaRobots:      args.Metas.MetaRobots,
+			MetaOgImage:     args.Metas.MetaOgImage,
+			Locale:          args.Metas.Locale,
+			PageAmount:      args.Metas.PageAmount,
+			SiteLanguage:    args.Metas.SiteLanguage,
+			MetaKey:         args.Metas.MetaKey,
+			MetaValue:       args.Metas.MetaValue,
 		}
+
+		result.Posts, err = q.UpdatePosts(ctx, postArgs)
+		if err != nil {
+			return fmt.Errorf("update post err: %v", err)
+		}
+
+		result.Metas, err = q.UpdateMeta(ctx, metaArgs)
+		if err != nil {
+			return fmt.Errorf("update meta err: %v", err)
+		}
+
 		return nil
 	})
 	return result, err
@@ -225,35 +247,58 @@ func (store *Store) UpdatePageTx(ctx context.Context, args UpdateContentTxParams
 		if err != nil {
 			return fmt.Errorf("get user err: %v", err)
 		}
-		result.User = user
 
 		page, err := q.GetPages(ctx, *args.PageId)
 		if err != nil {
 			return fmt.Errorf("get pages err: %v", err)
 		}
-		result.PageId = &page
 
-		meta, err := q.GetMetaByPageIDForUpdate(ctx, sql.NullInt64{Int64: *args.MetaPageID, Valid: true})
+		meta, err := q.GetMetaByPageIDForUpdate(ctx, sql.NullInt64{Int64: *args.PageId, Valid: true})
 		if err != nil {
 			return fmt.Errorf("get meta err: %v", err)
 		}
-		result.MetaPageID = &meta
 
-		for _, pageParams := range args.Pages {
-			page, err := q.UpdatePages(ctx, pageParams)
-			if err != nil {
-				return fmt.Errorf("update pages err: %v", err)
-			}
-			result.Pages = append(result.Pages, page)
+		pageArgs := UpdatePagesParams{
+			ID:             page.ID,
+			Domain:         args.Pages.Domain,
+			AuthorID:       user.ID,
+			PageAuthor:     user.Username,
+			Title:          args.Pages.Title,
+			Url:            args.Pages.Url,
+			MenuOrder:      args.Pages.MenuOrder,
+			ComponentType:  args.Pages.ComponentType,
+			ComponentValue: args.Pages.ComponentValue,
+			PageIdentifier: args.Pages.PageIdentifier,
+			OptionID:       args.Pages.OptionID,
+			OptionName:     args.Pages.OptionName,
+			OptionValue:    args.Pages.OptionValue,
+			OptionRequired: args.Pages.OptionRequired,
 		}
 
-		for _, metaParas := range args.Metas {
-			meta, err := q.UpdateMeta(ctx, metaParas)
-			if err != nil {
-				return fmt.Errorf("update meta err: %v", err)
-			}
-			result.Metas = append(result.Metas, meta)
+		metaArgs := UpdateMetaParams{
+			ID:              meta.ID,
+			PageID:          sql.NullInt64{Int64: page.ID},
+			MetaTitle:       args.Metas.MetaTitle,
+			MetaDescription: args.Metas.MetaDescription,
+			MetaRobots:      args.Metas.MetaRobots,
+			MetaOgImage:     args.Metas.MetaOgImage,
+			Locale:          args.Metas.Locale,
+			PageAmount:      args.Metas.PageAmount,
+			SiteLanguage:    args.Metas.SiteLanguage,
+			MetaKey:         args.Metas.MetaKey,
+			MetaValue:       args.Metas.MetaValue,
 		}
+
+		result.Pages, err = q.UpdatePages(ctx, pageArgs)
+		if err != nil {
+			return fmt.Errorf("update pages err: %v", err)
+		}
+
+		result.Metas, err = q.UpdateMeta(ctx, metaArgs)
+		if err != nil {
+			return fmt.Errorf("update meta err: %v", err)
+		}
+
 		return nil
 	})
 	return result, err
