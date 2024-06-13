@@ -43,9 +43,9 @@ type UpdateContentTxParams struct {
 	PostId     *int64              `json:"post_id"`
 	MetaPageID *int64              `json:"meta_page_id"`
 	MetaPostID *int64              `json:"meta_post_id"`
-	Pages      []UpdatePagesParams `json:"pages"`
+	Pages      UpdatePagesParams   `json:"pages"`
 	Posts      []UpdatePostsParams `json:"posts"`
-	Metas      []UpdateMetaParams  `json:"meta"`
+	Metas      UpdateMetaParams    `json:"meta"`
 }
 
 type UpdateContentTxResult struct {
@@ -54,9 +54,9 @@ type UpdateContentTxResult struct {
 	PostId     *Post  `json:"post_id"`
 	MetaPageID *Meta  `json:"meta_page_id"`
 	MetaPostID *Meta  `json:"meta_post_id"`
-	Pages      []Page `json:"page"`
+	Pages      Page   `json:"page"`
 	Posts      []Post `json:"post"`
-	Metas      []Meta `json:"meta"`
+	Metas      Meta   `json:"meta"`
 }
 
 type DeleteContentTxParams struct {
