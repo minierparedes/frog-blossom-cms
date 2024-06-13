@@ -278,6 +278,7 @@ func (store *Store) UpdatePageTx(ctx context.Context, args UpdateContentTxParams
 		metaArgs := UpdateMetaParams{
 			ID:              meta.ID,
 			PageID:          sql.NullInt64{Int64: page.ID, Valid: true},
+			PostsID:         sql.NullInt64{Int64: *args.PostId, Valid: true},
 			MetaTitle:       args.Metas.MetaTitle,
 			MetaDescription: args.Metas.MetaDescription,
 			MetaRobots:      args.Metas.MetaRobots,

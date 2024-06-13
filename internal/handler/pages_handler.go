@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	db "github.com/reflection/frog_blossom_db/db/sqlc"
+	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 )
 
 type createPagesTxRequest struct {
@@ -236,18 +236,17 @@ func UpdatePagesHandler(store *db.Store) gin.HandlerFunc {
 }
 
 type updatePagesTxRequest struct {
-	UserId     int64                  `json:"user_id" binding:"required"`
-	Username   string                 `json:"username" binding:"required"`
-	PageId     *int64                 `json:"page_id"`
-	PostId     *int64                 `json:"post_id"`
-	MetaPageID *int64                 `json:"meta_page_id"`
-	MetaPostID *int64                 `json:"meta_post_id"`
-	Pages      []db.UpdatePagesParams `json:"pages" binding:"required"`
-	Posts      []db.UpdatePostsParams `json:"posts"`
-	Metas      []updateMetaParams     `json:"meta"`
+	UserId   int64                `json:"user_id" binding:"required"`
+	Username string               `json:"username" binding:"required"`
+	PageId   *int64               `json:"page_id"`
+	PostId   *int64               `json:"post_id"`
+	Pages    db.UpdatePagesParams `json:"pages" binding:"required"`
+	Posts    db.UpdatePostsParams `json:"posts"`
+	Metas    updateMetaParams     `json:"meta"`
 }
 
 type updateMetaParams struct {
+	ID              int64   `json:"id"`
 	PageID          *int64  `json:"page_id"`
 	PostsID         *int64  `json:"posts_id"`
 	MetaTitle       *string `json:"meta_title"`
@@ -282,7 +281,7 @@ func UpdatePagesTxHandler(store *db.Store) gin.HandlerFunc {
 			return
 		}
 
-		meta, err := store.GetMetaByPageIDForUpdate(ctx, sql.NullInt64{Int64: *req.MetaPageID, Valid: true})
+		meta, err := store.GetMetaByPageIDForUpdate(ctx, sql.NullInt64{Int64: *req.PageId, Valid: true})
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
@@ -293,12 +292,19 @@ func UpdatePagesTxHandler(store *db.Store) gin.HandlerFunc {
 			return
 		}
 
-		// Create pointers to pass to toDBParams
-		pageID := &page.ID
-		metaPageID := &meta.PageID
+		if page.PageAuthor != req.Username {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Page's author does not match the provided username"})
+			return
+		}
 
-		// TODO: run app
-		args := req.toDBParams(user.ID, user.Username, pageID, *metaPageID)
+		metaPageID := sql.NullInt64{Int64: *req.PageId, Valid: true}
+
+		if meta.PageID != metaPageID {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Meta's pageID does not match the provided page ID"})
+			return
+		}
+
+		args := req.toDBParams(user.ID, user.Username, &page.ID)
 
 		result, err := store.UpdatePageTx(ctx, args)
 		if err != nil {
@@ -336,41 +342,31 @@ func (req *createPagesTxRequest) toDBParams(userID int64, username string) db.Cr
 	}
 }
 
-func (req *updatePagesTxRequest) toDBParams(userID int64, username string, pageID *int64, metaPageID sql.NullInt64) db.UpdateContentTxParams {
-	var metas []db.UpdateMetaParams
-	for _, m := range req.Metas {
-		metas = append(metas, db.UpdateMetaParams{
-			PageID:          sql.NullInt64{Int64: getInt64(m.PageID), Valid: m.PageID != nil},
-			PostsID:         sql.NullInt64{Int64: getInt64(m.PostsID), Valid: m.PostsID != nil},
-			MetaTitle:       sql.NullString{String: getStr(m.MetaTitle), Valid: true},
-			MetaDescription: sql.NullString{String: getStr(m.MetaDescription), Valid: true},
-			MetaRobots:      sql.NullString{String: getStr(m.MetaRobots), Valid: true},
-			MetaOgImage:     sql.NullString{String: getStr(m.MetaOgImage), Valid: true},
-			Locale:          sql.NullString{String: getStr(m.Locale), Valid: true},
-			PageAmount:      m.PageAmount,
-			SiteLanguage:    sql.NullString{String: getStr(m.SiteLanguage), Valid: true},
-			MetaKey:         m.MetaKey,
-			MetaValue:       m.MetaValue,
-		})
+func (req *updatePagesTxRequest) toDBParams(userID int64, username string, pageID *int64) db.UpdateContentTxParams {
+
+	dbMetas := db.UpdateMetaParams{
+		ID:              req.Metas.ID,
+		PageID:          sql.NullInt64{Int64: getInt64(req.Metas.PageID), Valid: req.Metas.PageID != nil},
+		PostsID:         sql.NullInt64{Int64: getInt64(req.Metas.PostsID), Valid: req.Metas.PostsID != nil},
+		MetaTitle:       sql.NullString{String: getStr(req.Metas.MetaTitle), Valid: true},
+		MetaDescription: sql.NullString{String: getStr(req.Metas.MetaDescription), Valid: true},
+		MetaRobots:      sql.NullString{String: getStr(req.Metas.MetaRobots), Valid: true},
+		MetaOgImage:     sql.NullString{String: getStr(req.Metas.MetaOgImage), Valid: true},
+		Locale:          sql.NullString{String: getStr(req.Metas.Locale), Valid: true},
+		PageAmount:      req.Metas.PageAmount,
+		SiteLanguage:    sql.NullString{String: getStr(req.Metas.SiteLanguage), Valid: true},
+		MetaKey:         req.Metas.MetaKey,
+		MetaValue:       req.Metas.MetaValue,
 	}
 	return db.UpdateContentTxParams{
-		UserId:     userID,
-		Username:   username,
-		PageId:     pageID,
-		PostId:     req.PostId,
-		MetaPageID: nullInt64ToInt64Pointer(metaPageID),
-		MetaPostID: req.MetaPostID,
-		Pages:      req.Pages,
-		Posts:      req.Posts,
-		Metas:      metas,
+		UserId:   userID,
+		Username: username,
+		PageId:   pageID,
+		PostId:   req.PostId,
+		Pages:    &req.Pages,
+		Posts:    &req.Posts,
+		Metas:    dbMetas,
 	}
-}
-
-func nullInt64ToInt64Pointer(nullInt sql.NullInt64) *int64 {
-	if !nullInt.Valid {
-		return nil
-	}
-	return &nullInt.Int64
 }
 
 func getInt64(ptr *int64) int64 {
@@ -385,4 +381,11 @@ func getStr(ptr *string) string {
 		return ""
 	}
 	return *ptr
+}
+
+func nullInt64ToInt64Pointer(nullInt sql.NullInt64) *int64 {
+	if !nullInt.Valid {
+		return nil
+	}
+	return &nullInt.Int64
 }
