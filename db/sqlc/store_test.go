@@ -656,7 +656,7 @@ func TestUpdatePageTx(t *testing.T) {
 	for i := 0; i < n; i++ {
 		go func() {
 
-			postMeta, err := store.GetMetaByPageIDForUpdate(context.Background(), sql.NullInt64{
+			pageMeta, err := store.GetMetaByPageIDForUpdate(context.Background(), sql.NullInt64{
 				Int64: newMeta.PageID.Int64,
 				Valid: true,
 			})
@@ -665,10 +665,10 @@ func TestUpdatePageTx(t *testing.T) {
 			result, err := store.UpdatePageTx(context.Background(), UpdateContentTxParams{
 				UserId:   newUser.ID,
 				Username: newUser.Username,
-				PageId:   &postMeta.PageID.Int64,
+				PageId:   &pageMeta.PageID.Int64,
 				PostId:   nil,
 				Pages: &UpdatePagesParams{
-					ID:             postMeta.PageID.Int64,
+					ID:             pageMeta.PageID.Int64,
 					Domain:         "example.com",
 					AuthorID:       newUser.ID,
 					PageAuthor:     newUser.Username,
@@ -685,8 +685,8 @@ func TestUpdatePageTx(t *testing.T) {
 				},
 				Posts: nil,
 				Metas: UpdateMetaParams{
-					ID:              postMeta.ID,
-					PageID:          sql.NullInt64{Int64: postMeta.PageID.Int64, Valid: true},
+					ID:              pageMeta.ID,
+					PageID:          sql.NullInt64{Int64: pageMeta.PageID.Int64, Valid: true},
 					PostsID:         sql.NullInt64{Int64: 0, Valid: false},
 					MetaTitle:       sql.NullString{String: "Sample Meta Title", Valid: true},
 					MetaDescription: sql.NullString{String: "Sample Meta Description", Valid: true},
