@@ -237,8 +237,8 @@ func (store *Store) UpdatePostsTx(ctx context.Context, args UpdateContentTxParam
 
 // UpdatePageTx updates existing content in the `page` table and its respective `meta` table.
 // It utilizes user info (users.id, users.username) to update the content and its associated metadata.
-func (store *Store) UpdatePageTx(ctx context.Context, args UpdateContentTxParams) (UpdateContentTxResult, error) {
-	var result UpdateContentTxResult
+func (store *Store) UpdatePageTx(ctx context.Context, args UpdatePageTxParams) (UpdatePageTxResult, error) {
+	var result UpdatePageTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error
@@ -278,7 +278,6 @@ func (store *Store) UpdatePageTx(ctx context.Context, args UpdateContentTxParams
 		metaArgs := UpdateMetaParams{
 			ID:              meta.ID,
 			PageID:          sql.NullInt64{Int64: page.ID, Valid: true},
-			PostsID:         sql.NullInt64{Int64: *args.PostId, Valid: true},
 			MetaTitle:       args.Metas.MetaTitle,
 			MetaDescription: args.Metas.MetaDescription,
 			MetaRobots:      args.Metas.MetaRobots,

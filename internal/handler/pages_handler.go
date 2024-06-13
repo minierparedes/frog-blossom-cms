@@ -342,12 +342,11 @@ func (req *createPagesTxRequest) toDBParams(userID int64, username string) db.Cr
 	}
 }
 
-func (req *updatePagesTxRequest) toDBParams(userID int64, username string, pageID *int64) db.UpdateContentTxParams {
+func (req *updatePagesTxRequest) toDBParams(userID int64, username string, pageID *int64) db.UpdatePageTxParams {
 
 	dbMetas := db.UpdateMetaParams{
 		ID:              req.Metas.ID,
-		PageID:          sql.NullInt64{Int64: getInt64(req.Metas.PageID), Valid: req.Metas.PageID != nil},
-		PostsID:         sql.NullInt64{Int64: getInt64(req.Metas.PostsID), Valid: req.Metas.PostsID != nil},
+		PageID:          sql.NullInt64{Int64: getInt64(req.Metas.PageID), Valid: true},
 		MetaTitle:       sql.NullString{String: getStr(req.Metas.MetaTitle), Valid: true},
 		MetaDescription: sql.NullString{String: getStr(req.Metas.MetaDescription), Valid: true},
 		MetaRobots:      sql.NullString{String: getStr(req.Metas.MetaRobots), Valid: true},
@@ -358,13 +357,11 @@ func (req *updatePagesTxRequest) toDBParams(userID int64, username string, pageI
 		MetaKey:         req.Metas.MetaKey,
 		MetaValue:       req.Metas.MetaValue,
 	}
-	return db.UpdateContentTxParams{
+	return db.UpdatePageTxParams{
 		UserId:   userID,
 		Username: username,
 		PageId:   pageID,
-		PostId:   req.PostId,
 		Pages:    &req.Pages,
-		Posts:    &req.Posts,
 		Metas:    dbMetas,
 	}
 }
