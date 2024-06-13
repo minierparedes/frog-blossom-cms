@@ -315,6 +315,57 @@ func UpdatePagesTxHandler(store *db.Store) gin.HandlerFunc {
 	}
 }
 
+type deletePageRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+func DeletePageTxHandler(store *db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		var req deletePageRequest
+		if err := ctx.ShouldBindUri(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		page, err := store.GetPages(ctx, req.ID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		meta, err := store.GetMetaByPageIDForUpdate(ctx, sql.NullInt64{Int64: req.ID, Valid: true})
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		if page.ID != req.ID {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Page's ID does not match the provided page ID"})
+			return
+		}
+
+		metaPageId := sql.NullInt64{Int64: req.ID, Valid: true}
+
+		if meta.PageID != metaPageId {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Page's ID does not match the provided page ID"})
+			return
+		}
+
+		args := db.DeleteContentTxParams{
+			PageId: &page.ID,
+		}
+
+		result, err := store.DeletePageTx(ctx, args)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, result)
+
+	}
+}
+
 func (req *createPagesTxRequest) toDBParams(userID int64, username string) db.CreateContentTxParams {
 	var metas []db.CreateMetaParams
 	for _, m := range req.Metas {
