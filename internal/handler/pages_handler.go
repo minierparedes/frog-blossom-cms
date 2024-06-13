@@ -62,56 +62,6 @@ func CreatePagesTxHandler(store *db.Store) gin.HandlerFunc {
 	}
 }
 
-type createPagesRequest struct {
-	Domain         string `json:"domain"`
-	AuthorID       int64  `json:"author_id"`
-	PageAuthor     string `json:"page_author"`
-	Title          string `json:"title"`
-	Url            string `json:"url"`
-	MenuOrder      int64  `json:"menu_order"`
-	ComponentType  string `json:"component_type"`
-	ComponentValue string `json:"component_value"`
-	PageIdentifier string `json:"page_identifier"`
-	OptionID       int64  `json:"option_id"`
-	OptionName     string `json:"option_name"`
-	OptionValue    string `json:"option_value"`
-	OptionRequired bool   `json:"option_required"`
-}
-
-func CreatePagesHandler(store *db.Store) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-
-		var req createPagesRequest
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, errorResponse(err))
-			return
-		}
-
-		args := db.CreatePagesParams{
-			Domain:         req.Domain,
-			AuthorID:       req.AuthorID,
-			PageAuthor:     req.PageAuthor,
-			Title:          req.Title,
-			Url:            req.Url,
-			MenuOrder:      req.MenuOrder,
-			ComponentType:  req.ComponentType,
-			ComponentValue: req.ComponentValue,
-			PageIdentifier: req.PageIdentifier,
-			OptionID:       req.OptionID,
-			OptionName:     req.OptionName,
-			OptionValue:    req.OptionValue,
-			OptionRequired: req.OptionRequired,
-		}
-
-		page, err := store.CreatePages(ctx, args)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-			return
-		}
-		ctx.JSON(http.StatusOK, page)
-	}
-}
-
 type getPageRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
@@ -162,76 +112,6 @@ func ListPagesHandler(store *db.Store) gin.HandlerFunc {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		}
 		ctx.JSON(http.StatusOK, pages)
-	}
-}
-
-type updatePagesRequest struct {
-	ID             int64  `json:"id"`
-	Domain         string `json:"domain"`
-	AuthorID       int64  `json:"author_id"`
-	PageAuthor     string `json:"page_author"`
-	Title          string `json:"title"`
-	Url            string `json:"url"`
-	MenuOrder      int64  `json:"menu_order"`
-	ComponentType  string `json:"component_type"`
-	ComponentValue string `json:"component_value"`
-	PageIdentifier string `json:"page_identifier"`
-	OptionID       int64  `json:"option_id"`
-	OptionName     string `json:"option_name"`
-	OptionValue    string `json:"option_value"`
-	OptionRequired bool   `json:"option_required"`
-}
-
-func UpdatePagesHandler(store *db.Store) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-
-		var req updatePagesRequest
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, errorResponse(err))
-			return
-		}
-
-		var pageID = req.ID
-
-		pages, err := store.GetPages(ctx, pageID)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				ctx.JSON(http.StatusBadRequest, errorResponse(err))
-				return
-			}
-		}
-
-		user, err := store.GetUsers(ctx, req.AuthorID)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				ctx.JSON(http.StatusBadRequest, errorResponse(err))
-				return
-			}
-		}
-
-		args := db.UpdatePagesParams{
-			ID:             pages.ID,
-			Domain:         req.Domain,
-			AuthorID:       user.ID,
-			PageAuthor:     user.Username,
-			Title:          req.Title,
-			Url:            req.Url,
-			MenuOrder:      req.MenuOrder,
-			ComponentType:  req.ComponentType,
-			ComponentValue: req.ComponentValue,
-			PageIdentifier: req.PageIdentifier,
-			OptionID:       req.OptionID,
-			OptionName:     req.OptionName,
-			OptionValue:    req.OptionValue,
-			OptionRequired: req.OptionRequired,
-		}
-
-		page, err := store.UpdatePages(ctx, args)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-			return
-		}
-		ctx.JSON(http.StatusCreated, page)
 	}
 }
 
@@ -366,6 +246,7 @@ func DeletePageTxHandler(store *db.Store) gin.HandlerFunc {
 	}
 }
 
+// toDBParams converts a createPagesTxRequest instance into a db.CreateContentTxParams structure for db operations
 func (req *createPagesTxRequest) toDBParams(userID int64, username string) db.CreateContentTxParams {
 	var metas []db.CreateMetaParams
 	for _, m := range req.Metas {
@@ -393,6 +274,7 @@ func (req *createPagesTxRequest) toDBParams(userID int64, username string) db.Cr
 	}
 }
 
+// toDBParams converts a updatePagesTxRequest instance into a db.UpdatePageTxParams structure for db operations
 func (req *updatePagesTxRequest) toDBParams(userID int64, username string, pageID *int64) db.UpdatePageTxParams {
 
 	dbMetas := db.UpdateMetaParams{
@@ -417,6 +299,7 @@ func (req *updatePagesTxRequest) toDBParams(userID int64, username string, pageI
 	}
 }
 
+// getInt64 function safely dereferences a pointer int64 to an int64
 func getInt64(ptr *int64) int64 {
 	if ptr == nil {
 		return 0
@@ -424,6 +307,7 @@ func getInt64(ptr *int64) int64 {
 	return *ptr
 }
 
+// getStr function safely dereferences a pointer string to a string
 func getStr(ptr *string) string {
 	if ptr == nil {
 		return ""
