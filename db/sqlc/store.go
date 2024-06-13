@@ -6,8 +6,7 @@ import (
 	"fmt"
 )
 
-// Functions for executing db queries and transactions
-
+// Store Functions for executing db queries and transactions
 type Store struct {
 	*Queries
 	db *sql.DB
@@ -21,7 +20,6 @@ func NewStore(db *sql.DB) *Store {
 }
 
 // executes a function within a db transaction
-
 func (store *Store) executeTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
@@ -139,11 +137,13 @@ func (store *Store) CreatePageTx(ctx context.Context, args CreateContentTxParams
 		}
 		result.User = user
 
-		posts, err := q.GetPosts(ctx, *args.PostId)
-		if err != nil {
-			return fmt.Errorf("get posts err: %v", err)
+		if args.PostId != nil {
+			posts, err := q.GetPosts(ctx, *args.PostId)
+			if err != nil {
+				return fmt.Errorf("get posts err: %v", err)
+			}
+			result.PostId = &posts
 		}
-		result.PostId = &posts
 
 		for _, pageParams := range args.Pages {
 			page, err := q.CreatePages(ctx, pageParams)
