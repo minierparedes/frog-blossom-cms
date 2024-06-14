@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 )
 
 // Store Functions for executing db queries and transactions
@@ -82,8 +83,8 @@ func (store *Store) InitSetupConfigTx(ctx context.Context, args InitSetupConfigT
 
 // CreatePostsTx creates new posts content based on user information
 // It utilizes user info(users.id, users.username) to create the `posts` and its respective `meta`.
-func (store *Store) CreatePostsTx(ctx context.Context, args CreateContentTxParams) (CreateContentTxResult, error) {
-	var result CreateContentTxResult
+func (store *Store) CreatePostsTx(ctx context.Context, args CreatePostTxParams) (CreatePostTxResult, error) {
+	var result CreatePostTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error
@@ -92,30 +93,42 @@ func (store *Store) CreatePostsTx(ctx context.Context, args CreateContentTxParam
 		if err != nil {
 			return fmt.Errorf("get users err: %v", err)
 		}
-		result.User = user
 
-		if args.PageId != nil {
-			page, err := q.GetPages(ctx, *args.PageId)
-			if err != nil {
-				return fmt.Errorf("get pages err: %v", err)
-			}
-			result.PageId = &page
+		postArgs := CreatePostsParams{
+			Title:        args.Posts.Title,
+			Content:      args.Posts.Content,
+			AuthorID:     user.ID,
+			Url:          args.Posts.Url,
+			Status:       args.Posts.Status,
+			PublishedAt:  time.Time{},
+			EditedAt:     time.Time{},
+			PostAuthor:   user.Username,
+			PostMimeType: args.Posts.PostMimeType,
+			PublishedBy:  user.Username,
+			UpdatedBy:    user.Username,
 		}
 
-		for _, postParams := range args.Posts {
-			post, err := q.CreatePosts(ctx, postParams)
-			if err != nil {
-				return fmt.Errorf("create posts err: %v", err)
-			}
-			result.Posts = append(result.Posts, post)
+		result.Posts, err = q.CreatePosts(ctx, postArgs)
+		if err != nil {
+			return fmt.Errorf("create posts err: %v", err)
 		}
 
-		for _, metaParas := range args.Metas {
-			meta, err := q.CreateMeta(ctx, metaParas)
-			if err != nil {
-				return fmt.Errorf("create meta err: %v", err)
-			}
-			result.Metas = append(result.Metas, meta)
+		metaArgs := CreateMetaParams{
+			PostsID:         sql.NullInt64{Int64: result.Posts.ID, Valid: true},
+			MetaTitle:       args.Metas.MetaTitle,
+			MetaDescription: args.Metas.MetaDescription,
+			MetaRobots:      args.Metas.MetaRobots,
+			MetaOgImage:     args.Metas.MetaOgImage,
+			Locale:          args.Metas.Locale,
+			PageAmount:      args.Metas.PageAmount,
+			SiteLanguage:    args.Metas.SiteLanguage,
+			MetaKey:         args.Metas.MetaKey,
+			MetaValue:       args.Metas.MetaValue,
+		}
+
+		result.Metas, err = q.CreateMeta(ctx, metaArgs)
+		if err != nil {
+			return fmt.Errorf("create meta err: %v", err)
 		}
 
 		return nil
@@ -125,8 +138,8 @@ func (store *Store) CreatePostsTx(ctx context.Context, args CreateContentTxParam
 
 // CreatePageTx creates new pages content based on user information
 // It utilizes user info(users.id, users.username) to create the `page` and its respective `meta`.
-func (store *Store) CreatePageTx(ctx context.Context, args CreateContentTxParams) (CreateContentTxResult, error) {
-	var result CreateContentTxResult
+func (store *Store) CreatePageTx(ctx context.Context, args CreatePageTxParams) (CreatePageTxResult, error) {
+	var result CreatePageTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error
@@ -135,30 +148,44 @@ func (store *Store) CreatePageTx(ctx context.Context, args CreateContentTxParams
 		if err != nil {
 			return fmt.Errorf("get users err: %v", err)
 		}
-		result.User = user
 
-		if args.PostId != nil {
-			posts, err := q.GetPosts(ctx, *args.PostId)
-			if err != nil {
-				return fmt.Errorf("get posts err: %v", err)
-			}
-			result.PostId = &posts
+		pageArgs := CreatePagesParams{
+			Domain:         args.Pages.Domain,
+			AuthorID:       user.ID,
+			PageAuthor:     user.Username,
+			Title:          args.Pages.Title,
+			Url:            args.Pages.Url,
+			MenuOrder:      args.Pages.MenuOrder,
+			ComponentType:  args.Pages.ComponentType,
+			ComponentValue: args.Pages.ComponentValue,
+			PageIdentifier: args.Pages.PageIdentifier,
+			OptionID:       args.Pages.OptionID,
+			OptionName:     args.Pages.OptionName,
+			OptionValue:    args.Pages.OptionValue,
+			OptionRequired: args.Pages.OptionRequired,
 		}
 
-		for _, pageParams := range args.Pages {
-			page, err := q.CreatePages(ctx, pageParams)
-			if err != nil {
-				return fmt.Errorf("create pages err: %v", err)
-			}
-			result.Pages = append(result.Pages, page)
+		result.Pages, err = q.CreatePages(ctx, pageArgs)
+		if err != nil {
+			return fmt.Errorf("create pages err: %v", err)
 		}
 
-		for _, metaParas := range args.Metas {
-			meta, err := q.CreateMeta(ctx, metaParas)
-			if err != nil {
-				return fmt.Errorf("create meta err: %v", err)
-			}
-			result.Metas = append(result.Metas, meta)
+		metaArgs := CreateMetaParams{
+			PageID:          sql.NullInt64{Int64: result.Pages.ID},
+			MetaTitle:       args.Metas.MetaTitle,
+			MetaDescription: args.Metas.MetaDescription,
+			MetaRobots:      args.Metas.MetaRobots,
+			MetaOgImage:     args.Metas.MetaOgImage,
+			Locale:          args.Metas.Locale,
+			PageAmount:      args.Metas.PageAmount,
+			SiteLanguage:    args.Metas.SiteLanguage,
+			MetaKey:         args.Metas.MetaKey,
+			MetaValue:       args.Metas.MetaValue,
+		}
+
+		result.Metas, err = q.CreateMeta(ctx, metaArgs)
+		if err != nil {
+			return fmt.Errorf("create meta err: %v", err)
 		}
 
 		return nil
@@ -169,8 +196,8 @@ func (store *Store) CreatePageTx(ctx context.Context, args CreateContentTxParams
 
 // UpdatePostsTx updates existing content in the `posts` table and its respective `meta` table.
 // It utilizes user info (users.id, users.username) to update the content and its associated metadata.
-func (store *Store) UpdatePostsTx(ctx context.Context, args UpdateContentTxParams) (UpdateContentTxResult, error) {
-	var result UpdateContentTxResult
+func (store *Store) UpdatePostsTx(ctx context.Context, args UpdatePostTxParams) (UpdatePostTxResult, error) {
+	var result UpdatePostTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error
@@ -306,8 +333,8 @@ func (store *Store) UpdatePageTx(ctx context.Context, args UpdatePageTxParams) (
 
 // DeletePostsTx deletes existing content in the `posts` table and its respective `meta` table.
 // It utilizes posts info (post.id) to delete posts content and its associated metadata.
-func (store *Store) DeletePostsTx(ctx context.Context, args DeleteContentTxParams) (DeleteContentTxResult, error) {
-	var result DeleteContentTxResult
+func (store *Store) DeletePostsTx(ctx context.Context, args DeletePostTxParams) (DeletePostTxResult, error) {
+	var result DeletePostTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error
@@ -334,8 +361,8 @@ func (store *Store) DeletePostsTx(ctx context.Context, args DeleteContentTxParam
 
 // DeletePageTx deletes existing content in the `page` table and its respective `meta` table.
 // It utilizes posts info (post.id) to delete posts content and its associated metadata.
-func (store *Store) DeletePageTx(ctx context.Context, args DeleteContentTxParams) (DeleteContentTxResult, error) {
-	var result DeleteContentTxResult
+func (store *Store) DeletePageTx(ctx context.Context, args DeletePageTxParams) (DeletePageTxResult, error) {
+	var result DeletePageTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error

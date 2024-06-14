@@ -17,38 +17,29 @@ type InitSetupConfigTxResult struct {
 	Metas []Meta `json:"meta_id"`
 }
 
-type CreateContentTxParams struct {
-	UserId   int64               `json:"user_id"`
-	Username string              `json:"username"`
-	PageId   *int64              `json:"page_id"`
-	PostId   *int64              `json:"post_id"`
-	Pages    []CreatePagesParams `json:"pages"`
-	Posts    []CreatePostsParams `json:"posts"`
-	Metas    []CreateMetaParams  `json:"meta"`
+type CreatePageTxParams struct {
+	UserId   int64              `json:"user_id"`
+	Username string             `json:"username"`
+	PageId   *int64             `json:"page_id"`
+	Pages    *CreatePagesParams `json:"pages"`
+	Metas    CreateMetaParams   `json:"meta"`
 }
 
-type CreateContentTxResult struct {
-	User   User   `json:"user"`
-	PageId *Page  `json:"pages_id"`
-	PostId *Post  `json:"post_id"`
-	Posts  []Post `json:"post"`
-	Metas  []Meta `json:"meta"`
-	Pages  []Page `json:"page"`
-}
-
-type UpdateContentTxParams struct {
-	UserId   int64             `json:"user_id"`
-	Username string            `json:"username"`
-	PageId   *int64            `json:"page_id"`
-	PostId   *int64            `json:"post_id"`
-	Pages    UpdatePagesParams `json:"pages"`
-	Posts    UpdatePostsParams `json:"posts"`
-	Metas    UpdateMetaParams  `json:"meta"`
-}
-
-type UpdateContentTxResult struct {
+type CreatePageTxResult struct {
 	Pages Page `json:"page"`
-	Posts Post `json:"post"`
+	Metas Meta `json:"meta"`
+}
+
+type CreatePostTxParams struct {
+	UserId   int64              `json:"user_id"`
+	Username string             `json:"username"`
+	PostId   *int64             `json:"page_id"`
+	Posts    *CreatePostsParams `json:"pages"`
+	Metas    CreateMetaParams   `json:"meta"`
+}
+
+type CreatePostTxResult struct {
+	Posts Post `json:"page"`
 	Metas Meta `json:"meta"`
 }
 
@@ -65,13 +56,33 @@ type UpdatePageTxResult struct {
 	Metas Meta `json:"meta"`
 }
 
-type DeleteContentTxParams struct {
-	PageId *int64 `json:"page_id"`
+type UpdatePostTxParams struct {
+	UserId   int64              `json:"user_id"`
+	Username string             `json:"username"`
+	PostId   *int64             `json:"page_id"`
+	Posts    *UpdatePostsParams `json:"pages"`
+	Metas    UpdateMetaParams   `json:"meta"`
+}
+
+type UpdatePostTxResult struct {
+	Posts Post `json:"page"`
+	Metas Meta `json:"meta"`
+}
+
+type DeletePostTxParams struct {
 	PostId *int64 `json:"post_id"`
 }
 
-type DeleteContentTxResult struct {
+type DeletePageTxParams struct {
+	PageId *int64 `json:"page_id"`
+}
+
+type DeletePostTxResult struct {
 	DeletedPost bool `json:"deleted_post"`
+	DeletedMeta bool `json:"deleted_meta"`
+}
+
+type DeletePageTxResult struct {
 	DeletedPage bool `json:"deleted_page"`
 	DeletedMeta bool `json:"deleted_meta"`
 }
