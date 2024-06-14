@@ -37,13 +37,13 @@ type CreateContentTxResult struct {
 }
 
 type UpdateContentTxParams struct {
-	UserId   int64              `json:"user_id"`
-	Username string             `json:"username"`
-	PageId   *int64             `json:"page_id"`
-	PostId   *int64             `json:"post_id"`
-	Pages    *UpdatePagesParams `json:"pages"`
-	Posts    *UpdatePostsParams `json:"posts"`
-	Metas    UpdateMetaParams   `json:"meta"`
+	UserId   int64             `json:"user_id"`
+	Username string            `json:"username"`
+	PageId   *int64            `json:"page_id"`
+	PostId   *int64            `json:"post_id"`
+	Pages    UpdatePagesParams `json:"pages"`
+	Posts    UpdatePostsParams `json:"posts"`
+	Metas    UpdateMetaParams  `json:"meta"`
 }
 
 type UpdateContentTxResult struct {
