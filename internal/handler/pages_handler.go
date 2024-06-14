@@ -8,14 +8,11 @@ import (
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 )
 
-type createPagesTxRequest struct {
-	UserId   int64                  `json:"user_id" binding:"required"`
-	Username string                 `json:"username" binding:"required"`
-	PageId   *int64                 `json:"page_id"`
-	PostId   *int64                 `json:"post_id"`
-	Pages    []db.CreatePagesParams `json:"pages" binding:"required"`
-	Posts    []db.CreatePostsParams `json:"posts"`
-	Metas    []createMetaParams     `json:"meta"`
+type createPageTxRequest struct {
+	UserId   int64                `json:"user_id" binding:"required"`
+	Username string               `json:"username" binding:"required"`
+	Pages    db.CreatePagesParams `json:"pages" binding:"required"`
+	Metas    createMetaParams     `json:"meta"`
 }
 
 type createMetaParams struct {
@@ -31,10 +28,10 @@ type createMetaParams struct {
 	MetaValue       string  `json:"meta_value"`
 }
 
-func CreatePagesTxHandler(store *db.Store) gin.HandlerFunc {
+func CreatePageTxHandler(store *db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var req createPagesTxRequest
+		var req createPageTxRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
@@ -232,7 +229,7 @@ func DeletePageTxHandler(store *db.Store) gin.HandlerFunc {
 			return
 		}
 
-		args := db.DeleteContentTxParams{
+		args := db.DeletePageTxParams{
 			PageId: &page.ID,
 		}
 
@@ -246,31 +243,24 @@ func DeletePageTxHandler(store *db.Store) gin.HandlerFunc {
 	}
 }
 
-// toDBParams converts a createPagesTxRequest instance into a db.CreateContentTxParams structure for db operations
-func (req *createPagesTxRequest) toDBParams(userID int64, username string) db.CreateContentTxParams {
-	var metas []db.CreateMetaParams
-	for _, m := range req.Metas {
-		metas = append(metas, db.CreateMetaParams{
-			PostsID:         sql.NullInt64{Int64: *m.PostsID, Valid: m.PostsID != nil},
-			MetaTitle:       sql.NullString{String: *m.MetaTitle, Valid: true},
-			MetaDescription: sql.NullString{String: *m.MetaDescription, Valid: true},
-			MetaRobots:      sql.NullString{String: *m.MetaRobots, Valid: true},
-			MetaOgImage:     sql.NullString{String: *m.MetaOgImage, Valid: true},
-			Locale:          sql.NullString{String: *m.Locale, Valid: true},
-			PageAmount:      m.PageAmount,
-			SiteLanguage:    sql.NullString{String: *m.SiteLanguage, Valid: true},
-			MetaKey:         m.MetaKey,
-			MetaValue:       m.MetaValue,
-		})
+// toDBParams converts a createPageTxRequest instance into a db.CreatePageTxParams structure for db operations
+func (req *createPageTxRequest) toDBParams(userID int64, username string) db.CreatePageTxParams {
+	dbMetas := db.CreateMetaParams{
+		MetaTitle:       sql.NullString{String: *req.Metas.MetaTitle, Valid: true},
+		MetaDescription: sql.NullString{String: *req.Metas.MetaDescription, Valid: true},
+		MetaRobots:      sql.NullString{String: *req.Metas.MetaRobots, Valid: true},
+		MetaOgImage:     sql.NullString{String: *req.Metas.MetaOgImage, Valid: true},
+		Locale:          sql.NullString{String: *req.Metas.Locale, Valid: true},
+		PageAmount:      req.Metas.PageAmount,
+		SiteLanguage:    sql.NullString{String: *req.Metas.SiteLanguage, Valid: true},
+		MetaKey:         req.Metas.MetaKey,
+		MetaValue:       req.Metas.MetaValue,
 	}
-	return db.CreateContentTxParams{
+	return db.CreatePageTxParams{
 		UserId:   userID,
 		Username: username,
-		PageId:   req.PageId,
-		PostId:   req.PostId,
-		Pages:    req.Pages,
-		Posts:    req.Posts,
-		Metas:    metas,
+		Pages:    &req.Pages,
+		Metas:    dbMetas,
 	}
 }
 
@@ -313,11 +303,4 @@ func getStr(ptr *string) string {
 		return ""
 	}
 	return *ptr
-}
-
-func nullInt64ToInt64Pointer(nullInt sql.NullInt64) *int64 {
-	if !nullInt.Valid {
-		return nil
-	}
-	return &nullInt.Int64
 }
