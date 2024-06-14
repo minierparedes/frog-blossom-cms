@@ -103,9 +103,11 @@ func (store *Store) CreatePostsTx(ctx context.Context, args CreatePostTxParams) 
 			Url:          args.Posts.Url,
 			Status:       args.Posts.Status,
 			PublishedAt:  time.Time{},
+			EditedAt:     time.Time{},
 			PostAuthor:   user.Username,
 			PostMimeType: args.Posts.PostMimeType,
 			PublishedBy:  user.Username,
+			UpdatedBy:    user.Username,
 		}
 
 		result.Posts, err = q.CreatePosts(ctx, postArgs)
@@ -196,8 +198,8 @@ func (store *Store) CreatePageTx(ctx context.Context, args CreatePageTxParams) (
 
 // UpdatePostsTx updates existing content in the `posts` table and its respective `meta` table.
 // It utilizes user info (users.id, users.username) to update the content and its associated metadata.
-func (store *Store) UpdatePostsTx(ctx context.Context, args UpdateContentTxParams) (UpdateContentTxResult, error) {
-	var result UpdateContentTxResult
+func (store *Store) UpdatePostsTx(ctx context.Context, args UpdatePostTxParams) (UpdatePostTxResult, error) {
+	var result UpdatePostTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error
@@ -264,8 +266,8 @@ func (store *Store) UpdatePostsTx(ctx context.Context, args UpdateContentTxParam
 
 // UpdatePageTx updates existing content in the `page` table and its respective `meta` table.
 // It utilizes user info (users.id, users.username) to update the content and its associated metadata.
-func (store *Store) UpdatePageTx(ctx context.Context, args UpdateContentTxParams) (UpdateContentTxResult, error) {
-	var result UpdateContentTxResult
+func (store *Store) UpdatePageTx(ctx context.Context, args UpdatePageTxParams) (UpdatePageTxResult, error) {
+	var result UpdatePageTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error
@@ -333,8 +335,8 @@ func (store *Store) UpdatePageTx(ctx context.Context, args UpdateContentTxParams
 
 // DeletePostsTx deletes existing content in the `posts` table and its respective `meta` table.
 // It utilizes posts info (post.id) to delete posts content and its associated metadata.
-func (store *Store) DeletePostsTx(ctx context.Context, args DeleteContentTxParams) (DeleteContentTxResult, error) {
-	var result DeleteContentTxResult
+func (store *Store) DeletePostsTx(ctx context.Context, args DeletePostTxParams) (DeletePostTxResult, error) {
+	var result DeletePostTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error
@@ -361,8 +363,8 @@ func (store *Store) DeletePostsTx(ctx context.Context, args DeleteContentTxParam
 
 // DeletePageTx deletes existing content in the `page` table and its respective `meta` table.
 // It utilizes posts info (post.id) to delete posts content and its associated metadata.
-func (store *Store) DeletePageTx(ctx context.Context, args DeleteContentTxParams) (DeleteContentTxResult, error) {
-	var result DeleteContentTxResult
+func (store *Store) DeletePageTx(ctx context.Context, args DeletePageTxParams) (DeletePageTxResult, error) {
+	var result DeletePageTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
 		var err error
