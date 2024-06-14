@@ -171,7 +171,7 @@ func (store *Store) CreatePageTx(ctx context.Context, args CreatePageTxParams) (
 		}
 
 		metaArgs := CreateMetaParams{
-			PageID:          sql.NullInt64{Int64: result.Pages.ID},
+			PageID:          sql.NullInt64{Int64: result.Pages.ID, Valid: true},
 			MetaTitle:       args.Metas.MetaTitle,
 			MetaDescription: args.Metas.MetaDescription,
 			MetaRobots:      args.Metas.MetaRobots,
