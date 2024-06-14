@@ -39,7 +39,7 @@ make postgres
 ***create frog_blossom_db database***
 
 ```bash
-make cratedb
+make createdb
 ```
 
 ### schema migration
@@ -66,4 +66,5 @@ make server
 | 2024-05-02 | 1.3     | readme                  | @minierparedes    |
 | 2024-05-10 | 1.4     | db schema v5            | @minierparedes    |
 | 2024-05-20 | 1.5     | readme: run docker      | @minierparedes    |
-| 2024-05-27 | 1.6     | github actions      | @minierparedes    |
+| 2024-05-27 | 1.6     | github actions          | @minierparedes    |
+| 2024-06-08 | 1.6     | updated readme          | @msinhay13        |
