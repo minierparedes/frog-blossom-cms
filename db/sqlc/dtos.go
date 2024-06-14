@@ -52,6 +52,19 @@ type UpdateContentTxResult struct {
 	Metas Meta `json:"meta"`
 }
 
+type UpdatePageTxParams struct {
+	UserId   int64              `json:"user_id"`
+	Username string             `json:"username"`
+	PageId   *int64             `json:"page_id"`
+	Pages    *UpdatePagesParams `json:"pages"`
+	Metas    UpdateMetaParams   `json:"meta"`
+}
+
+type UpdatePageTxResult struct {
+	Pages Page `json:"page"`
+	Metas Meta `json:"meta"`
+}
+
 type DeleteContentTxParams struct {
 	PageId *int64 `json:"page_id"`
 	PostId *int64 `json:"post_id"`
