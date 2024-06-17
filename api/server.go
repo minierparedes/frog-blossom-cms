@@ -8,12 +8,12 @@ import (
 
 // Server serves HTTP requets for CMS
 type Server struct {
-	Store  *db.Store
+	Store  db.Store
 	router *gin.Engine
 }
 
 // NewServer creates new HTTP server and sets up routing
-func NewServer(store *db.Store) *Server {
+func NewServer(store db.Store) *Server {
 	server := &Server{Store: store}
 	router := gin.Default()
 

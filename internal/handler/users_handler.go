@@ -21,7 +21,7 @@ type createUsersRequest struct {
 	Description string `json:"description" binding:"required"`
 }
 
-func CreateUsersHandler(store *db.Store) gin.HandlerFunc {
+func CreateUsersHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req createUsersRequest
@@ -58,7 +58,7 @@ type getUsersRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-func GetUsersHandler(store *db.Store) gin.HandlerFunc {
+func GetUsersHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req getUsersRequest
