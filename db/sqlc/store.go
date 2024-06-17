@@ -10,7 +10,13 @@ import (
 // Functions for executing db queries and transactions
 type Store interface {
 	Querier
+	InitSetupConfigTx(ctx context.Context, args InitSetupConfigTxParams) (InitSetupConfigTxResult, error)
 	CreatePostsTx(ctx context.Context, args CreatePostTxParams) (CreatePostTxResult, error)
+	CreatePageTx(ctx context.Context, args CreatePageTxParams) (CreatePageTxResult, error)
+	UpdatePostsTx(ctx context.Context, args UpdatePostTxParams) (UpdatePostTxResult, error)
+	UpdatePageTx(ctx context.Context, args UpdatePageTxParams) (UpdatePageTxResult, error)
+	DeletePostsTx(ctx context.Context, args DeletePostTxParams) (DeletePostTxResult, error)
+	DeletePageTx(ctx context.Context, args DeletePageTxParams) (DeletePageTxResult, error)
 }
 
 // SQLStore provides all func for executing SQL queries and transactions
