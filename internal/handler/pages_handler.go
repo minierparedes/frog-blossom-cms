@@ -28,7 +28,7 @@ type createMetaParams struct {
 	MetaValue       string  `json:"meta_value"`
 }
 
-func CreatePageTxHandler(store *db.Store) gin.HandlerFunc {
+func CreatePageTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req createPageTxRequest
@@ -63,7 +63,7 @@ type getPageRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-func GetPageHandler(store *db.Store) gin.HandlerFunc {
+func GetPageHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req getPageRequest
@@ -90,7 +90,7 @@ type listPagesRequest struct {
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
-func ListPagesHandler(store *db.Store) gin.HandlerFunc {
+func ListPagesHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req listPagesRequest
@@ -137,7 +137,7 @@ type updateMetaParams struct {
 	MetaValue       string  `json:"meta_value"`
 }
 
-func UpdatePagesTxHandler(store *db.Store) gin.HandlerFunc {
+func UpdatePagesTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req updatePagesTxRequest
@@ -196,7 +196,7 @@ type deletePageRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-func DeletePageTxHandler(store *db.Store) gin.HandlerFunc {
+func DeletePageTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req deletePageRequest

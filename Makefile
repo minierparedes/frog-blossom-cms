@@ -19,10 +19,13 @@ migratedown:
 sqlc:
 	sqlc generate
 
+mock:
+	mockgen -package mockdb  -destination db/mock/store.go github.com/reflection/frog-blossom-cms/db/sqlc Store
+
 server:
 	go run cmd/main.go
 
 test:
 	go test -v -cover ./...
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc server test
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc server test mock
