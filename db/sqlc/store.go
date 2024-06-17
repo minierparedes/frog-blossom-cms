@@ -8,20 +8,32 @@ import (
 )
 
 // Store Functions for executing db queries and transactions
-type Store struct {
+type Store interface {
+	Querier
+	InitSetupConfigTx(ctx context.Context, args InitSetupConfigTxParams) (InitSetupConfigTxResult, error)
+	CreatePostsTx(ctx context.Context, args CreatePostTxParams) (CreatePostTxResult, error)
+	CreatePageTx(ctx context.Context, args CreatePageTxParams) (CreatePageTxResult, error)
+	UpdatePostsTx(ctx context.Context, args UpdatePostTxParams) (UpdatePostTxResult, error)
+	UpdatePageTx(ctx context.Context, args UpdatePageTxParams) (UpdatePageTxResult, error)
+	DeletePostsTx(ctx context.Context, args DeletePostTxParams) (DeletePostTxResult, error)
+	DeletePageTx(ctx context.Context, args DeletePageTxParams) (DeletePageTxResult, error)
+}
+
+// SQLStore provides all func for executing SQL queries and transactions
+type SQLStore struct {
 	*Queries
 	db *sql.DB
 }
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+func NewStore(db *sql.DB) Store {
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}
 }
 
 // executes a function within a db transaction
-func (store *Store) executeTx(ctx context.Context, fn func(*Queries) error) error {
+func (store *SQLStore) executeTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -40,7 +52,7 @@ func (store *Store) executeTx(ctx context.Context, fn func(*Queries) error) erro
 
 // InitSetupConfigTx populates db tables with initial site-specific config data
 // Use user info to populate the `posts`, `pages`, and `meta` tables
-func (store *Store) InitSetupConfigTx(ctx context.Context, args InitSetupConfigTxParams) (InitSetupConfigTxResult, error) {
+func (store *SQLStore) InitSetupConfigTx(ctx context.Context, args InitSetupConfigTxParams) (InitSetupConfigTxResult, error) {
 	var result InitSetupConfigTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
@@ -83,7 +95,7 @@ func (store *Store) InitSetupConfigTx(ctx context.Context, args InitSetupConfigT
 
 // CreatePostsTx creates new posts content based on user information
 // It utilizes user info(users.id, users.username) to create the `posts` and its respective `meta`.
-func (store *Store) CreatePostsTx(ctx context.Context, args CreatePostTxParams) (CreatePostTxResult, error) {
+func (store *SQLStore) CreatePostsTx(ctx context.Context, args CreatePostTxParams) (CreatePostTxResult, error) {
 	var result CreatePostTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
@@ -138,7 +150,7 @@ func (store *Store) CreatePostsTx(ctx context.Context, args CreatePostTxParams) 
 
 // CreatePageTx creates new pages content based on user information
 // It utilizes user info(users.id, users.username) to create the `page` and its respective `meta`.
-func (store *Store) CreatePageTx(ctx context.Context, args CreatePageTxParams) (CreatePageTxResult, error) {
+func (store *SQLStore) CreatePageTx(ctx context.Context, args CreatePageTxParams) (CreatePageTxResult, error) {
 	var result CreatePageTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
@@ -196,7 +208,7 @@ func (store *Store) CreatePageTx(ctx context.Context, args CreatePageTxParams) (
 
 // UpdatePostsTx updates existing content in the `posts` table and its respective `meta` table.
 // It utilizes user info (users.id, users.username) to update the content and its associated metadata.
-func (store *Store) UpdatePostsTx(ctx context.Context, args UpdatePostTxParams) (UpdatePostTxResult, error) {
+func (store *SQLStore) UpdatePostsTx(ctx context.Context, args UpdatePostTxParams) (UpdatePostTxResult, error) {
 	var result UpdatePostTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
@@ -264,7 +276,7 @@ func (store *Store) UpdatePostsTx(ctx context.Context, args UpdatePostTxParams) 
 
 // UpdatePageTx updates existing content in the `page` table and its respective `meta` table.
 // It utilizes user info (users.id, users.username) to update the content and its associated metadata.
-func (store *Store) UpdatePageTx(ctx context.Context, args UpdatePageTxParams) (UpdatePageTxResult, error) {
+func (store *SQLStore) UpdatePageTx(ctx context.Context, args UpdatePageTxParams) (UpdatePageTxResult, error) {
 	var result UpdatePageTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
@@ -333,7 +345,7 @@ func (store *Store) UpdatePageTx(ctx context.Context, args UpdatePageTxParams) (
 
 // DeletePostsTx deletes existing content in the `posts` table and its respective `meta` table.
 // It utilizes posts info (post.id) to delete posts content and its associated metadata.
-func (store *Store) DeletePostsTx(ctx context.Context, args DeletePostTxParams) (DeletePostTxResult, error) {
+func (store *SQLStore) DeletePostsTx(ctx context.Context, args DeletePostTxParams) (DeletePostTxResult, error) {
 	var result DeletePostTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
@@ -361,7 +373,7 @@ func (store *Store) DeletePostsTx(ctx context.Context, args DeletePostTxParams) 
 
 // DeletePageTx deletes existing content in the `page` table and its respective `meta` table.
 // It utilizes posts info (post.id) to delete posts content and its associated metadata.
-func (store *Store) DeletePageTx(ctx context.Context, args DeletePageTxParams) (DeletePageTxResult, error) {
+func (store *SQLStore) DeletePageTx(ctx context.Context, args DeletePageTxParams) (DeletePageTxResult, error) {
 	var result DeletePageTxResult
 
 	err := store.executeTx(ctx, func(q *Queries) error {
