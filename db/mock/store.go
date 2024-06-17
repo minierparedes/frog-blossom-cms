@@ -56,6 +56,21 @@ func (mr *MockStoreMockRecorder) CreateMeta(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateMeta", reflect.TypeOf((*MockStore)(nil).CreateMeta), arg0, arg1)
 }
 
+// CreatePageTx mocks base method.
+func (m *MockStore) CreatePageTx(arg0 context.Context, arg1 frog_blossom_db.CreatePageTxParams) (frog_blossom_db.CreatePageTxResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePageTx", arg0, arg1)
+	ret0, _ := ret[0].(frog_blossom_db.CreatePageTxResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreatePageTx indicates an expected call of CreatePageTx.
+func (mr *MockStoreMockRecorder) CreatePageTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePageTx", reflect.TypeOf((*MockStore)(nil).CreatePageTx), arg0, arg1)
+}
+
 // CreatePages mocks base method.
 func (m *MockStore) CreatePages(arg0 context.Context, arg1 frog_blossom_db.CreatePagesParams) (frog_blossom_db.Page, error) {
 	m.ctrl.T.Helper()
@@ -158,6 +173,21 @@ func (mr *MockStoreMockRecorder) DeleteMetaByPostId(arg0, arg1 any) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteMetaByPostId", reflect.TypeOf((*MockStore)(nil).DeleteMetaByPostId), arg0, arg1)
 }
 
+// DeletePageTx mocks base method.
+func (m *MockStore) DeletePageTx(arg0 context.Context, arg1 frog_blossom_db.DeletePageTxParams) (frog_blossom_db.DeletePageTxResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeletePageTx", arg0, arg1)
+	ret0, _ := ret[0].(frog_blossom_db.DeletePageTxResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeletePageTx indicates an expected call of DeletePageTx.
+func (mr *MockStoreMockRecorder) DeletePageTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePageTx", reflect.TypeOf((*MockStore)(nil).DeletePageTx), arg0, arg1)
+}
+
 // DeletePages mocks base method.
 func (m *MockStore) DeletePages(arg0 context.Context, arg1 int64) error {
 	m.ctrl.T.Helper()
@@ -184,6 +214,21 @@ func (m *MockStore) DeletePosts(arg0 context.Context, arg1 int64) error {
 func (mr *MockStoreMockRecorder) DeletePosts(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePosts", reflect.TypeOf((*MockStore)(nil).DeletePosts), arg0, arg1)
+}
+
+// DeletePostsTx mocks base method.
+func (m *MockStore) DeletePostsTx(arg0 context.Context, arg1 frog_blossom_db.DeletePostTxParams) (frog_blossom_db.DeletePostTxResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeletePostsTx", arg0, arg1)
+	ret0, _ := ret[0].(frog_blossom_db.DeletePostTxResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeletePostsTx indicates an expected call of DeletePostsTx.
+func (mr *MockStoreMockRecorder) DeletePostsTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePostsTx", reflect.TypeOf((*MockStore)(nil).DeletePostsTx), arg0, arg1)
 }
 
 // DeleteUsers mocks base method.
@@ -290,6 +335,21 @@ func (mr *MockStoreMockRecorder) GetUsers(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsers", reflect.TypeOf((*MockStore)(nil).GetUsers), arg0, arg1)
 }
 
+// InitSetupConfigTx mocks base method.
+func (m *MockStore) InitSetupConfigTx(arg0 context.Context, arg1 frog_blossom_db.InitSetupConfigTxParams) (frog_blossom_db.InitSetupConfigTxResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InitSetupConfigTx", arg0, arg1)
+	ret0, _ := ret[0].(frog_blossom_db.InitSetupConfigTxResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// InitSetupConfigTx indicates an expected call of InitSetupConfigTx.
+func (mr *MockStoreMockRecorder) InitSetupConfigTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InitSetupConfigTx", reflect.TypeOf((*MockStore)(nil).InitSetupConfigTx), arg0, arg1)
+}
+
 // ListMeta mocks base method.
 func (m *MockStore) ListMeta(arg0 context.Context, arg1 frog_blossom_db.ListMetaParams) ([]frog_blossom_db.Meta, error) {
 	m.ctrl.T.Helper()
@@ -365,6 +425,21 @@ func (mr *MockStoreMockRecorder) UpdateMeta(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateMeta", reflect.TypeOf((*MockStore)(nil).UpdateMeta), arg0, arg1)
 }
 
+// UpdatePageTx mocks base method.
+func (m *MockStore) UpdatePageTx(arg0 context.Context, arg1 frog_blossom_db.UpdatePageTxParams) (frog_blossom_db.UpdatePageTxResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePageTx", arg0, arg1)
+	ret0, _ := ret[0].(frog_blossom_db.UpdatePageTxResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdatePageTx indicates an expected call of UpdatePageTx.
+func (mr *MockStoreMockRecorder) UpdatePageTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePageTx", reflect.TypeOf((*MockStore)(nil).UpdatePageTx), arg0, arg1)
+}
+
 // UpdatePages mocks base method.
 func (m *MockStore) UpdatePages(arg0 context.Context, arg1 frog_blossom_db.UpdatePagesParams) (frog_blossom_db.Page, error) {
 	m.ctrl.T.Helper()
@@ -393,6 +468,21 @@ func (m *MockStore) UpdatePosts(arg0 context.Context, arg1 frog_blossom_db.Updat
 func (mr *MockStoreMockRecorder) UpdatePosts(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePosts", reflect.TypeOf((*MockStore)(nil).UpdatePosts), arg0, arg1)
+}
+
+// UpdatePostsTx mocks base method.
+func (m *MockStore) UpdatePostsTx(arg0 context.Context, arg1 frog_blossom_db.UpdatePostTxParams) (frog_blossom_db.UpdatePostTxResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePostsTx", arg0, arg1)
+	ret0, _ := ret[0].(frog_blossom_db.UpdatePostTxResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdatePostsTx indicates an expected call of UpdatePostsTx.
+func (mr *MockStoreMockRecorder) UpdatePostsTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePostsTx", reflect.TypeOf((*MockStore)(nil).UpdatePostsTx), arg0, arg1)
 }
 
 // UpdateUsers mocks base method.

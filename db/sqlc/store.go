@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// Functions for executing db queries and transactions
+// Store Functions for executing db queries and transactions
 type Store interface {
 	Querier
 	InitSetupConfigTx(ctx context.Context, args InitSetupConfigTxParams) (InitSetupConfigTxResult, error)
