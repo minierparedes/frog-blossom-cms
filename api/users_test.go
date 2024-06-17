@@ -14,6 +14,7 @@ import (
 )
 
 func TestGetUsersHandler(t *testing.T) {
+	// Arrange
 	user := newUser()
 
 	ctrl := gomock.NewController(t)
@@ -31,13 +32,14 @@ func TestGetUsersHandler(t *testing.T) {
 	server := NewServer(store)
 	recorder := httptest.NewRecorder()
 
+	// Act
 	url := fmt.Sprintf("/api/v1/users/%d", user.ID)
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	require.NoError(t, err)
 
 	server.router.ServeHTTP(recorder, request)
 
-	// check response
+	// Assert
 	require.Equal(t, http.StatusOK, recorder.Code)
 }
 
