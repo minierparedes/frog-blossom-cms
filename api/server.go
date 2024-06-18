@@ -23,7 +23,7 @@ func NewServer(store db.Store) *Server {
 	subrouter.PUT("/users/:id", handler.UpdateUserHandler(store))
 	subrouter.GET("/users/:id", handler.GetUsersHandler(store))
 	subrouter.GET("/users", handler.ListUsersHandler(store))
-	subrouter.DELETE("/users/:id", handler.DeleteUsersHandler(store))
+	subrouter.PUT("/users/:id", handler.SoftDeleteUsersHandler(store))
 
 	server.router = router
 	return server

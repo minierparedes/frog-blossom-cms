@@ -159,14 +159,14 @@ func UpdateUserHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
-type deleteUserRequest struct {
+type softDeleteUserRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-func DeleteUsersHandler(store db.Store) gin.HandlerFunc {
+func SoftDeleteUsersHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var req deleteUserRequest
+		var req softDeleteUserRequest
 		if err := ctx.ShouldBindUri(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
@@ -174,7 +174,11 @@ func DeleteUsersHandler(store db.Store) gin.HandlerFunc {
 
 		user, err := store.GetUsers(ctx, req.ID)
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			if err == sql.ErrNoRows {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+			} else {
+				ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			}
 			return
 		}
 
@@ -183,7 +187,7 @@ func DeleteUsersHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 
-		arg := db.UpdateUsersParams{
+		arg := db.SoftDeleteUsersParams{
 			ID: user.ID,
 			IsDeleted: sql.NullBool{
 				Bool:  true,
@@ -191,11 +195,11 @@ func DeleteUsersHandler(store db.Store) gin.HandlerFunc {
 			},
 		}
 
-		result, err := store.UpdateUsers(ctx, arg)
+		result, err := store.SoftDeleteUsers(ctx, arg)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
-		ctx.JSON(http.StatusOK, result.IsDeleted)
+		ctx.JSON(http.StatusOK, result)
 	}
 }
