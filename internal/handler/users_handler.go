@@ -87,11 +87,13 @@ type listUsersRequest struct {
 
 func ListUsersHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+
 		var req listUsersRequest
 		if err := ctx.ShouldBindQuery(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}
+
 		args := db.ListUsersParams{
 			Limit:  req.PageSize,
 			Offset: (req.PageID - 1) * req.PageSize,
