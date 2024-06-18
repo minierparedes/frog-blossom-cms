@@ -3,6 +3,7 @@ package handler
 import (
 	"database/sql"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
@@ -105,5 +106,96 @@ func ListUsersHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusOK, users)
+	}
+}
+
+type updateUserRequest struct {
+	ID          int64          `json:"id"`
+	Username    string         `json:"username"`
+	Email       string         `json:"email"`
+	Password    string         `json:"password"`
+	Role        string         `json:"role"`
+	FirstName   string         `json:"first_name"`
+	LastName    string         `json:"last_name"`
+	UserUrl     sql.NullString `json:"user_url"`
+	Description sql.NullString `json:"description"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+}
+
+func UpdateUserHandler(store db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		var req updateUserRequest
+		if err := ctx.ShouldBindUri(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		users, err := store.GetUsers(ctx, req.ID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		args := db.UpdateUsersParams{
+			ID:          users.ID,
+			Username:    req.Username,
+			Email:       req.Email,
+			Password:    req.Password,
+			Role:        req.Role,
+			FirstName:   req.FirstName,
+			LastName:    req.LastName,
+			UserUrl:     req.UserUrl,
+			Description: req.Description,
+			UpdatedAt:   time.Time{},
+		}
+
+		user, err := store.UpdateUsers(ctx, args)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, user)
+	}
+}
+
+type deleteUserRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+func DeleteUsersHandler(store db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		var req deleteUserRequest
+		if err := ctx.ShouldBindUri(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		user, err := store.GetUsers(ctx, req.ID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		if user.ID != req.ID {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "user's ID does not match the provided user ID"})
+			return
+		}
+
+		arg := db.UpdateUsersParams{
+			ID: user.ID,
+			IsDeleted: sql.NullBool{
+				Bool:  true,
+				Valid: true,
+			},
+		}
+
+		result, err := store.UpdateUsers(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, result.IsDeleted)
 	}
 }
