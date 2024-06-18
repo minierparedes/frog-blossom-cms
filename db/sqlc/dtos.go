@@ -1,4 +1,4 @@
-package frog_blossom_db
+package db
 
 type InitSetupConfigTxParams struct {
 	UserId       int64               `json:"user_id"`
