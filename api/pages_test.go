@@ -1,11 +1,14 @@
 package api
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	mockdb "github.com/reflection/frog-blossom-cms/db/mock"
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -37,6 +40,7 @@ func TestGetPageHandler(t *testing.T) {
 
 	// Assert
 	require.Equal(t, http.StatusOK, recorder.Code)
+	requireBodyMatchPage(t, recorder.Body, page)
 }
 
 func newPage() db.Page {
@@ -56,4 +60,14 @@ func newPage() db.Page {
 		OptionValue:    "My Website",
 		OptionRequired: true,
 	}
+}
+
+func requireBodyMatchPage(t *testing.T, body *bytes.Buffer, page db.Page) {
+	data, err := io.ReadAll(body)
+	require.NoError(t, err)
+
+	var getPage db.Page
+	err = json.Unmarshal(data, &getPage)
+	require.NoError(t, err)
+	require.Equal(t, page, getPage)
 }
