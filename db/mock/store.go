@@ -14,7 +14,7 @@ import (
 	sql "database/sql"
 	reflect "reflect"
 
-	frog_blossom_db "github.com/reflection/frog-blossom-cms/db/sqlc"
+	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -42,10 +42,10 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 }
 
 // CreateMeta mocks base method.
-func (m *MockStore) CreateMeta(arg0 context.Context, arg1 frog_blossom_db.CreateMetaParams) (frog_blossom_db.Meta, error) {
+func (m *MockStore) CreateMeta(arg0 context.Context, arg1 db.CreateMetaParams) (db.Meta, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateMeta", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Meta)
+	ret0, _ := ret[0].(db.Meta)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -57,10 +57,10 @@ func (mr *MockStoreMockRecorder) CreateMeta(arg0, arg1 any) *gomock.Call {
 }
 
 // CreatePageTx mocks base method.
-func (m *MockStore) CreatePageTx(arg0 context.Context, arg1 frog_blossom_db.CreatePageTxParams) (frog_blossom_db.CreatePageTxResult, error) {
+func (m *MockStore) CreatePageTx(arg0 context.Context, arg1 db.CreatePageTxParams) (db.CreatePageTxResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePageTx", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.CreatePageTxResult)
+	ret0, _ := ret[0].(db.CreatePageTxResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -72,10 +72,10 @@ func (mr *MockStoreMockRecorder) CreatePageTx(arg0, arg1 any) *gomock.Call {
 }
 
 // CreatePages mocks base method.
-func (m *MockStore) CreatePages(arg0 context.Context, arg1 frog_blossom_db.CreatePagesParams) (frog_blossom_db.Page, error) {
+func (m *MockStore) CreatePages(arg0 context.Context, arg1 db.CreatePagesParams) (db.Page, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePages", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Page)
+	ret0, _ := ret[0].(db.Page)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -87,10 +87,10 @@ func (mr *MockStoreMockRecorder) CreatePages(arg0, arg1 any) *gomock.Call {
 }
 
 // CreatePosts mocks base method.
-func (m *MockStore) CreatePosts(arg0 context.Context, arg1 frog_blossom_db.CreatePostsParams) (frog_blossom_db.Post, error) {
+func (m *MockStore) CreatePosts(arg0 context.Context, arg1 db.CreatePostsParams) (db.Post, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePosts", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Post)
+	ret0, _ := ret[0].(db.Post)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -102,10 +102,10 @@ func (mr *MockStoreMockRecorder) CreatePosts(arg0, arg1 any) *gomock.Call {
 }
 
 // CreatePostsTx mocks base method.
-func (m *MockStore) CreatePostsTx(arg0 context.Context, arg1 frog_blossom_db.CreatePostTxParams) (frog_blossom_db.CreatePostTxResult, error) {
+func (m *MockStore) CreatePostsTx(arg0 context.Context, arg1 db.CreatePostTxParams) (db.CreatePostTxResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePostsTx", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.CreatePostTxResult)
+	ret0, _ := ret[0].(db.CreatePostTxResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -117,10 +117,10 @@ func (mr *MockStoreMockRecorder) CreatePostsTx(arg0, arg1 any) *gomock.Call {
 }
 
 // CreateUsers mocks base method.
-func (m *MockStore) CreateUsers(arg0 context.Context, arg1 frog_blossom_db.CreateUsersParams) (frog_blossom_db.User, error) {
+func (m *MockStore) CreateUsers(arg0 context.Context, arg1 db.CreateUsersParams) (db.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUsers", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.User)
+	ret0, _ := ret[0].(db.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -174,10 +174,10 @@ func (mr *MockStoreMockRecorder) DeleteMetaByPostId(arg0, arg1 any) *gomock.Call
 }
 
 // DeletePageTx mocks base method.
-func (m *MockStore) DeletePageTx(arg0 context.Context, arg1 frog_blossom_db.DeletePageTxParams) (frog_blossom_db.DeletePageTxResult, error) {
+func (m *MockStore) DeletePageTx(arg0 context.Context, arg1 db.DeletePageTxParams) (db.DeletePageTxResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeletePageTx", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.DeletePageTxResult)
+	ret0, _ := ret[0].(db.DeletePageTxResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -217,10 +217,10 @@ func (mr *MockStoreMockRecorder) DeletePosts(arg0, arg1 any) *gomock.Call {
 }
 
 // DeletePostsTx mocks base method.
-func (m *MockStore) DeletePostsTx(arg0 context.Context, arg1 frog_blossom_db.DeletePostTxParams) (frog_blossom_db.DeletePostTxResult, error) {
+func (m *MockStore) DeletePostsTx(arg0 context.Context, arg1 db.DeletePostTxParams) (db.DeletePostTxResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeletePostsTx", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.DeletePostTxResult)
+	ret0, _ := ret[0].(db.DeletePostTxResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -246,10 +246,10 @@ func (mr *MockStoreMockRecorder) DeleteUsers(arg0, arg1 any) *gomock.Call {
 }
 
 // GetMeta mocks base method.
-func (m *MockStore) GetMeta(arg0 context.Context, arg1 int64) (frog_blossom_db.Meta, error) {
+func (m *MockStore) GetMeta(arg0 context.Context, arg1 int64) (db.Meta, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetMeta", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Meta)
+	ret0, _ := ret[0].(db.Meta)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -261,10 +261,10 @@ func (mr *MockStoreMockRecorder) GetMeta(arg0, arg1 any) *gomock.Call {
 }
 
 // GetMetaByPageIDForUpdate mocks base method.
-func (m *MockStore) GetMetaByPageIDForUpdate(arg0 context.Context, arg1 sql.NullInt64) (frog_blossom_db.Meta, error) {
+func (m *MockStore) GetMetaByPageIDForUpdate(arg0 context.Context, arg1 sql.NullInt64) (db.Meta, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetMetaByPageIDForUpdate", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Meta)
+	ret0, _ := ret[0].(db.Meta)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -276,10 +276,10 @@ func (mr *MockStoreMockRecorder) GetMetaByPageIDForUpdate(arg0, arg1 any) *gomoc
 }
 
 // GetMetaByPostsIDForUpdate mocks base method.
-func (m *MockStore) GetMetaByPostsIDForUpdate(arg0 context.Context, arg1 sql.NullInt64) (frog_blossom_db.Meta, error) {
+func (m *MockStore) GetMetaByPostsIDForUpdate(arg0 context.Context, arg1 sql.NullInt64) (db.Meta, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetMetaByPostsIDForUpdate", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Meta)
+	ret0, _ := ret[0].(db.Meta)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -291,10 +291,10 @@ func (mr *MockStoreMockRecorder) GetMetaByPostsIDForUpdate(arg0, arg1 any) *gomo
 }
 
 // GetPages mocks base method.
-func (m *MockStore) GetPages(arg0 context.Context, arg1 int64) (frog_blossom_db.Page, error) {
+func (m *MockStore) GetPages(arg0 context.Context, arg1 int64) (db.Page, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPages", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Page)
+	ret0, _ := ret[0].(db.Page)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -306,10 +306,10 @@ func (mr *MockStoreMockRecorder) GetPages(arg0, arg1 any) *gomock.Call {
 }
 
 // GetPosts mocks base method.
-func (m *MockStore) GetPosts(arg0 context.Context, arg1 int64) (frog_blossom_db.Post, error) {
+func (m *MockStore) GetPosts(arg0 context.Context, arg1 int64) (db.Post, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPosts", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Post)
+	ret0, _ := ret[0].(db.Post)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -321,10 +321,10 @@ func (mr *MockStoreMockRecorder) GetPosts(arg0, arg1 any) *gomock.Call {
 }
 
 // GetUsers mocks base method.
-func (m *MockStore) GetUsers(arg0 context.Context, arg1 int64) (frog_blossom_db.User, error) {
+func (m *MockStore) GetUsers(arg0 context.Context, arg1 int64) (db.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUsers", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.User)
+	ret0, _ := ret[0].(db.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -336,10 +336,10 @@ func (mr *MockStoreMockRecorder) GetUsers(arg0, arg1 any) *gomock.Call {
 }
 
 // InitSetupConfigTx mocks base method.
-func (m *MockStore) InitSetupConfigTx(arg0 context.Context, arg1 frog_blossom_db.InitSetupConfigTxParams) (frog_blossom_db.InitSetupConfigTxResult, error) {
+func (m *MockStore) InitSetupConfigTx(arg0 context.Context, arg1 db.InitSetupConfigTxParams) (db.InitSetupConfigTxResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InitSetupConfigTx", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.InitSetupConfigTxResult)
+	ret0, _ := ret[0].(db.InitSetupConfigTxResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -351,10 +351,10 @@ func (mr *MockStoreMockRecorder) InitSetupConfigTx(arg0, arg1 any) *gomock.Call 
 }
 
 // ListMeta mocks base method.
-func (m *MockStore) ListMeta(arg0 context.Context, arg1 frog_blossom_db.ListMetaParams) ([]frog_blossom_db.Meta, error) {
+func (m *MockStore) ListMeta(arg0 context.Context, arg1 db.ListMetaParams) ([]db.Meta, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListMeta", arg0, arg1)
-	ret0, _ := ret[0].([]frog_blossom_db.Meta)
+	ret0, _ := ret[0].([]db.Meta)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -366,10 +366,10 @@ func (mr *MockStoreMockRecorder) ListMeta(arg0, arg1 any) *gomock.Call {
 }
 
 // ListPages mocks base method.
-func (m *MockStore) ListPages(arg0 context.Context, arg1 frog_blossom_db.ListPagesParams) ([]frog_blossom_db.Page, error) {
+func (m *MockStore) ListPages(arg0 context.Context, arg1 db.ListPagesParams) ([]db.Page, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListPages", arg0, arg1)
-	ret0, _ := ret[0].([]frog_blossom_db.Page)
+	ret0, _ := ret[0].([]db.Page)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -381,10 +381,10 @@ func (mr *MockStoreMockRecorder) ListPages(arg0, arg1 any) *gomock.Call {
 }
 
 // ListPosts mocks base method.
-func (m *MockStore) ListPosts(arg0 context.Context, arg1 frog_blossom_db.ListPostsParams) ([]frog_blossom_db.Post, error) {
+func (m *MockStore) ListPosts(arg0 context.Context, arg1 db.ListPostsParams) ([]db.Post, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListPosts", arg0, arg1)
-	ret0, _ := ret[0].([]frog_blossom_db.Post)
+	ret0, _ := ret[0].([]db.Post)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -396,10 +396,10 @@ func (mr *MockStoreMockRecorder) ListPosts(arg0, arg1 any) *gomock.Call {
 }
 
 // ListUsers mocks base method.
-func (m *MockStore) ListUsers(arg0 context.Context, arg1 frog_blossom_db.ListUsersParams) ([]frog_blossom_db.User, error) {
+func (m *MockStore) ListUsers(arg0 context.Context, arg1 db.ListUsersParams) ([]db.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListUsers", arg0, arg1)
-	ret0, _ := ret[0].([]frog_blossom_db.User)
+	ret0, _ := ret[0].([]db.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -410,11 +410,26 @@ func (mr *MockStoreMockRecorder) ListUsers(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUsers", reflect.TypeOf((*MockStore)(nil).ListUsers), arg0, arg1)
 }
 
+// SoftDeleteUsers mocks base method.
+func (m *MockStore) SoftDeleteUsers(arg0 context.Context, arg1 db.SoftDeleteUsersParams) (sql.NullBool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SoftDeleteUsers", arg0, arg1)
+	ret0, _ := ret[0].(sql.NullBool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SoftDeleteUsers indicates an expected call of SoftDeleteUsers.
+func (mr *MockStoreMockRecorder) SoftDeleteUsers(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SoftDeleteUsers", reflect.TypeOf((*MockStore)(nil).SoftDeleteUsers), arg0, arg1)
+}
+
 // UpdateMeta mocks base method.
-func (m *MockStore) UpdateMeta(arg0 context.Context, arg1 frog_blossom_db.UpdateMetaParams) (frog_blossom_db.Meta, error) {
+func (m *MockStore) UpdateMeta(arg0 context.Context, arg1 db.UpdateMetaParams) (db.Meta, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateMeta", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Meta)
+	ret0, _ := ret[0].(db.Meta)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -426,10 +441,10 @@ func (mr *MockStoreMockRecorder) UpdateMeta(arg0, arg1 any) *gomock.Call {
 }
 
 // UpdatePageTx mocks base method.
-func (m *MockStore) UpdatePageTx(arg0 context.Context, arg1 frog_blossom_db.UpdatePageTxParams) (frog_blossom_db.UpdatePageTxResult, error) {
+func (m *MockStore) UpdatePageTx(arg0 context.Context, arg1 db.UpdatePageTxParams) (db.UpdatePageTxResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdatePageTx", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.UpdatePageTxResult)
+	ret0, _ := ret[0].(db.UpdatePageTxResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -441,10 +456,10 @@ func (mr *MockStoreMockRecorder) UpdatePageTx(arg0, arg1 any) *gomock.Call {
 }
 
 // UpdatePages mocks base method.
-func (m *MockStore) UpdatePages(arg0 context.Context, arg1 frog_blossom_db.UpdatePagesParams) (frog_blossom_db.Page, error) {
+func (m *MockStore) UpdatePages(arg0 context.Context, arg1 db.UpdatePagesParams) (db.Page, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdatePages", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Page)
+	ret0, _ := ret[0].(db.Page)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -456,10 +471,10 @@ func (mr *MockStoreMockRecorder) UpdatePages(arg0, arg1 any) *gomock.Call {
 }
 
 // UpdatePosts mocks base method.
-func (m *MockStore) UpdatePosts(arg0 context.Context, arg1 frog_blossom_db.UpdatePostsParams) (frog_blossom_db.Post, error) {
+func (m *MockStore) UpdatePosts(arg0 context.Context, arg1 db.UpdatePostsParams) (db.Post, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdatePosts", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.Post)
+	ret0, _ := ret[0].(db.Post)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -471,10 +486,10 @@ func (mr *MockStoreMockRecorder) UpdatePosts(arg0, arg1 any) *gomock.Call {
 }
 
 // UpdatePostsTx mocks base method.
-func (m *MockStore) UpdatePostsTx(arg0 context.Context, arg1 frog_blossom_db.UpdatePostTxParams) (frog_blossom_db.UpdatePostTxResult, error) {
+func (m *MockStore) UpdatePostsTx(arg0 context.Context, arg1 db.UpdatePostTxParams) (db.UpdatePostTxResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdatePostsTx", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.UpdatePostTxResult)
+	ret0, _ := ret[0].(db.UpdatePostTxResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -486,10 +501,10 @@ func (mr *MockStoreMockRecorder) UpdatePostsTx(arg0, arg1 any) *gomock.Call {
 }
 
 // UpdateUsers mocks base method.
-func (m *MockStore) UpdateUsers(arg0 context.Context, arg1 frog_blossom_db.UpdateUsersParams) (frog_blossom_db.User, error) {
+func (m *MockStore) UpdateUsers(arg0 context.Context, arg1 db.UpdateUsersParams) (db.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateUsers", arg0, arg1)
-	ret0, _ := ret[0].(frog_blossom_db.User)
+	ret0, _ := ret[0].(db.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

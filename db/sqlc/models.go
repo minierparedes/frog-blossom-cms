@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package frog_blossom_db
+package db
 
 import (
 	"database/sql"

@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: pages.sql
 
-package frog_blossom_db
+package db
 
 import (
 	"context"
