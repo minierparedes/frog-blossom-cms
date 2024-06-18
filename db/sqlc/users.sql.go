@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: users.sql
 
-package frog_blossom_db
+package db
 
 import (
 	"context"
@@ -153,6 +153,25 @@ func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, e
 		return nil, err
 	}
 	return items, nil
+}
+
+const softDeleteUsers = `-- name: SoftDeleteUsers :one
+UPDATE users
+  SET is_deleted =$2
+WHERE id = $1
+RETURNING is_deleted
+`
+
+type SoftDeleteUsersParams struct {
+	ID        int64        `json:"id"`
+	IsDeleted sql.NullBool `json:"is_deleted"`
+}
+
+func (q *Queries) SoftDeleteUsers(ctx context.Context, arg SoftDeleteUsersParams) (sql.NullBool, error) {
+	row := q.db.QueryRowContext(ctx, softDeleteUsers, arg.ID, arg.IsDeleted)
+	var is_deleted sql.NullBool
+	err := row.Scan(&is_deleted)
+	return is_deleted, err
 }
 
 const updateUsers = `-- name: UpdateUsers :one

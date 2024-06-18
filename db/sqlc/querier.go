@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package frog_blossom_db
+package db
 
 import (
 	"context"
@@ -30,6 +30,7 @@ type Querier interface {
 	ListPages(ctx context.Context, arg ListPagesParams) ([]Page, error)
 	ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, error)
 	ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error)
+	SoftDeleteUsers(ctx context.Context, arg SoftDeleteUsersParams) (sql.NullBool, error)
 	UpdateMeta(ctx context.Context, arg UpdateMetaParams) (Meta, error)
 	UpdatePages(ctx context.Context, arg UpdatePagesParams) (Page, error)
 	UpdatePosts(ctx context.Context, arg UpdatePostsParams) (Post, error)

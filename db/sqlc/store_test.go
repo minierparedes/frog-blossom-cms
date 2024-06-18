@@ -1,4 +1,4 @@
-package frog_blossom_db
+package db
 
 import (
 	"context"

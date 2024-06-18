@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: posts.sql
 
-package frog_blossom_db
+package db
 
 import (
 	"context"

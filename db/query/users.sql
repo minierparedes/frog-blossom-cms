@@ -42,3 +42,10 @@ RETURNING *;
 -- name: DeleteUsers :exec
 DELETE FROM users
 WHERE id = $1;
+
+-- name: SoftDeleteUsers :one
+UPDATE users
+  SET is_deleted =$2
+WHERE id = $1
+RETURNING is_deleted;
+
