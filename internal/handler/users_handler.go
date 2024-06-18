@@ -79,3 +79,29 @@ func GetUsersHandler(store db.Store) gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, user)
 	}
 }
+
+type listUsersRequest struct {
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
+}
+
+func ListUsersHandler(store db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req listUsersRequest
+		if err := ctx.ShouldBindQuery(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+		args := db.ListUsersParams{
+			Limit:  req.PageSize,
+			Offset: (req.PageID - 1) * req.PageSize,
+		}
+
+		users, err := store.ListUsers(ctx, args)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, users)
+	}
+}
