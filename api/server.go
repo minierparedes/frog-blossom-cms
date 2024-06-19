@@ -20,7 +20,10 @@ func NewServer(store db.Store) *Server {
 	subrouter := router.Group("api/v1")
 
 	subrouter.POST("/users", handler.CreateUsersHandler(store))
+	subrouter.PUT("/users/:id", handler.UpdateUserHandler(store))
 	subrouter.GET("/users/:id", handler.GetUsersHandler(store))
+	subrouter.GET("/users", handler.ListUsersHandler(store))
+	subrouter.DELETE("/users/:id", handler.SoftDeleteUsersHandler(store))
 
 	server.router = router
 	return server
