@@ -20,7 +20,6 @@ type InitSetupConfigTxResult struct {
 type CreatePageTxParams struct {
 	UserId   int64              `json:"user_id"`
 	Username string             `json:"username"`
-	PageId   *int64             `json:"page_id"`
 	Pages    *CreatePagesParams `json:"pages"`
 	Metas    CreateMetaParams   `json:"meta"`
 }
