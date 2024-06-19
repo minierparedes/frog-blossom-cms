@@ -146,7 +146,15 @@ func UpdatePagesTxHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 
-		user, err := store.GetUsers(ctx, req.UserId)
+		var uri struct {
+			ID int64 `uri:"id" binding:"required,min=1"`
+		}
+		if err := ctx.ShouldBindUri(&uri); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		user, err := store.GetUsers(ctx, uri.ID)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
