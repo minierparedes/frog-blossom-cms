@@ -72,6 +72,7 @@ func GetUsersHandler(store db.Store) gin.HandlerFunc {
 			}
 
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
 		}
 		ctx.JSON(http.StatusOK, user)
 	}
