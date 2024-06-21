@@ -33,7 +33,7 @@ type CreatePostTxParams struct {
 	UserId   int64              `json:"user_id"`
 	Username string             `json:"username"`
 	PostId   *int64             `json:"page_id"`
-	Posts    *CreatePostsParams `json:"pages"`
+	Posts    *CreatePostsParams `json:"posts"`
 	Metas    CreateMetaParams   `json:"meta"`
 }
 
