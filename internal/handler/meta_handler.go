@@ -40,16 +40,26 @@ func CreateMetaHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 
+		post, err := store.GetPosts(ctx, req.PostsID.Int64)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				ctx.JSON(http.StatusNotFound, errorResponse(err))
+				return
+			}
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
 		args := db.CreateMetaParams{
 			PageID:          sql.NullInt64{Int64: page.ID, Valid: true},
-			PostsID:         req.PostsID,
-			MetaTitle:       req.MetaTitle,
-			MetaDescription: req.MetaDescription,
-			MetaRobots:      req.MetaRobots,
-			MetaOgImage:     req.MetaOgImage,
-			Locale:          req.Locale,
+			PostsID:         sql.NullInt64{Int64: post.ID, Valid: true},
+			MetaTitle:       sql.NullString{String: req.MetaTitle.String, Valid: true},
+			MetaDescription: sql.NullString{String: req.MetaDescription.String, Valid: true},
+			MetaRobots:      sql.NullString{String: req.MetaRobots.String, Valid: true},
+			MetaOgImage:     sql.NullString{String: req.MetaOgImage.String, Valid: true},
+			Locale:          sql.NullString{String: req.Locale.String, Valid: true},
 			PageAmount:      req.PageAmount,
-			SiteLanguage:    req.SiteLanguage,
+			SiteLanguage:    sql.NullString{String: req.SiteLanguage.String, Valid: true},
 			MetaKey:         req.MetaKey,
 			MetaValue:       req.MetaValue,
 		}
