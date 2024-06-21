@@ -50,6 +50,34 @@ func CreatePostTxHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+type getPostRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+func GetPostHandler(store db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		var req getPostRequest
+		if err := ctx.ShouldBindUri(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		post, err := store.GetPosts(ctx, req.ID)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				ctx.JSON(http.StatusNotFound, errorResponse(err))
+				return
+			} else {
+				ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+				return
+			}
+		}
+
+		ctx.JSON(http.StatusOK, post)
+	}
+}
+
 // toDBParams converts a createPageTxRequest instance into a db.CreatePageTxParams structure for db operations
 func (req *createPostsTxRequest) toDBParams(userID int64, username string) db.CreatePostTxParams {
 	dbMetas := db.CreateMetaParams{
