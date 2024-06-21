@@ -38,7 +38,7 @@ type CreatePostTxParams struct {
 }
 
 type CreatePostTxResult struct {
-	Posts Post `json:"page"`
+	Posts Post `json:"posts"`
 	Metas Meta `json:"meta"`
 }
 
