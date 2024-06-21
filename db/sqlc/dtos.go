@@ -42,6 +42,19 @@ type CreatePostTxResult struct {
 	Metas Meta `json:"meta"`
 }
 
+type CreateMetaTxParams struct {
+	PostsID         *int64  `json:"posts_id"`
+	MetaTitle       *string `json:"meta_title"`
+	MetaDescription *string `json:"meta_description"`
+	MetaRobots      *string `json:"meta_robots"`
+	MetaOgImage     *string `json:"meta_og_image"`
+	Locale          *string `json:"locale"`
+	PageAmount      int64   `json:"page_amount"`
+	SiteLanguage    *string `json:"site_language"`
+	MetaKey         string  `json:"meta_key"`
+	MetaValue       string  `json:"meta_value"`
+}
+
 type UpdatePageTxParams struct {
 	UserId   int64              `json:"user_id"`
 	Username string             `json:"username"`
