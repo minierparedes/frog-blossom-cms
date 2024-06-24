@@ -9,23 +9,10 @@ import (
 )
 
 type createPageTxRequest struct {
-	UserId   int64                `json:"user_id" binding:"required"`
-	Username string               `json:"username" binding:"required"`
-	Pages    db.CreatePagesParams `json:"pages" binding:"required"`
-	Metas    createMetaParams     `json:"meta"`
-}
-
-type createMetaParams struct {
-	PostsID         *int64  `json:"posts_id"`
-	MetaTitle       *string `json:"meta_title"`
-	MetaDescription *string `json:"meta_description"`
-	MetaRobots      *string `json:"meta_robots"`
-	MetaOgImage     *string `json:"meta_og_image"`
-	Locale          *string `json:"locale"`
-	PageAmount      int64   `json:"page_amount"`
-	SiteLanguage    *string `json:"site_language"`
-	MetaKey         string  `json:"meta_key"`
-	MetaValue       string  `json:"meta_value"`
+	UserId   int64                 `json:"user_id" binding:"required"`
+	Username string                `json:"username" binding:"required"`
+	Pages    db.CreatePagesParams  `json:"pages" binding:"required"`
+	Metas    db.CreateMetaTxParams `json:"meta"`
 }
 
 func CreatePageTxHandler(store db.Store) gin.HandlerFunc {
@@ -77,10 +64,12 @@ func GetPageHandler(store db.Store) gin.HandlerFunc {
 			if err == sql.ErrNoRows {
 				ctx.JSON(http.StatusNotFound, errorResponse(err))
 				return
+			} else {
+				ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+				return
 			}
-
-			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		}
+
 		ctx.JSON(http.StatusOK, page)
 	}
 }
@@ -107,6 +96,7 @@ func ListPagesHandler(store db.Store) gin.HandlerFunc {
 		pages, err := store.ListPages(ctx, args)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
 		}
 		ctx.JSON(http.StatusOK, pages)
 	}

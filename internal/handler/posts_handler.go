@@ -78,6 +78,34 @@ func GetPostHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+type listPostsRequest struct {
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
+}
+
+func ListPostsHandler(store db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		var req listPostsRequest
+		if err := ctx.ShouldBindQuery(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		args := db.ListPostsParams{
+			Limit:  req.PageSize,
+			Offset: (req.PageID - 1) * req.PageSize,
+		}
+
+		posts, err := store.ListPosts(ctx, args)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, posts)
+	}
+}
+
 // toDBParams converts a createPageTxRequest instance into a db.CreatePageTxParams structure for db operations
 func (req *createPostsTxRequest) toDBParams(userID int64, username string) db.CreatePostTxParams {
 	dbMetas := db.CreateMetaParams{
