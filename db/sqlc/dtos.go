@@ -81,6 +81,21 @@ type UpdatePostTxResult struct {
 	Metas Meta `json:"meta"`
 }
 
+type UpdateMetaTxParams struct {
+	ID              int64   `json:"id"`
+	PageID          *int64  `json:"page_id"`
+	PostsID         *int64  `json:"posts_id"`
+	MetaTitle       *string `json:"meta_title"`
+	MetaDescription *string `json:"meta_description"`
+	MetaRobots      *string `json:"meta_robots"`
+	MetaOgImage     *string `json:"meta_og_image"`
+	Locale          *string `json:"locale"`
+	PageAmount      int64   `json:"page_amount"`
+	SiteLanguage    *string `json:"site_language"`
+	MetaKey         string  `json:"meta_key"`
+	MetaValue       string  `json:"meta_value"`
+}
+
 type DeletePostTxParams struct {
 	PostId *int64 `json:"post_id"`
 }
