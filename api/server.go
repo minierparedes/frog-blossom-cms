@@ -37,6 +37,7 @@ func NewServer(store db.Store) *Server {
 	subrouter.POST("/posts", handler.CreatePostTxHandler(store))
 	subrouter.GET("/posts/:id", handler.GetPostHandler(store))
 	subrouter.GET("/posts", handler.ListPostsHandler(store))
+	subrouter.PUT("/posts/:id", handler.UpdatePostsTxHandler(store))
 
 	server.router = router
 	return server

@@ -109,7 +109,6 @@ func ListPostsHandler(store db.Store) gin.HandlerFunc {
 type updatePostsTxRequest struct {
 	UserId   int64                 `json:"user_id" binding:"required"`
 	Username string                `json:"username" binding:"required"`
-	PostId   *int64                `json:"post_id" binding:"required"`
 	Posts    db.UpdatePostsParams  `json:"posts"`
 	Metas    db.UpdateMetaTxParams `json:"meta"`
 }
@@ -131,13 +130,13 @@ func UpdatePostsTxHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 
-		user, err := store.GetUsers(ctx, uri.ID)
+		user, err := store.GetUsers(ctx, req.UserId)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
 
-		post, err := store.GetPosts(ctx, *req.PostId)
+		post, err := store.GetPosts(ctx, uri.ID)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
@@ -197,7 +196,7 @@ func (req *updatePostsTxRequest) toDBParams(userID int64, username string, postI
 
 	dbMetas := db.UpdateMetaParams{
 		ID:              req.Metas.ID,
-		PageID:          sql.NullInt64{Int64: getInt64(req.Metas.PageID), Valid: true},
+		PostsID:         sql.NullInt64{Int64: getInt64(req.Metas.PostsID), Valid: true},
 		MetaTitle:       sql.NullString{String: getStr(req.Metas.MetaTitle), Valid: true},
 		MetaDescription: sql.NullString{String: getStr(req.Metas.MetaDescription), Valid: true},
 		MetaRobots:      sql.NullString{String: getStr(req.Metas.MetaRobots), Valid: true},
