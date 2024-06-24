@@ -103,28 +103,13 @@ func ListPagesHandler(store db.Store) gin.HandlerFunc {
 }
 
 type updatePagesTxRequest struct {
-	UserId   int64                `json:"user_id" binding:"required"`
-	Username string               `json:"username" binding:"required"`
-	PageId   *int64               `json:"page_id"`
-	PostId   *int64               `json:"post_id"`
-	Pages    db.UpdatePagesParams `json:"pages" binding:"required"`
-	Posts    db.UpdatePostsParams `json:"posts"`
-	Metas    updateMetaParams     `json:"meta"`
-}
-
-type updateMetaParams struct {
-	ID              int64   `json:"id"`
-	PageID          *int64  `json:"page_id"`
-	PostsID         *int64  `json:"posts_id"`
-	MetaTitle       *string `json:"meta_title"`
-	MetaDescription *string `json:"meta_description"`
-	MetaRobots      *string `json:"meta_robots"`
-	MetaOgImage     *string `json:"meta_og_image"`
-	Locale          *string `json:"locale"`
-	PageAmount      int64   `json:"page_amount"`
-	SiteLanguage    *string `json:"site_language"`
-	MetaKey         string  `json:"meta_key"`
-	MetaValue       string  `json:"meta_value"`
+	UserId   int64                 `json:"user_id" binding:"required"`
+	Username string                `json:"username" binding:"required"`
+	PageId   *int64                `json:"page_id"`
+	PostId   *int64                `json:"post_id"`
+	Pages    db.UpdatePagesParams  `json:"pages" binding:"required"`
+	Posts    db.UpdatePostsParams  `json:"posts"`
+	Metas    db.UpdateMetaTxParams `json:"meta"`
 }
 
 func UpdatePagesTxHandler(store db.Store) gin.HandlerFunc {
@@ -156,7 +141,7 @@ func UpdatePagesTxHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 
-		meta, err := store.GetMetaByPageIDForUpdate(ctx, sql.NullInt64{Int64: *req.PageId, Valid: true})
+		meta, err := store.GetMetaByPageIDForUpdate(ctx, sql.NullInt64{Int64: page.ID, Valid: true})
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
@@ -172,7 +157,7 @@ func UpdatePagesTxHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 
-		metaPageID := sql.NullInt64{Int64: *req.PageId, Valid: true}
+		metaPageID := sql.NullInt64{Int64: page.ID, Valid: true}
 
 		if meta.PageID != metaPageID {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Meta's pageID does not match the provided page ID"})
