@@ -33,13 +33,26 @@ type CreatePostTxParams struct {
 	UserId   int64              `json:"user_id"`
 	Username string             `json:"username"`
 	PostId   *int64             `json:"page_id"`
-	Posts    *CreatePostsParams `json:"pages"`
+	Posts    *CreatePostsParams `json:"posts"`
 	Metas    CreateMetaParams   `json:"meta"`
 }
 
 type CreatePostTxResult struct {
-	Posts Post `json:"page"`
+	Posts Post `json:"posts"`
 	Metas Meta `json:"meta"`
+}
+
+type CreateMetaTxParams struct {
+	PostsID         *int64  `json:"posts_id"`
+	MetaTitle       *string `json:"meta_title"`
+	MetaDescription *string `json:"meta_description"`
+	MetaRobots      *string `json:"meta_robots"`
+	MetaOgImage     *string `json:"meta_og_image"`
+	Locale          *string `json:"locale"`
+	PageAmount      int64   `json:"page_amount"`
+	SiteLanguage    *string `json:"site_language"`
+	MetaKey         string  `json:"meta_key"`
+	MetaValue       string  `json:"meta_value"`
 }
 
 type UpdatePageTxParams struct {
@@ -59,13 +72,28 @@ type UpdatePostTxParams struct {
 	UserId   int64              `json:"user_id"`
 	Username string             `json:"username"`
 	PostId   *int64             `json:"page_id"`
-	Posts    *UpdatePostsParams `json:"pages"`
+	Posts    *UpdatePostsParams `json:"posts"`
 	Metas    UpdateMetaParams   `json:"meta"`
 }
 
 type UpdatePostTxResult struct {
-	Posts Post `json:"page"`
+	Posts Post `json:"posts"`
 	Metas Meta `json:"meta"`
+}
+
+type UpdateMetaTxParams struct {
+	ID              int64   `json:"id"`
+	PageID          *int64  `json:"page_id"`
+	PostsID         *int64  `json:"posts_id"`
+	MetaTitle       *string `json:"meta_title"`
+	MetaDescription *string `json:"meta_description"`
+	MetaRobots      *string `json:"meta_robots"`
+	MetaOgImage     *string `json:"meta_og_image"`
+	Locale          *string `json:"locale"`
+	PageAmount      int64   `json:"page_amount"`
+	SiteLanguage    *string `json:"site_language"`
+	MetaKey         string  `json:"meta_key"`
+	MetaValue       string  `json:"meta_value"`
 }
 
 type DeletePostTxParams struct {
