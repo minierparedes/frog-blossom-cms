@@ -170,6 +170,53 @@ func UpdatePostsTxHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+type deletePostsRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+func DeletePostTxHandler(store db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		var req deletePostsRequest
+		if err := ctx.ShouldBindUri(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		post, err := store.GetPosts(ctx, req.ID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		meta, err := store.GetMetaByPostsIDForUpdate(ctx, sql.NullInt64{Int64: post.ID, Valid: true})
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		if post.ID != req.ID {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Post's ID does not match the provided post ID"})
+			return
+		}
+
+		metaPostId := sql.NullInt64{Int64: post.ID, Valid: true}
+
+		if meta.PostsID != metaPostId {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Post's ID does not match the provided post ID"})
+		}
+
+		args := db.DeletePostTxParams{PostId: &post.ID}
+
+		result, err := store.DeletePostsTx(ctx, args)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, result)
+	}
+}
+
 // toDBParams converts a createPageTxRequest instance into a db.CreatePageTxParams structure for db operations
 func (req *createPostsTxRequest) toDBParams(userID int64, username string) db.CreatePostTxParams {
 	dbMetas := db.CreateMetaParams{

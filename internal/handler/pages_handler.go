@@ -105,7 +105,6 @@ func ListPagesHandler(store db.Store) gin.HandlerFunc {
 type updatePagesTxRequest struct {
 	UserId   int64                 `json:"user_id" binding:"required"`
 	Username string                `json:"username" binding:"required"`
-	PageId   *int64                `json:"page_id"`
 	PostId   *int64                `json:"post_id"`
 	Pages    db.UpdatePagesParams  `json:"pages" binding:"required"`
 	Posts    db.UpdatePostsParams  `json:"posts"`
@@ -129,13 +128,13 @@ func UpdatePagesTxHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 
-		user, err := store.GetUsers(ctx, uri.ID)
+		user, err := store.GetUsers(ctx, req.UserId)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
 
-		page, err := store.GetPages(ctx, *req.PageId)
+		page, err := store.GetPages(ctx, uri.ID)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
@@ -205,16 +204,14 @@ func DeletePageTxHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 
-		metaPageId := sql.NullInt64{Int64: req.ID, Valid: true}
+		metaPageId := sql.NullInt64{Int64: page.ID, Valid: true}
 
 		if meta.PageID != metaPageId {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Page's ID does not match the provided page ID"})
 			return
 		}
 
-		args := db.DeletePageTxParams{
-			PageId: &page.ID,
-		}
+		args := db.DeletePageTxParams{PageId: &page.ID}
 
 		result, err := store.DeletePageTx(ctx, args)
 		if err != nil {
@@ -222,7 +219,6 @@ func DeletePageTxHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusOK, result)
-
 	}
 }
 
