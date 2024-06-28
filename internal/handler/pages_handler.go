@@ -50,6 +50,20 @@ type getPageRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
+// @BasePath /api/v1
+
+// GetPageHandler retrieves a page by ID
+// @Summary Get a page by ID
+// @Schemes
+// @Description GetPageHandler retrieves a page by ID
+// @Tags pages
+// @Accept json
+// @Produce json
+// @Param id path int true "Page ID"
+// @Success 200 {object} db.Page
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Router /pages/{id} [get]
 func GetPageHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
