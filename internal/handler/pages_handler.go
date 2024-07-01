@@ -88,11 +88,33 @@ func GetPageHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+// listPagesRequest represents the query parameters for the ListPagesHandler
+// @Description Request parameters for listing pages
 type listPagesRequest struct {
-	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	// PageID is the current page number
+	// required: true
+	// min: 1
+	PageID int32 `form:"page_id" binding:"required,min=1"`
+
+	// PageSize is the number of items per page
+	// required: true
+	// min: 5
+	// max: 10
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
+// ListPagesHandler handles the request to list pages
+// @Summary List pages
+// @Description List pages with pagination
+// @Tags pages
+// @Accept json
+// @Produce json
+// @Param page_id query int true "Page ID"
+// @Param page_size query int true "Page Size"
+// @Success 200 {array} db.Page
+// @Failure 400 {object} gin.H{"error": "error message"}
+// @Failure 500 {object} gin.H{"error": "error message"}
+// @Router /pages [get]
 func ListPagesHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
