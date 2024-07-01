@@ -1,0 +1,73 @@
+basePath: /api/v1
+definitions:
+  db.Page:
+    properties:
+      author_id:
+        type: integer
+      component_type:
+        type: string
+      component_value:
+        type: string
+      domain:
+        type: string
+      id:
+        type: integer
+      menu_order:
+        type: integer
+      option_id:
+        type: integer
+      option_name:
+        type: string
+      option_required:
+        type: boolean
+      option_value:
+        type: string
+      page_author:
+        type: string
+      page_identifier:
+        type: string
+      title:
+        type: string
+      url:
+        type: string
+    type: object
+  gin.H:
+    additionalProperties: {}
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: frog-blossom
+  title: frog blossom API documentation
+  version: "1"
+paths:
+  /pages/{id}:
+    get:
+      consumes:
+      - application/json
+      description: GetPageHandler retrieves a page by ID
+      parameters:
+      - description: Page ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Page'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a page by ID
+      tags:
+      - pages
+swagger: "2.0"
