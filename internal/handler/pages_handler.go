@@ -112,8 +112,8 @@ type listPagesRequest struct {
 // @Param page_id query int true "Page ID"
 // @Param page_size query int true "Page Size"
 // @Success 200 {array} db.Page
-// @Failure 400 {object} gin.H{"error": "error message"}
-// @Failure 500 {object} gin.H{"error": "error message"}
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
 // @Router /pages [get]
 func ListPagesHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
