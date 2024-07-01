@@ -52,6 +52,9 @@ jobs:
       - name: Run migrations
         run: make migrateup
 
+      - name: Install gin-swagger
+        run: go install github.com/swaggo/swag/cmd/swag@latest
+
       - name: generate swagger api docs
         run: make swagger
 
