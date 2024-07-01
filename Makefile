@@ -25,7 +25,10 @@ mock:
 server:
 	go run cmd/main.go
 
+swagger:
+	swag init -g ./server.go -d ./api,./internal/handler -o ./docs --parseDependency
+
 test:
 	go test -v -cover ./...
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc server test mock
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc server test mock swagger
