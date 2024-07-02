@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+// createPostsTxRequest represents the request body for creating a post
+// @Description Request parameters for creating a post
 type createPostsTxRequest struct {
 	UserId   int64                 `json:"user_id" binding:"required"`
 	Username string                `json:"username" binding:"required"`
@@ -14,6 +16,20 @@ type createPostsTxRequest struct {
 	Metas    db.CreateMetaTxParams `json:"meta"`
 }
 
+// CreatePostTxHandler handles the request to create a post
+// @Summary Create a post
+// @Description Create a new post
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param user_id path int true "User ID"
+// @Param username path string true "Username"
+// @Param body body createPostsTxRequest true "Post creation request"
+// @Success 200 {object} db.Post
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /posts [post]
 func CreatePostTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -50,10 +66,24 @@ func CreatePostTxHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+// getPostRequest represents the request parameters for getting a post
+// @Description Request parameters for getting a post
 type getPostRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
+// GetPostHandler handles the request to get a post by ID
+// @Summary Get a post by ID
+// @Description Retrieve a specific post by its ID
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param id path int true "Post ID"
+// @Success 200 {object} db.Post
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /posts/{id} [get]
 func GetPostHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -78,11 +108,25 @@ func GetPostHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+// listPostsRequest represents the query parameters for listing posts
+// @Description Request parameters for listing posts
 type listPostsRequest struct {
 	PageID   int32 `form:"page_id" binding:"required,min=1"`
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
+// ListPostsHandler handles the request to list posts
+// @Summary List posts with pagination
+// @Description Retrieve a list of posts with pagination support
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param page_id query int true "Page number"
+// @Param page_size query int true "Page size (minimum 5, maximum 10)"
+// @Success 200 {array} db.Post
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /posts [get]
 func ListPostsHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -106,6 +150,8 @@ func ListPostsHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+// updatePostsTxRequest represents the query parameters for listing posts
+// @Description Request parameters for updating a post
 type updatePostsTxRequest struct {
 	UserId   int64                 `json:"user_id" binding:"required"`
 	Username string                `json:"username" binding:"required"`
@@ -113,6 +159,22 @@ type updatePostsTxRequest struct {
 	Metas    db.UpdateMetaTxParams `json:"meta"`
 }
 
+// UpdatePostsTxHandler handles the request to update a posts
+// @Summary Update a post
+// @Description Update a post with specified parameters
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param id path int true "Post ID"
+// @Param user_id body int64 true "User ID"
+// @Param username body string true "Username"
+// @Param posts body db.UpdatePostsParams true "Updated post parameters"
+// @Param meta body db.UpdateMetaTxParams true "Updated meta parameters"
+// @Success 201 {object} db.Posts
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /posts/{id} [put]
 func UpdatePostsTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -170,10 +232,24 @@ func UpdatePostsTxHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+// deletePostsRequest represents the request parameters for deleting a post
+// @Description Request parameters for deleting a post
 type deletePostsRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
+// DeletePostTxHandler handles the request to delete a posts
+// @Summary Delete a post
+// @Description Delete a post with the specified ID
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param id path int true "Post ID"
+// @Success 200 {object} SuccessResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /posts/{id} [delete]
 func DeletePostTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
