@@ -24,10 +24,9 @@ type createPostsTxRequest struct {
 // @Produce json
 // @Param user_id path int true "User ID"
 // @Param username path string true "Username"
-// @Param body body createPostsTxRequest true "Post creation request"
+// @Param createPostsTxRequest body true "Post creation request"
 // @Success 200 {object} db.Post
 // @Failure 400 {object} gin.H
-// @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /posts [post]
 func CreatePostTxHandler(store db.Store) gin.HandlerFunc {
@@ -72,8 +71,11 @@ type getPostRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
+// @BasePath /api/v1
+
 // GetPostHandler handles the request to get a post by ID
 // @Summary Get a post by ID
+// @Schemes
 // @Description Retrieve a specific post by its ID
 // @Tags posts
 // @Accept json
@@ -81,7 +83,6 @@ type getPostRequest struct {
 // @Param id path int true "Post ID"
 // @Success 200 {object} db.Post
 // @Failure 400 {object} gin.H
-// @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /posts/{id} [get]
 func GetPostHandler(store db.Store) gin.HandlerFunc {
@@ -168,11 +169,10 @@ type updatePostsTxRequest struct {
 // @Param id path int true "Post ID"
 // @Param user_id body int64 true "User ID"
 // @Param username body string true "Username"
-// @Param posts body db.UpdatePostsParams true "Updated post parameters"
-// @Param meta body db.UpdateMetaTxParams true "Updated meta parameters"
+// @Param db.UpdatePostsParams posts body true "Updated post parameters"
+// @Param db.UpdateMetaTxParams meta body true "Updated meta parameters"
 // @Success 201 {object} db.Post
 // @Failure 400 {object} gin.H
-// @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /posts/{id} [put]
 func UpdatePostsTxHandler(store db.Store) gin.HandlerFunc {
@@ -245,9 +245,8 @@ type deletePostsRequest struct {
 // @Accept json
 // @Produce json
 // @Param id path int true "Post ID"
-// @Success 200 {object} db.Post
+// @Success 200 {boolean} true
 // @Failure 400 {object} gin.H
-// @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /posts/{id} [delete]
 func DeletePostTxHandler(store db.Store) gin.HandlerFunc {

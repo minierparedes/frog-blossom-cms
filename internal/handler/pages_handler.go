@@ -117,7 +117,7 @@ type listPagesRequest struct {
 // @Accept json
 // @Produce json
 // @Param page_id query int true "Page ID"
-// @Param page_size query int true "Page Size"
+// @Param page_size query int true "Page Size (minimum 5, maximum 10)"
 // @Success 200 {array} db.Page
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
@@ -164,6 +164,7 @@ type updatePagesTxRequest struct {
 // @Produce json
 // @Param id path int true "Page ID"
 // @Param updatePagesTxRequest body updatePagesTxRequest true "Update Pages Request"
+// @Param db.UpdateMetaTxParams meta body true "Updated meta parameters"
 // @Success 201 {object} db.Page
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
