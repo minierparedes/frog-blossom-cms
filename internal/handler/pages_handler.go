@@ -8,8 +8,8 @@ import (
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 )
 
-// createPageTxRequest represents the request payload for creating a page transactional
-// @Description Request parameters for creating a page transactional
+// createPageTxRequest represents the request payload for creating a page
+// @Description Request parameters for creating a page
 type createPageTxRequest struct {
 	UserId   int64                 `json:"user_id" binding:"required"`
 	Username string                `json:"username" binding:"required"`
@@ -17,9 +17,9 @@ type createPageTxRequest struct {
 	Metas    db.CreateMetaTxParams `json:"meta"`
 }
 
-// CreatePageTxHandler handles the request to create a page transactional
-// @Summary Create a page transactional
-// @Description Create a page and its associated metadata transactional
+// CreatePageTxHandler handles the request to create a page
+// @Summary Create a page
+// @Description Create a page and its associated metadata
 // @Tags pages
 // @Accept json
 // @Produce json
@@ -145,8 +145,8 @@ func ListPagesHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
-// updatePagesTxRequest represents the request payload for updating pages transactional
-// @Description Request parameters for updating pages transactional
+// updatePagesTxRequest represents the request payload for updating pages
+// @Description Request parameters for updating pages
 type updatePagesTxRequest struct {
 	UserId   int64                 `json:"user_id" binding:"required"`
 	Username string                `json:"username" binding:"required"`
@@ -156,9 +156,9 @@ type updatePagesTxRequest struct {
 	Metas    db.UpdateMetaTxParams `json:"meta"`
 }
 
-// UpdatePagesTxHandler handles the request to update pages transactional
-// @Summary Update a page transactional
-// @Description Update a page and its associated metadata and posts transactional
+// UpdatePagesTxHandler handles the request to update pages
+// @Summary Update a page
+// @Description Update a page and its associated metadata and posts
 // @Tags pages
 // @Accept json
 // @Produce json
@@ -237,7 +237,7 @@ type deletePageRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-// DeletePageTxHandler handles the request to delete a page transactional
+// DeletePageTxHandler handles the request to delete a page
 // @Summary Delete a page
 // @Description Delete a page and its associated metadata
 // @Tags pages
