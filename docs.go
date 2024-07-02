@@ -69,7 +69,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create a page and its associated metadata transactional",
+                "description": "Create a page and its associated metadata",
                 "consumes": [
                     "application/json"
                 ],
@@ -79,7 +79,7 @@ const docTemplate = `{
                 "tags": [
                     "pages"
                 ],
-                "summary": "Create a page transactional",
+                "summary": "Create a page",
                 "parameters": [
                     {
                         "description": "Create Page Request",
@@ -157,7 +157,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update a page and its associated metadata and posts transactional",
+                "description": "Update a page and its associated metadata and posts",
                 "consumes": [
                     "application/json"
                 ],
@@ -167,7 +167,7 @@ const docTemplate = `{
                 "tags": [
                     "pages"
                 ],
-                "summary": "Update a page transactional",
+                "summary": "Update a page",
                 "parameters": [
                     {
                         "type": "integer",
@@ -1160,7 +1160,7 @@ const docTemplate = `{
             "additionalProperties": {}
         },
         "handler.createPageTxRequest": {
-            "description": "Request parameters for creating a page transactional",
+            "description": "Request parameters for creating a page",
             "type": "object",
             "required": [
                 "pages",
@@ -1246,7 +1246,7 @@ const docTemplate = `{
             }
         },
         "handler.updatePagesTxRequest": {
-            "description": "Request parameters for updating pages transactional",
+            "description": "Request parameters for updating pages",
             "type": "object",
             "required": [
                 "pages",

@@ -259,7 +259,7 @@ definitions:
     additionalProperties: {}
     type: object
   handler.createPageTxRequest:
-    description: Request parameters for creating a page transactional
+    description: Request parameters for creating a page
     properties:
       meta:
         $ref: '#/definitions/db.CreateMetaTxParams'
@@ -320,7 +320,7 @@ definitions:
     - username
     type: object
   handler.updatePagesTxRequest:
-    description: Request parameters for updating pages transactional
+    description: Request parameters for updating pages
     properties:
       meta:
         $ref: '#/definitions/db.UpdateMetaTxParams'
@@ -436,7 +436,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create a page and its associated metadata transactional
+      description: Create a page and its associated metadata
       parameters:
       - description: Create Page Request
         in: body
@@ -459,7 +459,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create a page transactional
+      summary: Create a page
       tags:
       - pages
   /pages/{id}:
@@ -522,7 +522,7 @@ paths:
     put:
       consumes:
       - application/json
-      description: Update a page and its associated metadata and posts transactional
+      description: Update a page and its associated metadata and posts
       parameters:
       - description: Page ID
         in: path
@@ -550,7 +550,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Update a page transactional
+      summary: Update a page
       tags:
       - pages
   /posts:

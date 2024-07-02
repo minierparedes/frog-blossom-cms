@@ -63,7 +63,7 @@
                 }
             },
             "post": {
-                "description": "Create a page and its associated metadata transactional",
+                "description": "Create a page and its associated metadata",
                 "consumes": [
                     "application/json"
                 ],
@@ -73,7 +73,7 @@
                 "tags": [
                     "pages"
                 ],
-                "summary": "Create a page transactional",
+                "summary": "Create a page",
                 "parameters": [
                     {
                         "description": "Create Page Request",
@@ -151,7 +151,7 @@
                 }
             },
             "put": {
-                "description": "Update a page and its associated metadata and posts transactional",
+                "description": "Update a page and its associated metadata and posts",
                 "consumes": [
                     "application/json"
                 ],
@@ -161,7 +161,7 @@
                 "tags": [
                     "pages"
                 ],
-                "summary": "Update a page transactional",
+                "summary": "Update a page",
                 "parameters": [
                     {
                         "type": "integer",
@@ -1154,7 +1154,7 @@
             "additionalProperties": {}
         },
         "handler.createPageTxRequest": {
-            "description": "Request parameters for creating a page transactional",
+            "description": "Request parameters for creating a page",
             "type": "object",
             "required": [
                 "pages",
@@ -1240,7 +1240,7 @@
             }
         },
         "handler.updatePagesTxRequest": {
-            "description": "Request parameters for updating pages transactional",
+            "description": "Request parameters for updating pages",
             "type": "object",
             "required": [
                 "pages",
