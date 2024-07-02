@@ -170,7 +170,7 @@ type updatePostsTxRequest struct {
 // @Param username body string true "Username"
 // @Param posts body db.UpdatePostsParams true "Updated post parameters"
 // @Param meta body db.UpdateMetaTxParams true "Updated meta parameters"
-// @Success 201 {object} db.Posts
+// @Success 201 {object} db.Post
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
@@ -245,10 +245,10 @@ type deletePostsRequest struct {
 // @Accept json
 // @Produce json
 // @Param id path int true "Post ID"
-// @Success 200 {object} SuccessResponse
-// @Failure 400 {object} ErrorResponse
-// @Failure 404 {object} ErrorResponse
-// @Failure 500 {object} ErrorResponse
+// @Success 200 {object} db.Post
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
 // @Router /posts/{id} [delete]
 func DeletePostTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
