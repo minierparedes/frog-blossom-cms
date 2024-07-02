@@ -52,6 +52,33 @@ definitions:
       url:
         type: string
     type: object
+  db.CreatePostsParams:
+    properties:
+      author_id:
+        type: integer
+      content:
+        type: string
+      edited_at:
+        type: string
+      post_author:
+        type: string
+      post_mime_type:
+        type: string
+      published_at:
+        type: string
+      published_by:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      updated_by:
+        type: string
+      url:
+        type: string
+    type: object
   db.Page:
     properties:
       author_id:
@@ -79,6 +106,37 @@ definitions:
       page_identifier:
         type: string
       title:
+        type: string
+      url:
+        type: string
+    type: object
+  db.Post:
+    properties:
+      author_id:
+        type: integer
+      content:
+        type: string
+      created_at:
+        type: string
+      edited_at:
+        type: string
+      id:
+        type: integer
+      post_author:
+        type: string
+      post_mime_type:
+        type: string
+      published_at:
+        type: string
+      published_by:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      updated_by:
         type: string
       url:
         type: string
@@ -204,27 +262,31 @@ definitions:
     description: Request parameters for creating a page transactional
     properties:
       meta:
-        allOf:
-        - $ref: '#/definitions/db.CreateMetaTxParams'
-        description: Metas contains the parameters for creating the metadata
+        $ref: '#/definitions/db.CreateMetaTxParams'
       pages:
-        allOf:
-        - $ref: '#/definitions/db.CreatePagesParams'
-        description: |-
-          Pages contains the parameters for creating the pages
-          required: true
+        $ref: '#/definitions/db.CreatePagesParams'
       user_id:
-        description: |-
-          UserID is the ID of the user making the request
-          required: true
         type: integer
       username:
-        description: |-
-          Username is the username of the user making the request
-          required: true
         type: string
     required:
     - pages
+    - user_id
+    - username
+    type: object
+  handler.createPostsTxRequest:
+    description: Request parameters for creating a post
+    properties:
+      meta:
+        $ref: '#/definitions/db.CreateMetaTxParams'
+      posts:
+        $ref: '#/definitions/db.CreatePostsParams'
+      user_id:
+        type: integer
+      username:
+        type: string
+    required:
+    - posts
     - user_id
     - username
     type: object
@@ -261,31 +323,16 @@ definitions:
     description: Request parameters for updating pages transactional
     properties:
       meta:
-        allOf:
-        - $ref: '#/definitions/db.UpdateMetaTxParams'
-        description: Metas contains the parameters for updating the metadata
+        $ref: '#/definitions/db.UpdateMetaTxParams'
       pages:
-        allOf:
-        - $ref: '#/definitions/db.UpdatePagesParams'
-        description: |-
-          Pages contains the parameters for updating the pages
-          required: true
+        $ref: '#/definitions/db.UpdatePagesParams'
       post_id:
-        description: PostID is the ID of the post associated with the page update
         type: integer
       posts:
-        allOf:
-        - $ref: '#/definitions/db.UpdatePostsParams'
-        description: Posts contains the parameters for updating the posts
+        $ref: '#/definitions/db.UpdatePostsParams'
       user_id:
-        description: |-
-          UserID is the ID of the user making the request
-          required: true
         type: integer
       username:
-        description: |-
-          Username is the username of the user making the request
-          required: true
         type: string
     required:
     - pages
@@ -491,6 +538,206 @@ paths:
       summary: Update a page transactional
       tags:
       - pages
+  /posts:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of posts with pagination support
+      parameters:
+      - description: Page number
+        in: query
+        name: page_id
+        required: true
+        type: integer
+      - description: Page size (minimum 5, maximum 10)
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/db.Post'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List posts with pagination
+      tags:
+      - posts
+    post:
+      consumes:
+      - application/json
+      description: Create a new post
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: Post creation request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createPostsTxRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Post'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create a post
+      tags:
+      - posts
+  /posts/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a post with the specified ID
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Post'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a post
+      tags:
+      - posts
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a specific post by its ID
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Post'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a post by ID
+      tags:
+      - posts
+    put:
+      consumes:
+      - application/json
+      description: Update a post with specified parameters
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User ID
+        in: body
+        name: user_id
+        required: true
+        schema:
+          type: integer
+      - description: Username
+        in: body
+        name: username
+        required: true
+        schema:
+          type: string
+      - description: Updated post parameters
+        in: body
+        name: posts
+        required: true
+        schema:
+          $ref: '#/definitions/db.UpdatePostsParams'
+      - description: Updated meta parameters
+        in: body
+        name: meta
+        required: true
+        schema:
+          $ref: '#/definitions/db.UpdateMetaTxParams'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/db.Post'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a post
+      tags:
+      - posts
   /users:
     get:
       consumes:
