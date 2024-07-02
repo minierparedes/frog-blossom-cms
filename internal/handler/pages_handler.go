@@ -11,20 +11,10 @@ import (
 // createPageTxRequest represents the request payload for creating a page transactional
 // @Description Request parameters for creating a page transactional
 type createPageTxRequest struct {
-	// UserID is the ID of the user making the request
-	// required: true
-	UserId int64 `json:"user_id" binding:"required"`
-
-	// Username is the username of the user making the request
-	// required: true
-	Username string `json:"username" binding:"required"`
-
-	// Pages contains the parameters for creating the pages
-	// required: true
-	Pages db.CreatePagesParams `json:"pages" binding:"required"`
-
-	// Metas contains the parameters for creating the metadata
-	Metas db.CreateMetaTxParams `json:"meta"`
+	UserId   int64                 `json:"user_id" binding:"required"`
+	Username string                `json:"username" binding:"required"`
+	Pages    db.CreatePagesParams  `json:"pages" binding:"required"`
+	Metas    db.CreateMetaTxParams `json:"meta"`
 }
 
 // CreatePageTxHandler handles the request to create a page transactional
@@ -72,9 +62,6 @@ func CreatePageTxHandler(store db.Store) gin.HandlerFunc {
 // getPageRequest represents the query parameter for the GetPageHandler
 // @Description Request parameters for Get a page
 type getPageRequest struct {
-	// ID is the current page ID
-	// required: true
-	// min: 1
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
@@ -119,15 +106,7 @@ func GetPageHandler(store db.Store) gin.HandlerFunc {
 // listPagesRequest represents the query parameters for the ListPagesHandler
 // @Description Request parameters for listing pages
 type listPagesRequest struct {
-	// PageID is the current page number
-	// required: true
-	// min: 1
-	PageID int32 `form:"page_id" binding:"required,min=1"`
-
-	// PageSize is the number of items per page
-	// required: true
-	// min: 5
-	// max: 10
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
@@ -169,26 +148,12 @@ func ListPagesHandler(store db.Store) gin.HandlerFunc {
 // updatePagesTxRequest represents the request payload for updating pages transactional
 // @Description Request parameters for updating pages transactional
 type updatePagesTxRequest struct {
-	// UserID is the ID of the user making the request
-	// required: true
-	UserId int64 `json:"user_id" binding:"required"`
-
-	// Username is the username of the user making the request
-	// required: true
-	Username string `json:"username" binding:"required"`
-
-	// PostID is the ID of the post associated with the page update
-	PostId *int64 `json:"post_id"`
-
-	// Pages contains the parameters for updating the pages
-	// required: true
-	Pages db.UpdatePagesParams `json:"pages" binding:"required"`
-
-	// Posts contains the parameters for updating the posts
-	Posts db.UpdatePostsParams `json:"posts"`
-
-	// Metas contains the parameters for updating the metadata
-	Metas db.UpdateMetaTxParams `json:"meta"`
+	UserId   int64                 `json:"user_id" binding:"required"`
+	Username string                `json:"username" binding:"required"`
+	PostId   *int64                `json:"post_id"`
+	Pages    db.UpdatePagesParams  `json:"pages" binding:"required"`
+	Posts    db.UpdatePostsParams  `json:"posts"`
+	Metas    db.UpdateMetaTxParams `json:"meta"`
 }
 
 // UpdatePagesTxHandler handles the request to update pages transactional
@@ -269,9 +234,6 @@ func UpdatePagesTxHandler(store db.Store) gin.HandlerFunc {
 // deletePageRequest represents the URI parameters for the DeletePageTxHandler
 // @Description Request parameters for deleting a page
 type deletePageRequest struct {
-	// ID is the unique identifier of the page to delete
-	// required: true
-	// minimum: 1
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
