@@ -35,8 +35,8 @@ type createPageTxRequest struct {
 // @Produce json
 // @Param createPageTxRequest body createPageTxRequest true "Create Page Request"
 // @Success 200 {object} db.Page
-// @Failure 400 {object} gin.H
-// @Failure 500 {object} gin.H
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
 // @Router /pages [post]
 func CreatePageTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
