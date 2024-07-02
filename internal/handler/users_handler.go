@@ -28,8 +28,8 @@ type createUsersRequest struct {
 // @Produce json
 // @Param createUsersRequest body createUsersRequest true "Create User Request"
 // @Success 200 {object} db.User
-// @Failure 400 {object} errorResponse
-// @Failure 500 {object} errorResponse
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
 // @Router /users [post]
 func CreateUsersHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -74,9 +74,9 @@ type getUsersRequest struct {
 // @Produce json
 // @Param id path int true "User ID"
 // @Success 200 {object} db.User
-// @Failure 400 {object} errorResponse
-// @Failure 404 {object} errorResponse
-// @Failure 500 {object} errorResponse
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
 // @Router /users/{id} [get]
 func GetUsersHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -116,8 +116,8 @@ type listUsersRequest struct {
 // @Param page_id query int true "Page ID"
 // @Param page_size query int true "Page Size"
 // @Success 200 {array} db.User
-// @Failure 400 {object} errorResponse
-// @Failure 500 {object} errorResponse
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
 // @Router /users [get]
 func ListUsersHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -164,8 +164,8 @@ type updateUserRequest struct {
 // @Param id path int true "User ID"
 // @Param body updateUserRequest true "User update request"
 // @Success 200 {object} db.User
-// @Failure 400 {object} errorResponse
-// @Failure 500 {object} errorResponse
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
 // @Router /users/{id} [put]
 func UpdateUserHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -224,9 +224,9 @@ type softDeleteUserRequest struct {
 // @Produce json
 // @Param id path int true "User ID"
 // @Success 200 {object} db.User
-// @Failure 400 {object} errorResponse
-// @Failure 404 {object} errorResponse
-// @Failure 500 {object} errorResponse
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
 // @Router /users/{id}/soft_delete [delete]
 func SoftDeleteUsersHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
