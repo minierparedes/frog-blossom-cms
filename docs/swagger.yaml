@@ -170,6 +170,33 @@ definitions:
       url:
         type: string
     type: object
+  db.User:
+    properties:
+      created_at:
+        type: string
+      description:
+        $ref: '#/definitions/sql.NullString'
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      is_deleted:
+        $ref: '#/definitions/sql.NullBool'
+      last_name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+      user_url:
+        $ref: '#/definitions/sql.NullString'
+      username:
+        type: string
+    type: object
   gin.H:
     additionalProperties: {}
     type: object
@@ -199,6 +226,35 @@ definitions:
     required:
     - pages
     - user_id
+    - username
+    type: object
+  handler.createUsersRequest:
+    description: Request parameters for creating a user
+    properties:
+      description:
+        $ref: '#/definitions/sql.NullString'
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      user_url:
+        $ref: '#/definitions/sql.NullString'
+      username:
+        type: string
+    required:
+    - description
+    - email
+    - first_name
+    - last_name
+    - password
+    - role
+    - user_url
     - username
     type: object
   handler.updatePagesTxRequest:
@@ -235,6 +291,42 @@ definitions:
     - pages
     - user_id
     - username
+    type: object
+  handler.updateUserRequest:
+    description: Request parameters for updating a user
+    properties:
+      description:
+        $ref: '#/definitions/sql.NullString'
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      user_url:
+        $ref: '#/definitions/sql.NullString'
+      username:
+        type: string
+    type: object
+  sql.NullBool:
+    properties:
+      bool:
+        type: boolean
+      valid:
+        description: Valid is true if Bool is not NULL
+        type: boolean
+    type: object
+  sql.NullString:
+    properties:
+      string:
+        type: string
+      valid:
+        description: Valid is true if String is not NULL
+        type: boolean
     type: object
 host: localhost:8080
 info:
@@ -399,4 +491,169 @@ paths:
       summary: Update a page transactional
       tags:
       - pages
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: List users with pagination
+      parameters:
+      - description: Page ID
+        in: query
+        name: page_id
+        required: true
+        type: integer
+      - description: Page Size
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/db.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with the provided parameters
+      parameters:
+      - description: Create User Request
+        in: body
+        name: createUsersRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createUsersRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create a user
+      tags:
+      - users
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update a user's information
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User update request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.updateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a user
+      tags:
+      - users
+  /users/{id}/soft_delete:
+    delete:
+      consumes:
+      - application/json
+      description: Soft delete a user by setting the IsDeleted flag to true
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Soft delete a user
+      tags:
+      - users
 swagger: "2.0"

@@ -162,7 +162,7 @@ type updateUserRequest struct {
 // @Accept json
 // @Produce json
 // @Param id path int true "User ID"
-// @Param body updateUserRequest true "User update request"
+// @Param body body updateUserRequest true "User update request"
 // @Success 200 {object} db.User
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
