@@ -38,7 +38,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Page Size",
+                        "description": "Page Size (minimum 5, maximum 10)",
                         "name": "page_size",
                         "in": "query",
                         "required": true
@@ -332,7 +332,7 @@ const docTemplate = `{
                     },
                     {
                         "description": "Post creation request",
-                        "name": "body",
+                        "name": "createPostsTxRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -349,12 +349,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -399,12 +393,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -456,21 +444,12 @@ const docTemplate = `{
                         }
                     },
                     {
-                        "description": "Updated post parameters",
-                        "name": "posts",
+                        "description": "Updated Posts request",
+                        "name": "updatePostsTxRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/db.UpdatePostsParams"
-                        }
-                    },
-                    {
-                        "description": "Updated meta parameters",
-                        "name": "meta",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/db.UpdateMetaTxParams"
+                            "$ref": "#/definitions/handler.updatePostsTxRequest"
                         }
                     }
                 ],
@@ -483,12 +462,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -526,17 +499,11 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/db.Post"
+                            "type": "boolean"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -1295,6 +1262,28 @@ const docTemplate = `{
                 },
                 "post_id": {
                     "type": "integer"
+                },
+                "posts": {
+                    "$ref": "#/definitions/db.UpdatePostsParams"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.updatePostsTxRequest": {
+            "description": "Request parameters for updating a post",
+            "type": "object",
+            "required": [
+                "user_id",
+                "username"
+            ],
+            "properties": {
+                "meta": {
+                    "$ref": "#/definitions/db.UpdateMetaTxParams"
                 },
                 "posts": {
                     "$ref": "#/definitions/db.UpdatePostsParams"
