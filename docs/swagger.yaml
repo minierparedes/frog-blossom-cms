@@ -1,5 +1,57 @@
 basePath: /api/v1
 definitions:
+  db.CreateMetaTxParams:
+    properties:
+      locale:
+        type: string
+      meta_description:
+        type: string
+      meta_key:
+        type: string
+      meta_og_image:
+        type: string
+      meta_robots:
+        type: string
+      meta_title:
+        type: string
+      meta_value:
+        type: string
+      page_amount:
+        type: integer
+      posts_id:
+        type: integer
+      site_language:
+        type: string
+    type: object
+  db.CreatePagesParams:
+    properties:
+      author_id:
+        type: integer
+      component_type:
+        type: string
+      component_value:
+        type: string
+      domain:
+        type: string
+      menu_order:
+        type: integer
+      option_id:
+        type: integer
+      option_name:
+        type: string
+      option_required:
+        type: boolean
+      option_value:
+        type: string
+      page_author:
+        type: string
+      page_identifier:
+        type: string
+      title:
+        type: string
+      url:
+        type: string
+    type: object
   db.Page:
     properties:
       author_id:
@@ -31,8 +83,158 @@ definitions:
       url:
         type: string
     type: object
+  db.UpdateMetaTxParams:
+    properties:
+      id:
+        type: integer
+      locale:
+        type: string
+      meta_description:
+        type: string
+      meta_key:
+        type: string
+      meta_og_image:
+        type: string
+      meta_robots:
+        type: string
+      meta_title:
+        type: string
+      meta_value:
+        type: string
+      page_amount:
+        type: integer
+      page_id:
+        type: integer
+      posts_id:
+        type: integer
+      site_language:
+        type: string
+    type: object
+  db.UpdatePagesParams:
+    properties:
+      author_id:
+        type: integer
+      component_type:
+        type: string
+      component_value:
+        type: string
+      domain:
+        type: string
+      id:
+        type: integer
+      menu_order:
+        type: integer
+      option_id:
+        type: integer
+      option_name:
+        type: string
+      option_required:
+        type: boolean
+      option_value:
+        type: string
+      page_author:
+        type: string
+      page_identifier:
+        type: string
+      title:
+        type: string
+      url:
+        type: string
+    type: object
+  db.UpdatePostsParams:
+    properties:
+      author_id:
+        type: integer
+      content:
+        type: string
+      edited_at:
+        type: string
+      id:
+        type: integer
+      post_author:
+        type: string
+      post_mime_type:
+        type: string
+      published_at:
+        type: string
+      published_by:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      updated_by:
+        type: string
+      url:
+        type: string
+    type: object
   gin.H:
     additionalProperties: {}
+    type: object
+  handler.createPageTxRequest:
+    description: Request parameters for creating a page transactional
+    properties:
+      meta:
+        allOf:
+        - $ref: '#/definitions/db.CreateMetaTxParams'
+        description: Metas contains the parameters for creating the metadata
+      pages:
+        allOf:
+        - $ref: '#/definitions/db.CreatePagesParams'
+        description: |-
+          Pages contains the parameters for creating the pages
+          required: true
+      user_id:
+        description: |-
+          UserID is the ID of the user making the request
+          required: true
+        type: integer
+      username:
+        description: |-
+          Username is the username of the user making the request
+          required: true
+        type: string
+    required:
+    - pages
+    - user_id
+    - username
+    type: object
+  handler.updatePagesTxRequest:
+    description: Request parameters for updating pages transactional
+    properties:
+      meta:
+        allOf:
+        - $ref: '#/definitions/db.UpdateMetaTxParams'
+        description: Metas contains the parameters for updating the metadata
+      pages:
+        allOf:
+        - $ref: '#/definitions/db.UpdatePagesParams'
+        description: |-
+          Pages contains the parameters for updating the pages
+          required: true
+      post_id:
+        description: PostID is the ID of the post associated with the page update
+        type: integer
+      posts:
+        allOf:
+        - $ref: '#/definitions/db.UpdatePostsParams'
+        description: Posts contains the parameters for updating the posts
+      user_id:
+        description: |-
+          UserID is the ID of the user making the request
+          required: true
+        type: integer
+      username:
+        description: |-
+          Username is the username of the user making the request
+          required: true
+        type: string
+    required:
+    - pages
+    - user_id
+    - username
     type: object
 host: localhost:8080
 info:
@@ -77,7 +279,64 @@ paths:
       summary: List pages
       tags:
       - pages
+    post:
+      consumes:
+      - application/json
+      description: Create a page and its associated metadata transactional
+      parameters:
+      - description: Create Page Request
+        in: body
+        name: createPageTxRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createPageTxRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Page'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create a page transactional
+      tags:
+      - pages
   /pages/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a page and its associated metadata
+      parameters:
+      - description: Page ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a page
+      tags:
+      - pages
     get:
       consumes:
       - application/json
@@ -104,6 +363,40 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a page by ID
+      tags:
+      - pages
+    put:
+      consumes:
+      - application/json
+      description: Update a page and its associated metadata and posts transactional
+      parameters:
+      - description: Page ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Pages Request
+        in: body
+        name: updatePagesTxRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handler.updatePagesTxRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/db.Page'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a page transactional
       tags:
       - pages
 swagger: "2.0"

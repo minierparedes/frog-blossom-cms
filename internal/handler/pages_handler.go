@@ -199,9 +199,9 @@ type updatePagesTxRequest struct {
 // @Produce json
 // @Param id path int true "Page ID"
 // @Param updatePagesTxRequest body updatePagesTxRequest true "Update Pages Request"
-// @Success 201 {object}
-// @Failure 400 {object}
-// @Failure 500 {object}
+// @Success 201 {object} db.Page
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
 // @Router /pages/{id} [put]
 func UpdatePagesTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -282,7 +282,7 @@ type deletePageRequest struct {
 // @Accept json
 // @Produce json
 // @Param id path int true "Page ID"
-// @Success 200 {object} gin.H{"result": "success"}
+// @Success 200 {boolean} true
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /pages/{id} [delete]
