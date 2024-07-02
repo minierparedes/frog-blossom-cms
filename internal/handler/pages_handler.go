@@ -8,13 +8,36 @@ import (
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 )
 
+// createPageTxRequest represents the request payload for creating a page transactional
+// @Description Request parameters for creating a page transactional
 type createPageTxRequest struct {
-	UserId   int64                 `json:"user_id" binding:"required"`
-	Username string                `json:"username" binding:"required"`
-	Pages    db.CreatePagesParams  `json:"pages" binding:"required"`
-	Metas    db.CreateMetaTxParams `json:"meta"`
+	// UserID is the ID of the user making the request
+	// required: true
+	UserId int64 `json:"user_id" binding:"required"`
+
+	// Username is the username of the user making the request
+	// required: true
+	Username string `json:"username" binding:"required"`
+
+	// Pages contains the parameters for creating the pages
+	// required: true
+	Pages db.CreatePagesParams `json:"pages" binding:"required"`
+
+	// Metas contains the parameters for creating the metadata
+	Metas db.CreateMetaTxParams `json:"meta"`
 }
 
+// CreatePageTxHandler handles the request to create a page transactional
+// @Summary Create a page transactional
+// @Description Create a page and its associated metadata transactional
+// @Tags pages
+// @Accept json
+// @Produce json
+// @Param createPageTxRequest body createPageTxRequest true "Create Page Request"
+// @Success 200 {object} db.Page
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /pages [post]
 func CreatePageTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -46,7 +69,12 @@ func CreatePageTxHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+// getPageRequest represents the query parameter for the GetPageHandler
+// @Description Request parameters for Get a page
 type getPageRequest struct {
+	// ID is the current page ID
+	// required: true
+	// min: 1
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
@@ -138,15 +166,43 @@ func ListPagesHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+// updatePagesTxRequest represents the request payload for updating pages transactional
+// @Description Request parameters for updating pages transactional
 type updatePagesTxRequest struct {
-	UserId   int64                 `json:"user_id" binding:"required"`
-	Username string                `json:"username" binding:"required"`
-	PostId   *int64                `json:"post_id"`
-	Pages    db.UpdatePagesParams  `json:"pages" binding:"required"`
-	Posts    db.UpdatePostsParams  `json:"posts"`
-	Metas    db.UpdateMetaTxParams `json:"meta"`
+	// UserID is the ID of the user making the request
+	// required: true
+	UserId int64 `json:"user_id" binding:"required"`
+
+	// Username is the username of the user making the request
+	// required: true
+	Username string `json:"username" binding:"required"`
+
+	// PostID is the ID of the post associated with the page update
+	PostId *int64 `json:"post_id"`
+
+	// Pages contains the parameters for updating the pages
+	// required: true
+	Pages db.UpdatePagesParams `json:"pages" binding:"required"`
+
+	// Posts contains the parameters for updating the posts
+	Posts db.UpdatePostsParams `json:"posts"`
+
+	// Metas contains the parameters for updating the metadata
+	Metas db.UpdateMetaTxParams `json:"meta"`
 }
 
+// UpdatePagesTxHandler handles the request to update pages transactional
+// @Summary Update a page transactional
+// @Description Update a page and its associated metadata and posts transactional
+// @Tags pages
+// @Accept json
+// @Produce json
+// @Param id path int true "Page ID"
+// @Param updatePagesTxRequest body updatePagesTxRequest true "Update Pages Request"
+// @Success 201 {object}
+// @Failure 400 {object}
+// @Failure 500 {object}
+// @Router /pages/{id} [put]
 func UpdatePagesTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -210,10 +266,26 @@ func UpdatePagesTxHandler(store db.Store) gin.HandlerFunc {
 	}
 }
 
+// deletePageRequest represents the URI parameters for the DeletePageTxHandler
+// @Description Request parameters for deleting a page
 type deletePageRequest struct {
+	// ID is the unique identifier of the page to delete
+	// required: true
+	// minimum: 1
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
+// DeletePageTxHandler handles the request to delete a page transactional
+// @Summary Delete a page
+// @Description Delete a page and its associated metadata
+// @Tags pages
+// @Accept json
+// @Produce json
+// @Param id path int true "Page ID"
+// @Success 200 {object} gin.H{"result": "success"}
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /pages/{id} [delete]
 func DeletePageTxHandler(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
