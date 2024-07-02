@@ -67,6 +67,50 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Create a page and its associated metadata transactional",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pages"
+                ],
+                "summary": "Create a page transactional",
+                "parameters": [
+                    {
+                        "description": "Create Page Request",
+                        "name": "createPageTxRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.createPageTxRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/db.Page"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
             }
         },
         "/pages/{id}": {
@@ -111,10 +155,182 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "description": "Update a page and its associated metadata and posts transactional",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pages"
+                ],
+                "summary": "Update a page transactional",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Pages Request",
+                        "name": "updatePagesTxRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.updatePagesTxRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/db.Page"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a page and its associated metadata",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pages"
+                ],
+                "summary": "Delete a page",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
             }
         }
     },
     "definitions": {
+        "db.CreateMetaTxParams": {
+            "type": "object",
+            "properties": {
+                "locale": {
+                    "type": "string"
+                },
+                "meta_description": {
+                    "type": "string"
+                },
+                "meta_key": {
+                    "type": "string"
+                },
+                "meta_og_image": {
+                    "type": "string"
+                },
+                "meta_robots": {
+                    "type": "string"
+                },
+                "meta_title": {
+                    "type": "string"
+                },
+                "meta_value": {
+                    "type": "string"
+                },
+                "page_amount": {
+                    "type": "integer"
+                },
+                "posts_id": {
+                    "type": "integer"
+                },
+                "site_language": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.CreatePagesParams": {
+            "type": "object",
+            "properties": {
+                "author_id": {
+                    "type": "integer"
+                },
+                "component_type": {
+                    "type": "string"
+                },
+                "component_value": {
+                    "type": "string"
+                },
+                "domain": {
+                    "type": "string"
+                },
+                "menu_order": {
+                    "type": "integer"
+                },
+                "option_id": {
+                    "type": "integer"
+                },
+                "option_name": {
+                    "type": "string"
+                },
+                "option_required": {
+                    "type": "boolean"
+                },
+                "option_value": {
+                    "type": "string"
+                },
+                "page_author": {
+                    "type": "string"
+                },
+                "page_identifier": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "db.Page": {
             "type": "object",
             "properties": {
@@ -162,9 +378,223 @@ const docTemplate = `{
                 }
             }
         },
+        "db.UpdateMetaTxParams": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "locale": {
+                    "type": "string"
+                },
+                "meta_description": {
+                    "type": "string"
+                },
+                "meta_key": {
+                    "type": "string"
+                },
+                "meta_og_image": {
+                    "type": "string"
+                },
+                "meta_robots": {
+                    "type": "string"
+                },
+                "meta_title": {
+                    "type": "string"
+                },
+                "meta_value": {
+                    "type": "string"
+                },
+                "page_amount": {
+                    "type": "integer"
+                },
+                "page_id": {
+                    "type": "integer"
+                },
+                "posts_id": {
+                    "type": "integer"
+                },
+                "site_language": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.UpdatePagesParams": {
+            "type": "object",
+            "properties": {
+                "author_id": {
+                    "type": "integer"
+                },
+                "component_type": {
+                    "type": "string"
+                },
+                "component_value": {
+                    "type": "string"
+                },
+                "domain": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "menu_order": {
+                    "type": "integer"
+                },
+                "option_id": {
+                    "type": "integer"
+                },
+                "option_name": {
+                    "type": "string"
+                },
+                "option_required": {
+                    "type": "boolean"
+                },
+                "option_value": {
+                    "type": "string"
+                },
+                "page_author": {
+                    "type": "string"
+                },
+                "page_identifier": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.UpdatePostsParams": {
+            "type": "object",
+            "properties": {
+                "author_id": {
+                    "type": "integer"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "edited_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "post_author": {
+                    "type": "string"
+                },
+                "post_mime_type": {
+                    "type": "string"
+                },
+                "published_at": {
+                    "type": "string"
+                },
+                "published_by": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "gin.H": {
             "type": "object",
             "additionalProperties": {}
+        },
+        "handler.createPageTxRequest": {
+            "description": "Request parameters for creating a page transactional",
+            "type": "object",
+            "required": [
+                "pages",
+                "user_id",
+                "username"
+            ],
+            "properties": {
+                "meta": {
+                    "description": "Metas contains the parameters for creating the metadata",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/db.CreateMetaTxParams"
+                        }
+                    ]
+                },
+                "pages": {
+                    "description": "Pages contains the parameters for creating the pages\nrequired: true",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/db.CreatePagesParams"
+                        }
+                    ]
+                },
+                "user_id": {
+                    "description": "UserID is the ID of the user making the request\nrequired: true",
+                    "type": "integer"
+                },
+                "username": {
+                    "description": "Username is the username of the user making the request\nrequired: true",
+                    "type": "string"
+                }
+            }
+        },
+        "handler.updatePagesTxRequest": {
+            "description": "Request parameters for updating pages transactional",
+            "type": "object",
+            "required": [
+                "pages",
+                "user_id",
+                "username"
+            ],
+            "properties": {
+                "meta": {
+                    "description": "Metas contains the parameters for updating the metadata",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/db.UpdateMetaTxParams"
+                        }
+                    ]
+                },
+                "pages": {
+                    "description": "Pages contains the parameters for updating the pages\nrequired: true",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/db.UpdatePagesParams"
+                        }
+                    ]
+                },
+                "post_id": {
+                    "description": "PostID is the ID of the post associated with the page update",
+                    "type": "integer"
+                },
+                "posts": {
+                    "description": "Posts contains the parameters for updating the posts",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/db.UpdatePostsParams"
+                        }
+                    ]
+                },
+                "user_id": {
+                    "description": "UserID is the ID of the user making the request\nrequired: true",
+                    "type": "integer"
+                },
+                "username": {
+                    "description": "Username is the username of the user making the request\nrequired: true",
+                    "type": "string"
+                }
+            }
         }
     }
 }`
