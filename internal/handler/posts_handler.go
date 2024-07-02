@@ -24,7 +24,7 @@ type createPostsTxRequest struct {
 // @Produce json
 // @Param user_id path int true "User ID"
 // @Param username path string true "Username"
-// @Param createPostsTxRequest body true "Post creation request"
+// @Param createPostsTxRequest body createPostsTxRequest true "Post creation request"
 // @Success 200 {object} db.Post
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
@@ -169,8 +169,7 @@ type updatePostsTxRequest struct {
 // @Param id path int true "Post ID"
 // @Param user_id body int64 true "User ID"
 // @Param username body string true "Username"
-// @Param db.UpdatePostsParams posts body true "Updated post parameters"
-// @Param db.UpdateMetaTxParams meta body true "Updated meta parameters"
+// @Param updatePostsTxRequest body updatePostsTxRequest true "Updated Posts request"
 // @Success 201 {object} db.Post
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H

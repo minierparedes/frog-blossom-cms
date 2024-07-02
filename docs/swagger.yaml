@@ -339,6 +339,21 @@ definitions:
     - user_id
     - username
     type: object
+  handler.updatePostsTxRequest:
+    description: Request parameters for updating a post
+    properties:
+      meta:
+        $ref: '#/definitions/db.UpdateMetaTxParams'
+      posts:
+        $ref: '#/definitions/db.UpdatePostsParams'
+      user_id:
+        type: integer
+      username:
+        type: string
+    required:
+    - user_id
+    - username
+    type: object
   handler.updateUserRequest:
     description: Request parameters for updating a user
     properties:
@@ -393,7 +408,7 @@ paths:
         name: page_id
         required: true
         type: integer
-      - description: Page Size
+      - description: Page Size (minimum 5, maximum 10)
         in: query
         name: page_size
         required: true
@@ -591,7 +606,7 @@ paths:
         type: string
       - description: Post creation request
         in: body
-        name: body
+        name: createPostsTxRequest
         required: true
         schema:
           $ref: '#/definitions/handler.createPostsTxRequest'
@@ -604,10 +619,6 @@ paths:
             $ref: '#/definitions/db.Post'
         "400":
           description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
           schema:
             $ref: '#/definitions/gin.H'
         "500":
@@ -634,13 +645,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/db.Post'
+            type: boolean
         "400":
           description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
           schema:
             $ref: '#/definitions/gin.H'
         "500":
@@ -669,10 +676,6 @@ paths:
             $ref: '#/definitions/db.Post'
         "400":
           description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
           schema:
             $ref: '#/definitions/gin.H'
         "500":
@@ -704,18 +707,12 @@ paths:
         required: true
         schema:
           type: string
-      - description: Updated post parameters
+      - description: Updated Posts request
         in: body
-        name: posts
+        name: updatePostsTxRequest
         required: true
         schema:
-          $ref: '#/definitions/db.UpdatePostsParams'
-      - description: Updated meta parameters
-        in: body
-        name: meta
-        required: true
-        schema:
-          $ref: '#/definitions/db.UpdateMetaTxParams'
+          $ref: '#/definitions/handler.updatePostsTxRequest'
       produces:
       - application/json
       responses:
@@ -725,10 +722,6 @@ paths:
             $ref: '#/definitions/db.Post'
         "400":
           description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
           schema:
             $ref: '#/definitions/gin.H'
         "500":
