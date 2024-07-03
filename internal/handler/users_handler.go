@@ -6,6 +6,7 @@ import (
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 	"github.com/reflection/frog-blossom-cms/utils"
 	"net/http"
+	"time"
 )
 
 // createUsersRequest represents the request payload for creating a user
@@ -21,6 +22,18 @@ type createUsersRequest struct {
 	Description sql.NullString `json:"description" binding:"required"`
 }
 
+type createUserResponse struct {
+	ID          int64          `json:"id"`
+	Username    string         `json:"username"`
+	Email       string         `json:"email"`
+	Role        string         `json:"role"`
+	FirstName   string         `json:"first_name"`
+	LastName    string         `json:"last_name"`
+	UserUrl     sql.NullString `json:"user_url"`
+	Description sql.NullString `json:"description"`
+	CreatedAt   time.Time      `json:"created_at"`
+}
+
 // CreateUsersHandler handles the request to create a user
 // @Summary Create a user
 // @Description Create a new user with the provided parameters
@@ -28,7 +41,7 @@ type createUsersRequest struct {
 // @Accept json
 // @Produce json
 // @Param createUsersRequest body createUsersRequest true "Create User Request"
-// @Success 200 {object} db.User
+// @Success 200 {object} createUserResponse
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /users [post]
@@ -63,7 +76,20 @@ func CreateUsersHandler(store db.Store) gin.HandlerFunc {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
-		ctx.JSON(http.StatusOK, user)
+
+		response := createUserResponse{
+			ID:          user.ID,
+			Username:    user.Username,
+			Email:       user.Email,
+			Role:        user.Role,
+			FirstName:   user.FirstName,
+			LastName:    user.LastName,
+			UserUrl:     user.UserUrl,
+			Description: user.Description,
+			CreatedAt:   user.CreatedAt,
+		}
+
+		ctx.JSON(http.StatusOK, response)
 	}
 }
 
