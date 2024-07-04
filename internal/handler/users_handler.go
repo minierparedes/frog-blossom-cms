@@ -77,7 +77,7 @@ func CreateUsersHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 
-		response := createUserResponse{
+		resp := createUserResponse{
 			ID:          user.ID,
 			Username:    user.Username,
 			Email:       user.Email,
@@ -89,7 +89,7 @@ func CreateUsersHandler(store db.Store) gin.HandlerFunc {
 			CreatedAt:   user.CreatedAt,
 		}
 
-		ctx.JSON(http.StatusOK, response)
+		ctx.JSON(http.StatusOK, resp)
 	}
 }
 
