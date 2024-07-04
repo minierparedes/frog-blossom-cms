@@ -290,6 +290,27 @@ definitions:
     - user_id
     - username
     type: object
+  handler.createUserResponse:
+    properties:
+      created_at:
+        type: string
+      description:
+        $ref: '#/definitions/sql.NullString'
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      role:
+        type: string
+      user_url:
+        $ref: '#/definitions/sql.NullString'
+      username:
+        type: string
+    type: object
   handler.createUsersRequest:
     description: Request parameters for creating a user
     properties:
@@ -784,7 +805,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/db.User'
+            $ref: '#/definitions/handler.createUserResponse'
         "400":
           description: Bad Request
           schema:
