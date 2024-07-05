@@ -28,7 +28,7 @@ func TestGetPageHandler(t *testing.T) {
 		Times(1).
 		Return(page, nil)
 
-	server := NewServer(store)
+	server := newTestServer(t, store)
 	recorder := httptest.NewRecorder()
 
 	// Act
