@@ -1,7 +1,7 @@
 package token
 
 import (
-	"github.com/reflection/frog-blossom-cms/utils"
+	"github.com/reflection/frog-blossom-cms/util"
 	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
@@ -9,10 +9,10 @@ import (
 
 func TestJWTMaker(t *testing.T) {
 	// Arrange
-	maker, err := NewJWTMaker(utils.RandomString(32))
+	maker, err := NewJWTMaker(util.RandomString(32))
 	require.NoError(t, err)
 
-	username := utils.RandomUsername()
+	username := util.RandomUsername()
 	duration := time.Minute
 
 	issuedAt := time.Now()
