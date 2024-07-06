@@ -15,8 +15,8 @@ import (
 // Server serves HTTP request for CMS
 type Server struct {
 	Store      db.Store
-	tokenMaker token.Maker
-	config     config.Config
+	TokenMaker token.Maker
+	Config     config.Config
 	router     *gin.Engine
 }
 
@@ -29,20 +29,23 @@ type Server struct {
 
 // NewServer creates new HTTP server and sets up routing
 func NewServer(config config.Config, store db.Store) (*Server, error) {
-	tokeMaker, err := token.NewJWTMaker(config.TokenSystemmetricKey)
+	tokenMaker, err := token.NewJWTMaker(config.TokenSystemmetricKey)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create token maker: %w", err)
 	}
 	server := &Server{
 		Store:      store,
-		tokenMaker: tokeMaker,
-		config:     config,
+		TokenMaker: tokenMaker,
+		Config:     config,
 	}
 	router := gin.Default()
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	subrouter := router.Group("api/v1")
+
+	// User login
+	subrouter.POST("/users/login", handler.LoginUser(server, store))
 
 	// Users router
 	subrouter.POST("/users", handler.CreateUsersHandler(store))
