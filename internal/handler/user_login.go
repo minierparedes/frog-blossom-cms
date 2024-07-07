@@ -3,7 +3,7 @@ package handler
 import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
-	"github.com/reflection/frog-blossom-cms/api"
+	"github.com/reflection/frog-blossom-cms/common"
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 	"github.com/reflection/frog-blossom-cms/util"
 	"net/http"
@@ -48,7 +48,7 @@ func newUserResponse(user db.User) userResponse {
 	}
 }
 
-func LoginUser(server *api.Server, store db.Store) gin.HandlerFunc {
+func LoginUser(server *common.Server, store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req loginUsersRequest

@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/reflection/frog-blossom-cms/common"
 	"github.com/reflection/frog-blossom-cms/config"
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 	"github.com/reflection/frog-blossom-cms/docs"
@@ -28,12 +29,12 @@ type Server struct {
 // @BasePath /api/v1
 
 // NewServer creates new HTTP server and sets up routing
-func NewServer(config config.Config, store db.Store) (*Server, error) {
+func NewServer(config config.Config, store db.Store) (*common.Server, error) {
 	tokenMaker, err := token.NewJWTMaker(config.TokenSystemmetricKey)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create token maker: %w", err)
 	}
-	server := &Server{
+	server := &common.Server{
 		Store:      store,
 		TokenMaker: tokenMaker,
 		Config:     config,
@@ -70,10 +71,10 @@ func NewServer(config config.Config, store db.Store) (*Server, error) {
 
 	subrouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	server.router = router
+	server.Router = router
 	return server, nil
 }
 
-func (server *Server) Start(address string) error {
-	return server.router.Run(address)
+func Start(server *common.Server, address string) error {
+	return server.Router.Run(address)
 }
