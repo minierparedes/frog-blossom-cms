@@ -13,14 +13,6 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// Server serves HTTP request for CMS
-type Server struct {
-	Store      db.Store
-	TokenMaker token.Maker
-	Config     config.Config
-	router     *gin.Engine
-}
-
 // @title frog blossom API documentation
 // @version 1
 // @Description frog-blossom

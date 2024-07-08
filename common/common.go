@@ -7,6 +7,7 @@ import (
 	"github.com/reflection/frog-blossom-cms/token"
 )
 
+// Server serves HTTP request for CMS
 type Server struct {
 	Store      db.Store
 	TokenMaker token.Maker
