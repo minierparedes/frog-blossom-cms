@@ -29,7 +29,7 @@ func TestGetPostHandler(t *testing.T) {
 		Times(1).
 		Return(post, nil)
 
-	server := NewServer(store)
+	server := newTestServer(t, store)
 	recorder := httptest.NewRecorder()
 
 	// Act
@@ -37,7 +37,7 @@ func TestGetPostHandler(t *testing.T) {
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	require.NoError(t, err)
 
-	server.router.ServeHTTP(recorder, request)
+	server.Router.ServeHTTP(recorder, request)
 
 	// Assert
 	require.Equal(t, http.StatusOK, recorder.Code)

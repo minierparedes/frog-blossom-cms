@@ -1,19 +1,17 @@
 package api
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/reflection/frog-blossom-cms/common"
+	"github.com/reflection/frog-blossom-cms/config"
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
 	"github.com/reflection/frog-blossom-cms/docs"
 	"github.com/reflection/frog-blossom-cms/internal/handler"
+	"github.com/reflection/frog-blossom-cms/token"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
-
-// Server serves HTTP request for CMS
-type Server struct {
-	Store  db.Store
-	router *gin.Engine
-}
 
 // @title frog blossom API documentation
 // @version 1
@@ -23,13 +21,24 @@ type Server struct {
 // @BasePath /api/v1
 
 // NewServer creates new HTTP server and sets up routing
-func NewServer(store db.Store) *Server {
-	server := &Server{Store: store}
+func NewServer(config config.Config, store db.Store) (*common.Server, error) {
+	tokenMaker, err := token.NewJWTMaker(config.TokenSystemmetricKey)
+	if err != nil {
+		return nil, fmt.Errorf("cannot create token maker: %w", err)
+	}
+	server := &common.Server{
+		Store:      store,
+		TokenMaker: tokenMaker,
+		Config:     config,
+	}
 	router := gin.Default()
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	subrouter := router.Group("api/v1")
+
+	// User login
+	subrouter.POST("/users/login", handler.LoginUser(server, store))
 
 	// Users router
 	subrouter.POST("/users", handler.CreateUsersHandler(store))
@@ -54,10 +63,10 @@ func NewServer(store db.Store) *Server {
 
 	subrouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	server.router = router
-	return server
+	server.Router = router
+	return server, nil
 }
 
-func (server *Server) Start(address string) error {
-	return server.router.Run(address)
+func Start(server *common.Server, address string) error {
+	return server.Router.Run(address)
 }

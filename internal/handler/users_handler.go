@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
-	"github.com/reflection/frog-blossom-cms/utils"
+	"github.com/reflection/frog-blossom-cms/util"
 	"net/http"
 	"time"
 )
@@ -54,7 +54,7 @@ func CreateUsersHandler(store db.Store) gin.HandlerFunc {
 			return
 		}
 
-		hashedPassword, err := utils.HashPassword(req.Password)
+		hashedPassword, err := util.HashPassword(req.Password)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
@@ -128,6 +128,7 @@ func GetUsersHandler(store db.Store) gin.HandlerFunc {
 			}
 
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
 		}
 		ctx.JSON(http.StatusOK, user)
 	}
