@@ -37,7 +37,7 @@ func TestGetUsersHandler(t *testing.T) {
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	require.NoError(t, err)
 
-	server.router.ServeHTTP(recorder, request)
+	server.Router.ServeHTTP(recorder, request)
 
 	// Assert
 	require.Equal(t, http.StatusOK, recorder.Code)
