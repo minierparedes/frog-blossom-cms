@@ -1,0 +1,23 @@
+package api
+
+import (
+	"github.com/reflection/frog-blossom-cms/common"
+	"github.com/reflection/frog-blossom-cms/config"
+	db "github.com/reflection/frog-blossom-cms/db/sqlc"
+	"github.com/reflection/frog-blossom-cms/util"
+	"github.com/stretchr/testify/require"
+	"testing"
+	"time"
+)
+
+func NewTestServer(t *testing.T, store db.Store) *common.Server {
+	config := config.Config{
+		TokenSystemmetricKey: util.RandomString(32),
+		AccessTokenDuration:  time.Minute,
+	}
+
+	server, err := NewServer(config, store)
+	require.NoError(t, err)
+
+	return server
+}
