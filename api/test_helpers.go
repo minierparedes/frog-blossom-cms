@@ -11,12 +11,12 @@ import (
 )
 
 func NewTestServer(t *testing.T, store db.Store) *common.Server {
-	config := config.Config{
+	testConfig := config.Config{
 		TokenSystemmetricKey: util.RandomString(32),
 		AccessTokenDuration:  time.Minute,
 	}
 
-	server, err := NewServer(config, store)
+	server, err := NewServer(testConfig, store)
 	require.NoError(t, err)
 
 	return server

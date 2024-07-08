@@ -29,7 +29,7 @@ func TestGetPostHandler(t *testing.T) {
 		Times(1).
 		Return(post, nil)
 
-	server := newTestServer(t, store)
+	server := NewTestServer(t, store)
 	recorder := httptest.NewRecorder()
 
 	// Act

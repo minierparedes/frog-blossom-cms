@@ -29,7 +29,7 @@ func TestGetUsersHandler(t *testing.T) {
 		Return(user, nil)
 
 	// start test server and send request
-	server := newTestServer(t, store)
+	server := NewTestServer(t, store)
 	recorder := httptest.NewRecorder()
 
 	// Act
