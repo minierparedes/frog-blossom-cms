@@ -36,6 +36,8 @@ func NewServer(config config.Config, store db.Store) (*common.Server, error) {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	subrouter := router.Group("api/v1")
+	// authRoutes authorization middleware
+	// authRoutes := router.Group("/").Use(middleware.AuthMiddleware(server.TokenMaker))
 
 	// User login
 	subrouter.POST("/users/login", handler.LoginUser(server, store))
