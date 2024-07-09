@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// NewTestServer helper for handler functions
 func NewTestServer(t *testing.T, store db.Store) *common.Server {
 	testConfig := config.Config{
 		TokenSystemmetricKey: util.RandomString(32),
