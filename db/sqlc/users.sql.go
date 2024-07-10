@@ -127,6 +127,25 @@ func (q *Queries) GetUsersByEmail(ctx context.Context, email string) (GetUsersBy
 	return i, err
 }
 
+const getUsersByUsername = `-- name: GetUsersByUsername :one
+SELECT id, username, email FROM users
+WHERE email = $1
+LIMIT 1
+`
+
+type GetUsersByUsernameRow struct {
+	ID       int64  `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
+func (q *Queries) GetUsersByUsername(ctx context.Context, email string) (GetUsersByUsernameRow, error) {
+	row := q.db.QueryRowContext(ctx, getUsersByUsername, email)
+	var i GetUsersByUsernameRow
+	err := row.Scan(&i.ID, &i.Username, &i.Email)
+	return i, err
+}
+
 const listUsers = `-- name: ListUsers :many
 SELECT id, username, email, password, role, first_name, last_name, user_url, description, created_at, updated_at, is_deleted FROM users
 ORDER BY id
