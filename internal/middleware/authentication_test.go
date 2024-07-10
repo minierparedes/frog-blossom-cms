@@ -17,7 +17,7 @@ func addAuthorization(t *testing.T, req *http.Request, tokenMaker token.Maker, a
 	require.NoError(t, err)
 
 	authorizationHeader := fmt.Sprintf("%s %s", authorizationType, testToken)
-	req.Header.Set(authorizationHeaderKey, authorizationHeader)
+	req.Header.Set(AuthorizationHeaderKey, authorizationHeader)
 }
 
 func TestAuthMiddleware(t *testing.T) {
@@ -29,7 +29,7 @@ func TestAuthMiddleware(t *testing.T) {
 		{
 			name: "OK",
 			setupAuth: func(t *testing.T, req *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, req, tokenMaker, authorizationTypeBearer, "user", time.Minute)
+				addAuthorization(t, req, tokenMaker, AuthorizationTypeBearer, "user", time.Minute)
 			},
 			checkResp: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
@@ -46,7 +46,7 @@ func TestAuthMiddleware(t *testing.T) {
 			authPath := "/auth"
 			server.Router.GET(
 				authPath,
-				AuthMiddleware(server.TokenMaker),
+				AuthenticationMiddleware(server.TokenMaker),
 				func(ctx *gin.Context) {
 					ctx.JSON(http.StatusOK, gin.H{})
 				},
