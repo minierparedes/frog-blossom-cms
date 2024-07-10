@@ -84,7 +84,8 @@ func (q *Queries) DeleteUsers(ctx context.Context, id int64) error {
 
 const getUsers = `-- name: GetUsers :one
 SELECT id, username, email, password, role, first_name, last_name, user_url, description, created_at, updated_at, is_deleted FROM users
-WHERE id = $1 LIMIT 1
+WHERE id = $1
+LIMIT 1
 `
 
 func (q *Queries) GetUsers(ctx context.Context, id int64) (User, error) {
@@ -104,6 +105,25 @@ func (q *Queries) GetUsers(ctx context.Context, id int64) (User, error) {
 		&i.UpdatedAt,
 		&i.IsDeleted,
 	)
+	return i, err
+}
+
+const getUsersByEmail = `-- name: GetUsersByEmail :one
+SELECT id, username, email FROM users
+WHERE email = $1
+LIMIT 1
+`
+
+type GetUsersByEmailRow struct {
+	ID       int64  `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
+func (q *Queries) GetUsersByEmail(ctx context.Context, email string) (GetUsersByEmailRow, error) {
+	row := q.db.QueryRowContext(ctx, getUsersByEmail, email)
+	var i GetUsersByEmailRow
+	err := row.Scan(&i.ID, &i.Username, &i.Email)
 	return i, err
 }
 
