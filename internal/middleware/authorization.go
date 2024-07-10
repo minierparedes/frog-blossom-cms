@@ -3,15 +3,16 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/reflection/frog-blossom-cms/internal/roles"
+	"github.com/reflection/frog-blossom-cms/token"
 	"net/http"
 )
 
 func Authorization(requiredAction roles.Action) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		role := ctx.GetString("role")
+		role := ctx.MustGet(AuthorizationPayloadKey).(*token.Payload)
 
 		// check if the role has the required action permission
-		if !hasPermission(role, requiredAction) {
+		if !hasPermission(role.Role, requiredAction) {
 			ctx.JSON(http.StatusForbidden, gin.H{"error": "you don't have permission to access this resource"})
 			ctx.Abort()
 			return
