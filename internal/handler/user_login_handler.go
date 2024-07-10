@@ -48,7 +48,7 @@ func newUserResponse(user db.User) userResponse {
 	}
 }
 
-func LoginUser(server *common.Server, store db.Store) gin.HandlerFunc {
+func LoginUserHandler(server *common.Server, store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req loginUsersRequest

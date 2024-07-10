@@ -40,10 +40,11 @@ func NewServer(config config.Config, store db.Store) (*common.Server, error) {
 	// authRoutes := router.Group("/").Use(middleware.AuthMiddleware(server.TokenMaker))
 
 	// User login
-	subrouter.POST("/users/login", handler.LoginUser(server, store))
+	subrouter.POST("/users/login", handler.LoginUserHandler(server, store))
 
 	// Users router
 	subrouter.POST("/users", handler.CreateUsersHandler(store))
+	subrouter.POST("/users/register", handler.CreateInitialAdminHandler(store))
 	subrouter.PUT("/users/:id", handler.UpdateUserHandler(store))
 	subrouter.GET("/users/:id", handler.GetUsersHandler(store))
 	subrouter.GET("/users", handler.ListUsersHandler(store))
