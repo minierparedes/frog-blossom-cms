@@ -45,7 +45,6 @@ func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {
 		validationErr, ok := err.(*jwt.ValidationError)
 		if ok && errors.Is(validationErr.Inner, ErrExpiredToken) {
 			return nil, ErrExpiredToken
-
 		}
 		return nil, ErrInvalidToken
 	}
