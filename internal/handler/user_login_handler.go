@@ -67,6 +67,11 @@ func LoginUserHandler(server *common.Server, store db.Store) gin.HandlerFunc {
 			return
 		}
 
+		if user.Username != req.Username {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+
 		err = util.CheckPassword(req.Password, user.Password)
 		if err != nil {
 			ctx.JSON(http.StatusUnauthorized, errorResponse(err))
