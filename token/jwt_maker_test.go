@@ -14,12 +14,13 @@ func TestJWTMaker(t *testing.T) {
 
 	username := util.RandomUsername()
 	duration := time.Minute
+	role := "user"
 
 	issuedAt := time.Now()
 	expiredAt := issuedAt.Add(duration)
 
 	// Act
-	token, err := maker.CreateToken(username, duration)
+	token, err := maker.CreateToken(username, role, duration)
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
 
