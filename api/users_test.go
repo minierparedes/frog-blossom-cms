@@ -5,6 +5,7 @@ import (
 	"fmt"
 	mockdb "github.com/reflection/frog-blossom-cms/db/mock"
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
+	"github.com/reflection/frog-blossom-cms/testhelpers"
 	"github.com/reflection/frog-blossom-cms/util"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -29,7 +30,7 @@ func TestGetUsersHandler(t *testing.T) {
 		Return(user, nil)
 
 	// start test server and send request
-	server := NewTestServer(t, store)
+	server := testhelpers.NewTestServer(t, store)
 	recorder := httptest.NewRecorder()
 
 	// Act

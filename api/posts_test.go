@@ -6,6 +6,7 @@ import (
 	"fmt"
 	mockdb "github.com/reflection/frog-blossom-cms/db/mock"
 	db "github.com/reflection/frog-blossom-cms/db/sqlc"
+	"github.com/reflection/frog-blossom-cms/testhelpers"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 	"io"
@@ -29,7 +30,7 @@ func TestGetPostHandler(t *testing.T) {
 		Times(1).
 		Return(post, nil)
 
-	server := NewTestServer(t, store)
+	server := testhelpers.NewTestServer(t, store)
 	recorder := httptest.NewRecorder()
 
 	// Act

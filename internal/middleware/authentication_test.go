@@ -3,7 +3,7 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/reflection/frog-blossom-cms/api"
+	"github.com/reflection/frog-blossom-cms/testhelpers"
 	"github.com/reflection/frog-blossom-cms/token"
 	"github.com/stretchr/testify/require"
 	"net/http"
@@ -41,7 +41,7 @@ func TestAuthMiddleware(t *testing.T) {
 		tc := testCases[i]
 
 		t.Run(tc.name, func(t *testing.T) {
-			server := api.NewTestServer(t, nil)
+			server := testhelpers.NewTestServer(t, nil)
 
 			authPath := "/auth"
 			server.Router.GET(
