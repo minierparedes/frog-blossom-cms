@@ -14,3 +14,7 @@ type Server struct {
 	Config     config.Config
 	Router     *gin.Engine
 }
+
+func ErrorResponse(err error) gin.H {
+	return gin.H{"error": err.Error()}
+}

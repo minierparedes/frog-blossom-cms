@@ -48,7 +48,7 @@ func newUserResponse(user db.User) userResponse {
 	}
 }
 
-func LoginUser(server *common.Server, store db.Store) gin.HandlerFunc {
+func LoginUserHandler(server *common.Server, store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req loginUsersRequest
@@ -67,13 +67,18 @@ func LoginUser(server *common.Server, store db.Store) gin.HandlerFunc {
 			return
 		}
 
+		if user.Username != req.Username {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+
 		err = util.CheckPassword(req.Password, user.Password)
 		if err != nil {
 			ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 			return
 		}
 
-		accessToken, err := server.TokenMaker.CreateToken(user.Username, server.Config.AccessTokenDuration)
+		accessToken, err := server.TokenMaker.CreateToken(user.Username, user.Role, server.Config.AccessTokenDuration)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 			return

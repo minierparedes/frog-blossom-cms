@@ -1,4 +1,4 @@
-package api
+package testhelpers
 
 import (
 	"github.com/reflection/frog-blossom-cms/common"
@@ -17,7 +17,7 @@ func NewTestServer(t *testing.T, store db.Store) *common.Server {
 		AccessTokenDuration:  time.Minute,
 	}
 
-	server, err := NewServer(testConfig, store)
+	server, err := common.NewTestingServer(testConfig, store)
 	require.NoError(t, err)
 
 	return server

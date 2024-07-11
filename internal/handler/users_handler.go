@@ -34,6 +34,76 @@ type createUserResponse struct {
 	CreatedAt   time.Time      `json:"created_at"`
 }
 
+func CreateInitialAdminHandler(store db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req createUsersRequest
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		// Check for Existing User
+		_, err := store.GetUsersByEmail(ctx, req.Email)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				ctx.JSON(http.StatusConflict, gin.H{"error": "email already exists"})
+				return
+			} else {
+				ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+				return
+			}
+		}
+
+		_, err = store.GetUsersByUsername(ctx, req.Username)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				ctx.JSON(http.StatusConflict, gin.H{"error": "username already exists"})
+				return
+			} else {
+				ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+				return
+			}
+		}
+
+		hashedPassword, err := util.HashPassword(req.Password)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		args := db.CreateUsersParams{
+			Username:    req.Username,
+			Email:       req.Email,
+			Password:    hashedPassword,
+			Role:        "admin",
+			FirstName:   req.FirstName,
+			LastName:    req.LastName,
+			UserUrl:     req.UserUrl,
+			Description: req.Description,
+		}
+
+		user, err := store.CreateUsers(ctx, args)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		response := createUserResponse{
+			ID:          user.ID,
+			Username:    user.Username,
+			Email:       user.Email,
+			Role:        user.Role,
+			FirstName:   user.FirstName,
+			LastName:    user.LastName,
+			UserUrl:     user.UserUrl,
+			Description: user.Description,
+			CreatedAt:   user.CreatedAt,
+		}
+
+		ctx.JSON(http.StatusOK, response)
+	}
+}
+
 // CreateUsersHandler handles the request to create a user
 // @Summary Create a user
 // @Description Create a new user with the provided parameters

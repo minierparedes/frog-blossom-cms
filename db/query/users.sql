@@ -16,7 +16,18 @@ INSERT INTO Users (
 
 -- name: GetUsers :one
 SELECT * FROM users
-WHERE id = $1 LIMIT 1;
+WHERE id = $1
+LIMIT 1;
+
+-- name: GetUsersByEmail :one
+SELECT id, username, email FROM users
+WHERE email = $1
+LIMIT 1;
+
+-- name: GetUsersByUsername :one
+SELECT id, username, email FROM users
+WHERE email = $1
+LIMIT 1;
 
 -- name: ListUsers :many
 SELECT * FROM users
